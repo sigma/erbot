@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-13 09:07:15 deego>
+;; Time-stamp: <2003-05-13 13:36:25 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1828,10 +1828,12 @@ number N, and ending at M-1. The first record is numbered 0.
 		   rest))
 	   ((and expandp (member cc '("unecho" "noecho"))
 		 dd)
-	    (format "%s" 
-		    (mapconcat 'identity ee " "))
-	    )
-	   
+		 ;;dd)
+	    (erbutils-itemize 
+	     (cons
+	      (format "%s" 
+		      (mapconcat 'identity ee " "))
+	      (cdr result1))))
 	   ((and expandp (member cc '("lisp")))
 	    (erbeng-main 
 	     (concat ", (progn "
