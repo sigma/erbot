@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-08-07 11:48:04 deego>
+;; Time-stamp: <2003-08-08 07:18:46 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3731,6 +3731,8 @@ last time i checked , equalp seemed to work as well.. "
 
 (defalias 'fs-number-to-string 'string-to-number)
 (defalias 'fs-format 'format)
+(erbutils-defalias '(format-time-string))
+
 (defalias 'fs-split-string 'split-string)
 (defalias 'fs-rm 'fs-forget)
 (defalias 'fs-progn 'progn)
