@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-02 17:03:11 deego>
+;; Time-stamp: <2005-01-03 14:34:15 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2179,7 +2179,7 @@ Numbering of positions starts from 0. "
        thisnote
        (tostring (downcase (format "%s" to)))
        )
-    (unless term
+    (unless realterm
       (error "No such term exists %S" term))
     (unless notes
       (error "Report this bug.  Term exists but no notes?? %S" term))

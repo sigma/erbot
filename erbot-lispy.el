@@ -1,5 +1,5 @@
 ;;; erbot-lispy.el --- ErBot integration in Lispy
-;; Time-stamp: <2004-07-21 15:59:53 deego>
+;; Time-stamp: <2005-01-03 00:29:20 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot-lispy.el
 ;; Package: erbot
