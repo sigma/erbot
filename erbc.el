@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-18 23:06:54 deego>
+;; Time-stamp: <03/05/20 13:16:35 freundt>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -79,7 +79,7 @@
 ;;==========================================
 ;;; Code:
 
-;; NOTE:  stuff liek (erbc-et) can be passed possibly mischievous
+;; NOTE:  stuff like (erbc-et) can be passed possibly mischievous
 ;; code as the first argument... never eval or "set" any
 ;; "code"... always convert it to a single atom... before setting it..
 
@@ -2440,7 +2440,7 @@ here."
 	(setq more (buffer-substring new-point (point-max)))
 	(if 
 	    (string-match "[^ \t\n]" more )
-	    (setq ans (concat ans " ..[Type ,more]"))	    
+	    (setq ans (concat ans " ..[Type " erbnoc-char "more]"))	    
 	  (when nomorep (setq more "")))
 	)
       )
@@ -2959,7 +2959,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defun erbc-replace-regexp (&optional from to term number)
   (unless (and from to term)
-    (error "Syntax: , (replace-regexp FROM TO TERM &optional NUMBER)"))
+    (error (format "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER)" erbnoc-char)))
   (erbnocmd-iterate-internal term number 'replace-regexp-in-string from to
 			     nil)
   (format "Replaced regexp %S with %S" from to))
@@ -2982,7 +2982,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defun erbc-merge (&optional name dest &rest args)
   (unless (and name dest (not args))
-    (error "Syntax: , merge TERM1 TERM2"))
+    (error (format "Syntax: %s merge TERM1 TERM2" erbnoc-char)))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (when (string= (downcase name) (downcase dest))
@@ -3009,7 +3009,7 @@ number N, and ending at M-1. The first record is numbered 0.
 Do not confuse this function with erbc-rearrange which rearranges the
 order of entries within a given term. "
   (when (or args (not (and name dest)))
-    (error "Format: , mv foo bar"))
+    (error (format "Format: %s mv foo bar" erbnoc-char)))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (cond
@@ -3040,10 +3040,10 @@ order of entries within a given term. "
   (catch 'erbnocmd-tag-foo
     (unless (equal (length msg) 3) 
       (throw 'erbnocmd-tag-foo
-	     `(erbc-error "Syntax: , N->M in TERM")))
+	     `(erbc-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
   (unless (equal (downcase (format "%s" (second msg))) "in")
     (throw 'erbnocmd-tag-foo
-	   `(erbc-error "Syntax: , N->M in TERM")))
+	   `(erbc-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
   (let (term
 	fromto
 	lenfromto
@@ -3054,7 +3054,7 @@ order of entries within a given term. "
     (setq lenfromto (length fromto))
     (unless (= lenfromto 2)
       (throw 'erbnocmd-tag-foo
-	     `(erbc-error "Syntax: , N->M in TERM")))
+	     `(erbc-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
     `(erbc-rearrange ,(first fromto) ,(second fromto) ,term))))
 
 
@@ -3197,7 +3197,7 @@ MSG here is a list which needs to be combined.  "
 
 (defun erbc-replace-string (&optional from to term number)
   (unless (and from to term)
-    (error "Syntax: , s/foo.../bar in TERM [NUMBER or ALL]"))
+    (error (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbnoc-char)))
   (erbnocmd-iterate-internal 
    (or (erbbdb-get-exact-name term ) term)
    number 'erbutils-replace-string-in-string 
@@ -3261,7 +3261,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 (defun erbc-info (&optional regexp)
-  (unless regexp (error "Syntax: , info REGEXP"))
+  (unless regexp (error (format "Syntax: %s info REGEXP" erbnoc-char)))
   (unless (stringp regexp) (setq regexp (format "%s" regexp)))
   (Info-goto-node "(Emacs)")
   (if (Info-search regexp)
@@ -3272,7 +3272,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defun erbc-locate-library (&optional arg &rest rest)
   "REST WILL be ignored :-)"
-  (unless arg (error "Syntax: , locate-library LIB"))
+  (unless arg (format (error "Syntax: %s locate-library LIB" erbnoc-char)))
   (unless (stringp arg)
     (setq arg (format "%s" arg)))
   (locate-library arg))
@@ -3286,7 +3286,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 (defun erbc-dict (&optional word &rest ignore)
-  (unless word (error "Syntax: , d[ict] word"))
+  (unless word (error (format "Syntax: %s d[ict] word" erbnoc-char)))
   (unless (stringp word) (setq word (format "%s" word)))
   (erbc-dictionary-search word))
 
@@ -3407,7 +3407,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun erbc-country (&optional ct)
-  (unless ct (error "Syntax: , country NM (example , country jp)"))
+  (unless ct (error (format "Syntax: %s country NM (example , country jp)" erbnoc-char)))
   (setq ct (format "%s" ct))
   (let ((addp (and (> (length ct) 1)
 		   ;; does not start with .
@@ -3559,7 +3559,7 @@ last time i checked , equalp seemed to work as well.. "
 
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun erbc-wserver (&optional site &rest args)
-  (unless site (error "Syntax: , wserver SITE"))
+  (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
   (if (erbc-shell-test site '(" " "<" "-"))
       (error "No attacks please. "))
@@ -3570,7 +3570,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun erbc-web (&optional site &rest args)
   "displays a website"
-  (unless site (error "Syntax: , wserver SITE"))
+  (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
   (if (erbc-shell-test site '(" " "<" "-"))
       (error "No attacks please. "))
