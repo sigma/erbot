@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2004-03-28 11:44:24 deego>
+;; Time-stamp: <2004-12-03 16:47:03 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -173,7 +173,7 @@ to query using PROMPT, or just return t."
 (defalias 'fs-lisp-proper 'erbutils-listp-proper)
 
 
-(require 'calc)
+(ignore-errors (require 'calc))
 
 (defvar erbnoc-calc-time 3)
 (defcustom erbnoc-calc-p nil
