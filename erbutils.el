@@ -410,7 +410,11 @@ as many times as it returns a...
       "\n"))
    "\n"))
 
-
+(defun erbutils-cleanup-whitespace (str)
+  "Strip all leading whitespace and replace one or more tabs, newlines,
+or spaces with a single space."
+  (let ((result (replace-regexp-in-string "[\t\n ]+" " " str)))
+    (subseq result (or (position ?  result :test-not 'eq) 0))))
 
 (defun erbutils-downcase (str)
   (if (stringp str)
