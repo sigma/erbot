@@ -532,6 +532,9 @@ reply please be abbreviated. ")
   (list 1)
   "")
 
+(defcustom fs-web-page-title-p nil
+  "Change it to t to enable the erbot to look up the title of urls
+posted in a channel.  When string, will be matched against target.")
 
 (defcustom fs-m8b-p nil
   "Change it to t for the magic 8-ball... define m8b then of
@@ -690,8 +693,8 @@ Optional argument FOO ."
 	(when (equal 0 (string-match "," restmsg))
 	  (setq restmsg (substring restmsg 1)))
 	(setq msg (concat erbot-nick ": " restmsg))))
-    
-    
+
+
     ;; now we split strings..
     (setq msg (split-string msg))
 
@@ -804,7 +807,26 @@ Optional argument FOO ."
 			  ))
 	  ))
       )
-    
+
+    ;; Sat Jan  8 12:40:46 EST 2005 (petekaz)
+    ;; We need to make sure this is the last thing we check
+    ;; because we don't want to hijack another valid command
+    ;; with our parsing.  I.e. if a user adds a term with an
+    ;; url included in its note, we don't process that.
+    (when (and leave-alone-p
+               fs-web-page-title-p
+               (if (stringp fs-web-page-title-p)
+                   (and (stringp tgt) 
+                        (string-match fs-web-page-title-p tgt))
+                 t))
+      (let* ((case-fold-search t)
+             (url (some (lambda (e)
+                          (when (string-match "^http://[^ ]+$" e)
+                            e))
+                        msg)))
+        (when url
+          (setq leave-alone-p nil)
+          (setq msg (list "(" "web-page-title" (format "%S" url) ")")))))
     
     ;;       (cond
     ;;        ((equal (length msg) 1)
