@@ -44,7 +44,7 @@
 (ignore-errors 
   (require 'erbmsg))
 
-(require 'flame)
+(ignore-errors (require 'flame))
 
 (ignore-errors (require 'mkback))
 (ignore-errors (require 'lines))
