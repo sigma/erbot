@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-01-01 20:38:54 deego>
+;; Time-stamp: <2005-01-01 21:17:53 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -200,10 +200,11 @@ to query using PROMPT, or just return t."
 (defvar erbtrain-local-buffer "*erbtrain-log*")
 
 (defun erbtrain-file-locally (file)
-  "Can use this when you ARE su'ed so that you are in the bot's account.
+  "EXPERIMENTAL. Can use this when you ARE su'ed so that you are in the bot's account.
 
 su to your bot's account and then use this... This has the minor
 advantage of being much faster. "
+  (interactive "f")
   (unless
       (yes-or-no-p 
        (concat "Are you really logged in as the bot? "))
@@ -213,12 +214,17 @@ advantage of being much faster. "
     (let ((allstrings (buffer-substring-no-properties
 		       (point-min) (point-max))))
       (setq allstrings (split-string allstrings "\n"))
-      (mapcar 'erbtrain-local allstrings))))
+      (mapcar 'erbtrain-local allstrings)))
+  (display-buffer erbtrain-local-buffer))
+
 
 (defun erbtrain-local (str)
   "See the doc for erbtrain-file-locally. "
   ;;(require 'erball)
-  (let* ((strlisp (fs-parse str))
+  (let* ((strlisp1 (ignore-errors (fs-parse str)))
+	 (strlisp (ignore-errors 
+		   (if (stringp strlisp1)
+		       (read strlisp1) nil)))
 	 (result (ignore-errors (fs-eval strlisp))))
     (erbtrain-local-log str strlisp result)))
 
@@ -227,7 +233,8 @@ advantage of being much faster. "
     (set-buffer (get-buffer-create erbtrain-local-buffer))
     (goto-char (point-max))
     (insert "\n")
-    (let ((msg (concat str "\n" "=> " expr "\n" "==> " result)))
+    (let ((msg (concat str "\n" "=> " (format "%S" expr) "\n" "==> " 
+		       (format "%S" result) "\n\n")))
       (message (format "%s" msg))
       (insert msg))))
 
