@@ -45,6 +45,8 @@
 ;; - store which channel the memo came from
 ;; - added garbage collection function (erbmsg-garbage-cleanse-cookies) to
 ;;   clean up erbmsg-msg-cookie-hash-table from unreferenced cookies
+;; 2004/04/01:
+;; - added hooks
 
 ;;; TODO:
 ;; - functionality to forget the erbmsg-question-* pile effectively
@@ -73,7 +75,17 @@ messages are saved here")
   :group 'erbmsg)
 
 
-;;(set-time-zone-rule "UTC")
+;;; uncomment this to normalize to UTC
+;;(set-time-zone-rule "UTC0")
+
+(defvar erbmsg-flush-pre-hook nil
+	"Hook called before erbmsg-flush-pending-msgs is called.")
+(defvar erbmsg-flush-post-hook nil
+	"Hook called before erbmsg-flush-pending-msgs is called.")
+
+
+;;; this is too useful to not add it here
+(add-hook 'erbmsg-flush-post-hook 'erbmsg-garbage-cleanse-cookies)
 
 
 (defun fs-memo (nick &rest msg)
@@ -272,10 +284,12 @@ instead of PRIVMSG you may specify another sending method."
 
 (defun erbmsg-flush-pending-msgs (nick msg-cookies)
   "Flushes all pending messages for user `nick'."
+	(run-hook-with-args 'erbmsg-flush-pre-hook nick msg-cookies)
   (erbmsg-flush-msg-cookies msg-cookies)
   (remhash nick erbmsg-msg-hash-table)
   (remhash nick erbmsg-question-hash-table)
-  (erc-send-message "flushed"))
+  (erc-send-message "flushed")
+	(run-hook-with-args 'erbmsg-flush-post-hook nick msg-cookies))
 
 (defun erbmsg-flush-msg-cookie (msg-cookie)
   "Flushes `msg-cookie'."
@@ -294,7 +308,7 @@ instead of PRIVMSG you may specify another sending method."
 
 ;; garbage collection
 
-(defun erbmsg-garbage-cleanse-cookies nil
+(defun erbmsg-garbage-cleanse-cookies (&rest ignore)
 	"Collects garbage from `erbmsg-msg-cookie-hash-table' when
 there's no referring entry in `erbmsg-msg-hash-table'."
 	(maphash (lambda (cookie-k cookie-v)
