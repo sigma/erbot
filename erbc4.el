@@ -248,10 +248,15 @@ to query using PROMPT, or just return t."
     amount))
 
 (defun fs-money (&optional maybe-nick)
-  (let ((nick (or maybe-nick (intern nick))))
-    (format "You've got %d GEMs, %s."
-            (or (gethash nick erbnoc-money) 0)
-            nick)))
+  (let ((amount (or (gethash (or maybe-nick (intern nick)) erbnoc-money)
+                    0)))
+    (if maybe-nick
+        (format "%s has %d GEMs."
+                maybe-nick
+                amount)
+      (format "You've got %d GEMs, %s."
+              amount
+              nick))))
 
 (defun erbnoc-distribute (maybe-dead-nick winning-table losing-table)
   (let* ((vals (erbnoc-valueshash losing-table))
