@@ -184,8 +184,10 @@ to query using PROMPT, or just return t."
         (incf (gethash nick table2) amount)
       (setf (gethash nick table2) amount))))
 
-(defun fs-bet (on-what how-much)
+(defun fs-bet (arg1 arg2)
   (let* ((nick (intern nick))
+         (on-what (if (symbolp arg1) arg1 arg2))
+         (how-much (if (numberp arg2) arg2 arg1))
          (table (case on-what
                   ((empty no-bullet click) erbnoc-RR-empty-bets)
                   ((bullet bang blam) erbnoc-RR-bullet-bets)
@@ -195,7 +197,7 @@ to query using PROMPT, or just return t."
                       erbnoc-RR-bullet-bets)))
     (cond
      ((gethash nick not-table)
-      (format "%s: Idiot, you can can only bet on one outcome (%s)."
+      (format "%s: Idiot, you can can only bet on one outcome."
               nick on-what))
      ((< (gethash nick erbnoc-money) how-much)
       (format "%s: Fool, you can't bet more than you've got (%d)."
