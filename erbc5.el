@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2004-12-17 00:13:06 deego>
+;; Time-stamp: <2004-12-31 22:45:55 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -170,7 +170,7 @@ to query using PROMPT, or just return t."
 
 ;;; Real Code:
 
-(defalias 'fs-lisp-proper 'erbutils-listp-proper)
+(defalias 'fs-listp-proper 'erbutils-listp-proper)
 
 
 (ignore-errors (require 'calc))
@@ -182,7 +182,7 @@ Enabling this means that fsbot will do calc operations, but those have
 no timeout build in... leading to DOS attacks. ")
 
 
-(defun fs-calc-eval (&optional str)
+(defun fsi-calc-eval (&optional str)
   "
 Note that  even though this function has a with-timeout built into it,
 that doesn't save us from a DOS attack..since emacs polls only when
@@ -211,12 +211,12 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
   )
 
 
-(defun fs-sreg (&rest args)
+(defun fsi-sreg (&rest args)
   (format "%S" 
 	  (apply 'fs-sregex args)))
 
 
-(defun fs-sregex (&rest args)
+(defun fsi-sregex (&rest args)
   (cond
    (erbnoc-sregex-p
     (apply 'sregex args))

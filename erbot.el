@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-12-31 20:51:31 deego>
+;; Time-stamp: <2004-12-31 23:24:45 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -405,7 +405,7 @@ from-term to-term from-entries to-entries final-entries")
 	(setq pre "Will save to ~/pub/dunnet/dunnet.game"))
       (cond
        ((string-match "^.?more" arg)
-	(setq ans (fs-more)))
+	(setq ans (fsi-more)))
        (t
 	(unless freshp (insert arg))
 	(goto-char (point-max))
@@ -648,6 +648,7 @@ those things..
 
 ;;;###autoload
 (defun erbot-install ()
+  "Run this function AFTER loading all the files..."
   (interactive)
   (setq erbot-on-new-erc-p
 	(and (boundp 'erc-server-PRIVMSG-functions)
@@ -664,8 +665,31 @@ those things..
 	 ;;(add-hook 'erc-send-completed-hook 'erbot-local t)
 	 (add-hook 'erc-server-376-hook
 		   'erbot-autojoin-channels))
-	))
+	)
+  (erbot-initiate-symbols))
 
+
+
+
+
+(defun erbot-initiate-symbols ()
+  "By now, you should have loaded all pertinent erbot files... If you
+add any new functions, don't forget to run (erbot-install) AFTER
+that.."
+  (interactive)
+  (let ((ss (fsi-command-list-readonly)))
+    (dolist (s ss)
+      
+      (if (symbolp s)
+	  (let ((f-s (erbutils-concat-symbols 'fs- s))
+		(fi-s (erbutils-concat-symbols 'fsi- s)))
+	    
+	    (defalias f-s fi-s)
+	    (put f-s 'readonly t))
+	(message "Ignoring fsi->fs for %s" s)))))
+
+
+  
 
 ;;;###autoload
 (defun erbot-autojoin-channels (server nick)

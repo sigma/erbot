@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2004-04-22 23:08:17 deego>
+;; Time-stamp: <2004-12-31 21:46:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -106,7 +106,7 @@ tries to make sure that we sandbox that whole quoted thing.. "
   "You should add &rest and &optional to this list. 
 We WON'T do this by default since this could lead to exploits if you
 *happen* to have bound these keywords to weird stuff like 
-(setq &rest (shell-command \"rm -rf /\")) in your .emacs."
+\(setq &rest (shell-command \"rm -rf /\")) in your .emacs."
 )
 
 (defun erblisp-sandbox (expr)

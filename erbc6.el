@@ -1,5 +1,5 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2004-12-17 00:14:23 deego>
+;; Time-stamp: <2004-12-31 22:40:24 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
@@ -47,7 +47,7 @@
 
 
 
-(defun fs-C-h (sym &rest thing)
+(defun fsi-C-h (sym &rest thing)
   "
 ;;; 2003-08-16 T15:19:00-0400 (Saturday)    D. Goel
 Coded by bojohann on #emacs."

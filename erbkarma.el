@@ -1,5 +1,5 @@
 ;;; erbkarma.el ---
-;; Time-stamp: <2004-01-22 07:18:40 deego>
+;; Time-stamp: <2004-12-31 22:47:00 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbkarma.el

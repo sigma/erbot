@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-12-17 00:14:12 deego>
+;; Time-stamp: <2004-12-31 22:40:24 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -76,7 +76,7 @@ With prefix ARG, insert version string into current buffer at point."
 ;;   ;; everything should already be boxquoted.. cool
 ;;   (mapcar sym seq))
 
-(defun fs-mapcar (fcn ls)
+(defun fsi-mapcar (fcn ls)
   (apply 'mapcar 
 	 (erbnoc-special-quote-function fcn)
 	 ls nil))
@@ -95,14 +95,14 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 
-(defun fs-mapc (fcn ls)
+(defun fsi-mapc (fcn ls)
   (apply 'mapc
 	 (erbnoc-special-quote-function fcn)
 	 ls nil))
 
 
 
-(defun fs-mapconcat (fcn ls sep)
+(defun fsi-mapconcat (fcn ls sep)
   (apply 'mapconcat
 	 (erbnoc-special-quote-function fcn)
 	 ls sep nil))
@@ -113,7 +113,7 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 
-(defun fs-maplist (fcn ls &rest args)
+(defun fsi-maplist (fcn ls &rest args)
   (require 'cl)
   (apply 'maplist
 	 (erbnoc-special-quote-function fcn)
@@ -121,13 +121,13 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 
-(defun fs-mapl (fcn ls &rest args)
+(defun fsi-mapl (fcn ls &rest args)
   (require 'cl)
   (apply 'mapl
 	 (erbnoc-special-quote-function fcn)
 	 ls args))
 
-(defun fs-mapcar* (fcn ls &rest args)
+(defun fsi-mapcar* (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcar*
 	 (erbnoc-special-quote-function fcn)
@@ -135,7 +135,7 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 
-(defun fs-mapcon (fcn ls &rest args)
+(defun fsi-mapcon (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcon
 	 (erbnoc-special-quote-function fcn)

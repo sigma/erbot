@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2004-07-01 11:53:28 deego>
+;; Time-stamp: <2004-12-31 23:08:39 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -507,7 +507,15 @@ should start at the beginning of b."
     (insert text)
     (buffer-substring-no-properties (point-min) (point-max))))
 
-(defun erbutils-defalias (ls &optional prefix prefix-rm)
+(defun erbutils-defalias-i (ls &optional prefix prefix-rm
+			       functionpref)
+  "Similar to erbutils-defalias, except that for functions, it
+defaliases a 'fsi-"
+  (unless functionpref (setq functionpref "fsi-"))
+  (erbutils-defalias ls prefix prefix-rm functionpref))
+
+
+(defun erbutils-defalias (ls &optional prefix prefix-rm functionpref)
   "Define new fs- aliases from ls. 
 
 If the entry in the ls is a function, it is defaliased.  If it is a
@@ -516,8 +524,12 @@ variable.
 
 When prefix and prefix-rm is provided, we assume that the entry is of
 the form prefix-rmENTRY. And we then (defalias fs-prefixENTRY
-prefix-rmENTRY. "
+prefix-rmENTRY. 
 
+functionpref should usually be fs-.  If you want fsi- instead, you
+might prefer calling erbutils-defalias-i instead.
+"
+  (unless functionpref (setq functionpref "fs-"))
   (let* ((pref (if prefix (format "%s" prefix) ""))
    (pref-rm (if prefix-rm (format "%s" prefix-rm) ""))
    (lenrm (length pref-rm))
@@ -525,20 +537,21 @@ prefix-rmENTRY. "
     (mapcar 
      (lambda (arg)
        (let* (      
-        (argst (format "%s" arg))
-        (gop (string-match reg argst))
-        (arg2 (and gop (substring argst lenrm)))
-        (foo (and gop (intern (format "fs-%s%s" pref arg2)))))
-
-   (when gop
-     (if (functionp arg)
-         (defalias foo arg)
-       (erbutils-defalias-vars (list arg prefix prefix-rm))
-        ;;`(defun ,foo () 
-        ;;   ,(concat "Pseudo function that returns the value of `"
-        ;;    argst "'. ")
-        ;;,arg)
-       ))))
+	      (argst (format "%s" arg))
+	      (gop (string-match reg argst))
+	      (arg2 (and gop (substring argst lenrm)))
+	      (foo (and gop (intern (format (concat functionpref "%s%s")
+					    pref arg2)))))
+	      
+	 (when gop
+	   (if (functionp arg)
+	       (defalias foo arg)
+	     (erbutils-defalias-vars (list arg prefix prefix-rm))
+	     ;;`(defun ,foo () 
+	     ;;   ,(concat "Pseudo function that returns the value of `"
+	     ;;    argst "'. ")
+	     ;;,arg)
+	     ))))
      ls)))
 
 (defun erbutils-defalias-vars (ls &optional prefix prefix-rm)
@@ -627,5 +640,21 @@ lisp file, else error. "
   "from <Riastradh>"
   (or (null l) (and (consp l)
 		    (erbutils-listp-proper (cdr l)))))
+
+
+
+
+
+;;;###autoload
+(defun erbutils-concat-symbols (&rest args)
+  "Like `concat' but applies to symbols, and returns an interned
+concatted symbol.  Also see fsbot's
+`erbnoc-command-list-from-prefix'.  
+
+Thanks to edrx on #emacs for suggesting 'symbol-name.."
+  (let* ((strings (mapcar 'symbol-name args))
+	 (str (apply 'concat strings)))
+    (intern str)))
+
 
 ;;; erbutils.el ends here

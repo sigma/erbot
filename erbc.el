@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-12-31 21:26:20 deego>
+;; Time-stamp: <2004-12-31 23:24:56 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -197,7 +197,7 @@ list is non-nil"
 
 
 
-(defun fs-get-google-defaults ()
+(defun fsi-get-google-defaults ()
   (cadr (assoc fs-tgt erbnoc-google-defaults)))
 
 (defvar fs-prestring  "")
@@ -250,7 +250,7 @@ Foo ? "
   :group 'erbc)
   
 
-(defun fs-correct-entry (name &rest fubar)
+(defun fsi-correct-entry (name &rest fubar)
   "Assumes that name is a string... this downcases strings.  Rendering
 it fit for database-entry. "
   (unless (stringp name) (setq name (format "%s" name)))
@@ -261,7 +261,7 @@ it fit for database-entry. "
 	newname)))
 
 
-(defun fs-describe-key-briefly (&optional key &rest args)
+(defun fsi-describe-key-briefly (&optional key &rest args)
   "Return the function on key..building block for other erbc's..
 If no such function, return the symbol 'unbound. "
 
@@ -282,20 +282,20 @@ If no such function, return the symbol 'unbound. "
 ;; for now..
 ;;(defalias 'fs-describe-key 'fs-describe-key-briefly)
 
-(defun fs-where-is-in-map (map &optional fcn)
+(defun fsi-where-is-in-map (map &optional fcn)
   (let* ((wi (where-is-internal fcn map)))
     (mapconcat 'key-description wi ", ")))
 
-(defun fs-where-is-gnus-group (&optional fcn)
+(defun fsi-where-is-gnus-group (&optional fcn)
   (require 'gnus)
   (unless fcn (error "please supply a function"))
   (fs-where-is-in-map gnus-group-mode-map fcn))
 
-(defun fs-where-is-gnus-summary (&optional fcn)
+(defun fsi-where-is-gnus-summary (&optional fcn)
   (require 'gnus)
   (unless fcn (error "please supply a function"))
   (fs-where-is-in-map gnus-summary-mode-map fcn))
-(defun fs-where-is-message (&optional fcn)
+(defun fsi-where-is-message (&optional fcn)
   (require 'gnus)
   (require 'message)
 
@@ -304,13 +304,13 @@ If no such function, return the symbol 'unbound. "
 
 
 
-(defun fs-keyize (key morekeys)
+(defun fsi-keyize (key morekeys)
   (setq key (read-kbd-macro 
 	     (mapconcat '(lambda (arg) (format "%s" arg))
 			(cons key morekeys) " "))))
 
 
-(defun fs-describe-key-one-line (&optional key &rest args)
+(defun fsi-describe-key-one-line (&optional key &rest args)
   "Key, and just one line of function"
   (unless key (error "Syntax: , dk \"Key...\""))
   (let* ((fcn (apply 'fs-describe-key-briefly key args))
@@ -321,11 +321,11 @@ If no such function, return the symbol 'unbound. "
 		    fcns
 		    apr))))
 
-(defalias 'fs-dko 'fs-describe-key-one-line)
+(defalias 'fsi-dko 'fs-describe-key-one-line)
 
-(defalias 'fs-describe-key 'fs-describe-key-and-function)
+(defalias 'fsi-describe-key 'fs-describe-key-and-function)
 
-(defun fs-lookup-key-from-map-internal (&optional map key &rest morekeys) 
+(defun fsi-lookup-key-from-map-internal (&optional map key &rest morekeys) 
   (unless key (error "No key supplied. "))
   (unless (stringp key)
     (setq key (read-kbd-macro 
@@ -338,17 +338,17 @@ If no such function, return the symbol 'unbound. "
 		  "No doc available. ")))
     (concat (format "%s -- %s" fcns apr))))
 
-(defun fs-lookup-key-gnus-group (&optional key &rest args)
+(defun fsi-lookup-key-gnus-group (&optional key &rest args)
   (unless key (error "Syntax: , lkgg \"Key...\""))
   (require 'gnus-group)
   (apply 'fs-lookup-key-from-map-internal gnus-group-mode-map key args))
 
-(defun fs-lookup-key-gnus-summary (&optional key &rest args)
+(defun fsi-lookup-key-gnus-summary (&optional key &rest args)
   (unless key (error "Syntax: , lkgg \"Key...\""))
   (require 'gnus)
   (apply 'fs-lookup-key-from-map-internal gnus-summary-mode-map key args))
 
-(defun fs-lookup-key-message (&optional key &rest args)
+(defun fsi-lookup-key-message (&optional key &rest args)
   (unless key (error "Syntax: , lkgg \"Key...\""))
   (require 'gnus)
   (require 'message)
@@ -357,7 +357,7 @@ If no such function, return the symbol 'unbound. "
 
 
 
-(defun fs-apropos-exact (str)
+(defun fsi-apropos-exact (str)
   (unless (stringp str) (setq str (format "%s" str)))
   (let* ((reg (concat "^" (regexp-quote str) "$"))
 	 (apr (apropos reg))
@@ -370,11 +370,11 @@ If no such function, return the symbol 'unbound. "
     (if val (format "%s" val)
       nil)))
   
-(defun fs-describe-key-long (k &rest args)
+(defun fsi-describe-key-long (k &rest args)
   (let ((f (apply 'fs-describe-key-briefly k args)))
     (fs-describe-function-long f)))
 
-(defun fs-describe-key-and-function (key &rest args)
+(defun fsi-describe-key-and-function (key &rest args)
   "Describe the key KEY.  
 Optional argument ARGS .  If the input arguments are not strings, it
 kbds's them first... , so that , df C-x C-c works"
@@ -396,7 +396,7 @@ kbds's them first... , so that , df C-x C-c works"
 
 
 
-(defun fs-describe-function (&optional function nolimitp &rest fubar)
+(defun fsi-describe-function (&optional function nolimitp &rest fubar)
   "Describes the FUNCTION named function.
 Also tries an fs- prefix for the function..
 nolimitp has to be eq 'nolimit for the nolimit effect to take place..
@@ -437,7 +437,7 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
       "NO function specified"))))
 
 
-(defun fs-where-is (function &rest args)
+(defun fsi-where-is (function &rest args)
   "Tells what key the function is on..
 
 "
@@ -461,17 +461,17 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
       (concat str0 str1 str2 str3))
      (t (format "Looks like %s is not a symbol" function)))))
 
-(defun fs-describe-function-long (function &rest fubar)
+(defun fsi-describe-function-long (function &rest fubar)
   "Similar to describe-function, but does not limit the strings...
 Use with caution only in privmsgs please, for may produce long outputs. "
   (fs-describe-function function 'nolimit))
 
 
-(defun fs-describe-variable-long (variable &rest fubar )
+(defun fsi-describe-variable-long (variable &rest fubar )
   "Similar to describe-variable, but does not limit strings.."
   (fs-describe-variable variable 'nolimit))
 
-(defun fs-describe-variable (&optional variable &rest ignore)
+(defun fsi-describe-variable (&optional variable &rest ignore)
   "Describes a VARIABLE.."
   (unless variable (error "Syntax: , dv 'variable"))
   (let* ((f variable))
@@ -485,10 +485,10 @@ Use with caution only in privmsgs please, for may produce long outputs. "
      (t
       "NO variable specified"))))
 
-(defalias 'fs-parse 'fs-lispify)
-(defalias 'fs-parse-english 'fs-lispify)
+(defalias 'fsi-parse 'fs-lispify)
+(defalias 'fsi-parse-english 'fs-lispify)
 
-(defun fs-require (feature &rest fubar)
+(defun fsi-require (feature &rest fubar)
   "Make the bot require the feature FEATURE.
 So that the command df
 or dv works fine..Actually, df knows how to load unloaded features
@@ -520,7 +520,7 @@ reply please be abbreviated. ")
 (defvar fs-internal-max-lisp-p nil)
 
 
-(defun fs-respond-to-query-p (msg)
+(defun fsi-respond-to-query-p (msg)
   ;; if it is of the form resolve? the user KNOWS what resolve or
   ;; kensanata is, and is not asking for information. So, please don't
   ;; respond in such a case.
@@ -539,7 +539,7 @@ course...
 When string, will be matched against target. "
 )
 
-(defun fs-parse-preprocess-message (msg)
+(defun fsi-parse-preprocess-message (msg)
   (let ((len (length msg)))
     (when (and
 	   (> len 0)
@@ -548,7 +548,7 @@ When string, will be matched against target. "
 	   (setq msg (subseq msg 0 -1)))))
   msg)
 
-(defun fs-lispify (&optional msg proc nick tgt localp
+(defun fsi-lispify (&optional msg proc nick tgt localp
 				 userinfo &rest foo)
   "Parse the english MSG into a lisp command. 
 
@@ -1073,7 +1073,7 @@ Optional argument FOO ."
 	  (format "%S" newmsglist))))))
 
 
-(defun fs-describe-from-english (&optional origmsg msg)
+(defun fsi-describe-from-english (&optional origmsg msg)
   "Call fs-describe appropriately. 
 ORIGMSG is in english. 
 MSG is a list..
@@ -1346,22 +1346,31 @@ Optional argument ARGS ."
 
 
 
-(defun fs-command-list (&rest foo)
-  "USed by erbc.el.. should return a string.."
+(defun fsi-command-list (&rest foo)
+  "Used by erbc.el and by erbot-install.. "
+  (erbnoc-command-list-from-prefix "fs-"))
+
+
+(defun fsi-command-list-readonly (&rest foo)
+  "Used by erbc.el..  and erbot-install "
+  (erbnoc-command-list-from-prefix "fsi-"))
+
+
+(defun erbnoc-command-list-from-prefix (prefix &rest foo)
+  "Used by erbc.el.. should return a string.."
   (let*
-      ((longnames (erbutils-matching-functions "fs-"))
+      ((longnames (erbutils-matching-functions prefix))
        (shortnames
 	(with-temp-buffer
 	  (insert (format "%s" longnames))
 	  (goto-char (point-min))
-	  (replace-string "fs-" "")
+	  (replace-string prefix "")
 	  (text-mode)
 	  (fill-paragraph 1)
 	  (read (buffer-substring (point-min) (point-max))))))
     shortnames))
 
-
-(defun fs-commands (&optional regexp N M &rest foo)
+(defun fsi-commands (&optional regexp N M &rest foo)
   "List available commands matching REGEXP. If N and M provided, list
 matches starting at N and ending at M. "
   (if (and regexp (not (stringp regexp)))
@@ -1398,7 +1407,7 @@ matches starting at N and ending at M. "
 
       
 
-(defun fs-describe-commands (&rest foo)
+(defun fsi-describe-commands (&rest foo)
   "Just a help command. Describes how to run commands. "
   (concat
    "If you use plain english, it simply gets transformed to lisp
@@ -1413,10 +1422,10 @@ Future commands:  info-search, hurd-info-search etc. etc.
 ))
 
 
-(defalias 'fs-d 'fs-describe)
+(defalias 'fsi-d 'fs-describe)
 
 
-(defun fs-search (&optional regexp N M prestring expr &rest rest)
+(defun fsi-search (&optional regexp N M prestring expr &rest rest)
   "Search for the REGEXP from among all the terms (and their
 descriptions).  See also fs-search-wide. 
 EXPR (optional) is the full initial expression.. "
@@ -1468,7 +1477,7 @@ EXPR (optional) is the full initial expression.. "
 	       rest)))))
 
 
-(defun fs-search-wide-sensitive (&rest args)
+(defun fsi-search-wide-sensitive (&rest args)
   "Like fs-search-wide, but case-sensitive"
   (let ((case-fold-search nil)
 	(bbdb-case-fold-search nil))
@@ -1481,7 +1490,7 @@ EXPR (optional) is the full initial expression.. "
 
 
 
-(defun fs-search-wide (&optional regexp N M prestring expr &rest rest)
+(defun fsi-search-wide (&optional regexp N M prestring expr &rest rest)
   "Search for the REGEXP from among all the terms (and their
 descriptions).  See also fs-search-wide. 
 EXPR is the full initial expression, well, mostly..
@@ -1540,7 +1549,7 @@ EXPR is the full initial expression, well, mostly..
   "Greetings and Salutations from %s" "")
 
 
-(defun fs-english-only (expr &optional addressedatlast nogoogle)
+(defun fsi-english-only (expr &optional addressedatlast nogoogle)
   "when addressedatlast is t, means that fsbot/botito was triggered because
 it was addressed at last. "
   ;; expr should already be a string ...but just in case:
@@ -1699,7 +1708,7 @@ it was addressed at last. "
 					     )))))))
 ;;(t (apply 'fs-suggest-describe  expr)))))))
 
-(defun fs-eval (expr)
+(defun fsi-eval (expr)
   (eval
    (erblisp-sandbox expr)))
 
@@ -1816,7 +1825,7 @@ it was addressed at last. "
    
 
 
-(defun fs-search-basic (&optional regexp N M describep &rest rest)
+(defun fsi-search-basic (&optional regexp N M describep &rest rest)
    "Don't call directly.. meant as a building block for other functions. 
  Search for the REGEXP from among all the terms (and their
    descriptions).  See also fs-search-wide. That function actually
@@ -1867,7 +1876,7 @@ it was addressed at last. "
 		       
 
 (defvar fs-internal-describe-literally-p nil)
-(defun fs-describe-literally (&rest rest)
+(defun fsi-describe-literally (&rest rest)
   (unless rest
     (error "Format: , describe-literally TERM [FROM] [TO]"))
   (let ((fs-internal-describe-literally-p t)
@@ -1884,7 +1893,7 @@ it was addressed at last. "
 
 (defvar erbnocmd-describe-search-p t)
 
-(defun fs-describe (&optional mainterm N M prestring expr &rest rest)
+(defun fsi-describe (&optional mainterm N M prestring expr &rest rest)
   "The general syntax is (fs-describe TERM [N] [M]).
 Looks for TERM, and shows its descriptions starting at description
 number N, and ending at M-1. The first record is numbered 0. 
@@ -2075,7 +2084,7 @@ number N, and ending at M-1. The first record is numbered 0.
   )
 
 
-(defun fs-suggest-describe (&rest terms)
+(defun fsi-suggest-describe (&rest terms)
   "Fallback for when `fs-describe' fails.
 It then (often) calls this function, which suggests
 alternatives.
@@ -2143,12 +2152,12 @@ Optional argument TERMS ."
 
 
 
-(defun fs-yow (&rest args)
+(defun fsi-yow (&rest args)
   ""
   (erbutils-eval-until-limited
    '(yow)))
 
-(defun fs-rearrange (&optional from to term &rest dummy)
+(defun fsi-rearrange (&optional from to term &rest dummy)
   "Syntax: FROM->TO in TERM. 
 Move the FROMth entry to the TOth position in the given TERM.  
 Numbering of positions starts from 0. "
@@ -2196,7 +2205,7 @@ Numbering of positions starts from 0. "
     ))
 
 ;;; 2002-09-04 T01:51:08-0400 (Wednesday)    D. Goel
-(defun fs-forget (&optional name number &rest dummy)
+(defun fsi-forget (&optional name number &rest dummy)
   "Remove the entry correponding to NAME in the database.  
 With NUMBER, forget only the NUMBERth entry of NAME. "
 
@@ -2274,12 +2283,12 @@ With NUMBER, forget only the NUMBERth entry of NAME. "
 (make-variable-buffer-local 'fs-set-add-all-p)
 
 
-(defun fs-set-add-all-enable ()
+(defun fsi-set-add-all-enable ()
   (setq fs-set-add-all-p t))
-(defun fs-set-add-all-disable ()
+(defun fsi-set-add-all-disable ()
   (setq fs-set-add-all-p nil))
 
-(defun fs-set-add-all-toggle ()
+(defun fsi-set-add-all-toggle ()
   "Enable the \"is\" command to always work.
 viz.  Add field even if another field is already present. This is not the
 recommended usage in general, except when using automated scripts to
@@ -2291,7 +2300,7 @@ train the bot.  The default is nil, which suggests the user to use
    "All-is mode set to %S.  To toggle, type , (fs-set-add-all-toggle)" 
    fs-set-add-all-p))
 
-(defun fs-set-term (&rest args)
+(defun fsi-set-term (&rest args)
   "Add an entry to database.
 An entry gleaned from (first ARGS) is
 added.  (second ARGS) is the description.  The entry is converted to
@@ -2330,7 +2339,7 @@ lowercase, and all whitespace is converted to colons."
 		       )))))))
 
 
-(defun fs-chase-redirects (name)
+(defun fsi-chase-redirects (name)
   "either return nil or the redirected entry. "
   (let* ((notes (fs-notes name))
 	 (fir (first notes)))
@@ -2342,7 +2351,7 @@ lowercase, and all whitespace is converted to colons."
 	  name)))))
 
 
-(defun fs-set-also (&rest args)
+(defun fsi-set-also (&rest args)
   "Add more fields to the the database-entry gleaned from (first ARGS).
 \(second ARGS) contains the new descriptions.
 Record should be a single entity here... a string..."
@@ -2364,14 +2373,14 @@ Record should be a single entity here... a string..."
       (format "Added entry to the term %S" name)))))
 
 
-(defun fs-doctor (&rest foo)
+(defun fsi-doctor (&rest foo)
   ""
   (erbutils-add-nick 
    (funcall 'erbot-doctor  
 	    (erbutils-stringify foo))))
 
 
-(defun fs-dunnet-command (&rest foo)
+(defun fsi-dunnet-command (&rest foo)
   ;;(let ((fs-limit-lines 8))
   ;;(fs-limit-lines
   ;;(let ((dun-batch-mode t))
@@ -2379,7 +2388,7 @@ Record should be a single entity here... a string..."
 	   (erbutils-stringify foo)))
 
 
-(defun fs-info-search (&rest foo)
+(defun fsi-info-search (&rest foo)
   "info-search.. Coming soon...will tell the number of matches
 in manuals of HURD, tramp, eshell, elisp, gnus, message, emacs, ebrowse, calc,
 gdb, make sawfish, cl-emacs, bash, gnuplot, latex and others by demand...")
@@ -2391,13 +2400,13 @@ gdb, make sawfish, cl-emacs, bash, gnuplot, latex and others by demand...")
   "Coming soon...")
 (defalias 'fs-his 'erbutils-hurd-info-search)
 
-(defun fs-blue-moon (&rest foo)
+(defun fsi-blue-moon (&rest foo)
   "Return true in a really rare case. Currently 1 in 100,000.. was 1 in
 2000. "
   (= (random 100000) 0))
 
 
-(defun fs-set-force (&rest args)
+(defun fsi-set-force (&rest args)
   "Forget an entry and add new fields to it..
 Syntax: , no foo is bar."
   (progn
@@ -2433,7 +2442,7 @@ risky.. ")
 				    ))))
 
 
-(defun fs-fortune (&rest args)
+(defun fsi-fortune (&rest args)
   (erbnoc-fortune ""))
 
 
@@ -2739,12 +2748,12 @@ Thus, keep it below, say 350."
 
 
 
-(defun fs-limit-string (&optional str maxlen &rest ignored)
+(defun fsi-limit-string (&optional str maxlen &rest ignored)
   "Fills the string and then then limits lines"
   (fs-limit-lines (fs-fill-string str)))
 
 
-(defun fs-fill-string (str)
+(defun fsi-fill-string (str)
   (with-temp-buffer
     (insert str)
     (let ((fill-column fs-internal-fill-column))
@@ -2752,7 +2761,7 @@ Thus, keep it below, say 350."
       (fill-region (point-min) (point-max))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
-(defun fs-limit-string-old (&optional str maxlen &rest ignored)
+(defun fsi-limit-string-old (&optional str maxlen &rest ignored)
   (cond
    (str
     (unless (stringp str)
@@ -2772,7 +2781,7 @@ Thus, keep it below, say 350."
 	(fill-paragraph nil))
       (buffer-string)))
    (t "\n")))
-(defun fs-dunnet-mode (&optional arg)
+(defun fsi-dunnet-mode (&optional arg)
   
   (setq fs-dunnet-mode 
 	(cond
@@ -2786,7 +2795,7 @@ Thus, keep it below, say 350."
   (format "Dunnet mode set to %S.  To toggle, type , (dunnet-mode)" 
 	  fs-dunnet-mode))
 
-(defun fs-limit-string-no-fill (&optional str limit-lines
+(defun fsi-limit-string-no-fill (&optional str limit-lines
 				      limit-length
 				      limit-line-length
 				      &rest ignored
@@ -2818,7 +2827,7 @@ than fs-limit-lines in all.."
 ;;(make-variable-buffer-local 'fs-more)
 
 
-(defun fs-limit-lines (str0 &optional nomorep &rest ignored)
+(defun fsi-limit-lines (str0 &optional nomorep &rest ignored)
   "Limits the string, both, to a reasonable number of lines and a
 reasonable number of characters, trying not to break lines and not to
 break words, if possible. 
@@ -2898,7 +2907,7 @@ here."
     ans))
 
 
-(defun fs-limit-lines-old (str0 &rest ignored)
+(defun fsi-limit-lines-old (str0 &rest ignored)
   ""
   (let* (
 	 (str (erbutils-remove-text-properties str0))
@@ -2920,7 +2929,7 @@ here."
       (setq fs-more ""))
     (concat (mapconcat 'identity goodstr "\n") ender)))
 
-(defun fs-more (&rest args)
+(defun fsi-more (&rest args)
   "Display the contents of the cache. "
   (if (and (stringp fs-more) 
 	   (not (string= fs-more "")))
@@ -2928,20 +2937,20 @@ here."
     (fs-describe "more")))
 	
 
-(defun fs-limit-lines-long (str &rest ignored)
+(defun fsi-limit-lines-long (str &rest ignored)
   ""
   (let ((fs-limit-lines 7))
     (apply 'fs-limit-lines str ignored)))
 
 
 
-(defun fs-limit-length (str &rest ignored)
+(defun fsi-limit-length (str &rest ignored)
   "Don't use this, use fs-limit-lines"
   (if (> (length str) fs-internal-limit-length)
       (concat (substring str 0 (- fs-internal-limit-length 1)) "...<more>")
     str))
 
-(defun fs-limit-line-length (&optional str &rest args)
+(defun fsi-limit-line-length (&optional str &rest args)
   "a subfunction.."
  (let* (
 	;; this not needed now..
@@ -2970,7 +2979,7 @@ here."
 
 (defvar fs-internal-directed nil)
 
-(defun fs-tell-to (string nick &rest ignored)
+(defun fsi-tell-to (string nick &rest ignored)
   (setq fs-nick (format "%s" nick))
   (let* ((fs-internal-directed t)
 	 (ni (if (string= (format "%s" nick) "me")
@@ -2984,17 +2993,17 @@ here."
       (concat ni ": " reply))))
     
 
-(defun fs-apropos (&optional regexp N M &rest ignored)
+(defun fsi-apropos (&optional regexp N M &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos regexp N M))
-(defun fs-apropos-command (&optional regexp n m &rest ignored)
+(defun fsi-apropos-command (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos-command regexp n m ))
-(defun fs-apropos-variable (&optional regexp n m &rest ignored)
+(defun fsi-apropos-variable (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos-variable regexp n m ))
-(defun fs-apropos-function (&optional regexp n m &rest ignored)
+(defun fsi-apropos-function (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos-variable regexp n m ))
-(defun fs-apropos-value (&optional regexp n m &rest ignored)
+(defun fsi-apropos-value (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'apropos-value regexp n m ))
-(defun fs-apropos-documentation (&optional regexp n m &rest ignored)
+(defun fsi-apropos-documentation (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos-documentation  regexp n m ))
 
 (defun erbnoc-apropos-documentation (reg)
@@ -3025,7 +3034,7 @@ here."
 		       (facep symbol)
 		       (symbol-plist symbol)))))
 
-(defun fs-apropos-basic (fcn &optional regexp N M &rest ignored)
+(defun fsi-apropos-basic (fcn &optional regexp N M &rest ignored)
   "Show the apropos-matches  of regexp starting at match number N"
   (unless regexp 
     (error "Syntax: , apropos REGEXP &optional N M"))
@@ -3055,10 +3064,10 @@ here."
     (concat str0 str1 str2 str3 str4)))
 
 
-(defun fs-find-variable (function &rest ignore)
+(defun fsi-find-variable (function &rest ignore)
   (fs-find-variable-internal function  'nolimit))
 
-(defun fs-find-variable-internal (function &optional nolimitp &rest ignore)
+(defun fsi-find-variable-internal (function &optional nolimitp &rest ignore)
   "Finds the variable named FUNCTION."
   (if (stringp function) (setq function (read function)))
   (cond
@@ -3079,11 +3088,11 @@ here."
 	fstr)))
    (t "\n")))
 
-(defalias 'fs-find-variable-briefly 'fs-find-variable)
+(defalias 'fsi-find-variable-briefly 'fs-find-variable)
 
 
 
-(defun fs-find-function (&optional function &rest ignore)
+(defun fsi-find-function (&optional function &rest ignore)
   (unless function
     (error "Syntax: , find-function 'function-name"))
   ;;fs-limit-lines-long 
@@ -3093,18 +3102,18 @@ here."
 
 
 
-(defalias 'fs-find-function-briefly 'fs-find-function)
+(defalias 'fsi-find-function-briefly 'fs-find-function)
 
-(defun fs-find-function-on-key (&optional k &rest rest)
+(defun fsi-find-function-on-key (&optional k &rest rest)
   (unless k
     (error
      "Syntax (ffo <key>)"))
   (fs-find-function (fs-describe-key-briefly k)))
 
-(defun fs-find-function-on-key-briefly (k &rest rest)
+(defun fsi-find-function-on-key-briefly (k &rest rest)
   (fs-find-function-briefly (fs-describe-key-briefly k)))
 
-(defun fs-find-function-internal (&optional function nolimitp &rest nada)
+(defun fsi-find-function-internal (&optional function nolimitp &rest nada)
   (unless function
     (error
      "Syntax: (ff 'fucntion)"))
@@ -3137,7 +3146,7 @@ here."
 
 
 ;;; 2002-11-10 T14:50:20-0500 (Sunday)    D. Goel
-(defun fs-say (&rest args)
+(defun fsi-say (&rest args)
   ;; let's make it safe, even though we know it will be made safe again...
   (let ((response
 	 (mapconcat 
@@ -3155,13 +3164,13 @@ here."
 
 
 
-(defun fs-regexp-quote (str)
+(defun fsi-regexp-quote (str)
   (unless (stringp str)
     (setq str (format "%s" str)))
   (regexp-quote str))
 
 
-(defun fs-concat (&rest sequences)
+(defun fsi-concat (&rest sequences)
   (apply 'concat
 	 (mapcar
 	  'erbutils-convert-sequence 
@@ -3255,7 +3264,7 @@ number N, and ending at M-1. The first record is numbered 0.
 (defcustom fs-internal-dictionary-time 4
   "" :group 'erbc)
 
-(defun fs-google-raw (&rest args)
+(defun fsi-google-raw (&rest args)
   "Return a list of google results. "
   (let ((concatted
 	 (mapconcat '(lambda (a)
@@ -3288,7 +3297,7 @@ number N, and ending at M-1. The first record is numbered 0.
 (defvar fs-internal-google-redirect-p nil)
 
 
-(defun fs-googlen (n &rest args)
+(defun fsi-googlen (n &rest args)
   "Format the first n results in a nice format. "
   (let* ((rawres (apply 'fs-google-raw args))
 	 (terms (first rawres))
@@ -3309,11 +3318,11 @@ number N, and ending at M-1. The first record is numbered 0.
        'nogoogle
        )))))
 
-(defun fs-google-lucky-raw (&rest args)
+(defun fsi-google-lucky-raw (&rest args)
   (caadr (apply 'fs-google-raw args)))
 
 
-(defun fs-google-redirect-to-google-bot (&rest args)
+(defun fsi-google-redirect-to-google-bot (&rest args)
   (concat "google: "
 	  (mapconcat 
 	   '(lambda (arg) (format "%s" arg))
@@ -3321,11 +3330,11 @@ number N, and ending at M-1. The first record is numbered 0.
 
 
 
-(defun fs-google-from-english (&rest args)
+(defun fsi-google-from-english (&rest args)
   (let ((fs-internal-google-redirect-p t))
     (apply 'fs-google args)))
 
-(defun fs-google (&rest args)
+(defun fsi-google (&rest args)
   (unless args (error "Syntax: , g[oogle] [NUMBER] WORD1 &rest MORE-WORDS "))
   (let (num 
 	(fir (first args))
@@ -3340,28 +3349,28 @@ number N, and ending at M-1. The first record is numbered 0.
       (setq num 1))
     (apply 'fs-googlen num args)))
 
-(defun fs-google-with-options (options terms &rest args)
+(defun fsi-google-with-options (options terms &rest args)
   "internal"
   (apply 'fs-google (append terms args (list options))))
 
-(defun fs-google-deego (&rest args)
+(defun fsi-google-deego (&rest args)
   "Google on the gnufans.net."
   (fs-google-with-options "site:gnufans.net" args))
 
 
-(defun fs-google-emacswiki(&rest args)
+(defun fsi-google-emacswiki(&rest args)
   "Google on the emacswiki site."
   (fs-google-with-options "site:emacswiki.org" args))
 
-(defun fs-google-sl4 (&rest args)
+(defun fsi-google-sl4 (&rest args)
   "Google on the emacswiki site."
   (fs-google-with-options "site:sl4.org" args))
 
-(defun fs-google-planetmath (&rest args)
+(defun fsi-google-planetmath (&rest args)
   "Google on the emacswiki site."
   (fs-google-with-options "site:planetmath.org" args))
 
-(defun fs-google-octave (&rest args)
+(defun fsi-google-octave (&rest args)
   "Google on the emacswiki site."
   (fs-google-with-options "site:octave.org" args))
 
@@ -3407,7 +3416,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defalias 'fs-google-meatball 'fs-google-usemod)
 
-(defun fs-replace-regexp (&optional from to term number delimited
+(defun fsi-replace-regexp (&optional from to term number delimited
 				    fixedcase literal subexp)
   "TODO: implemenet fixedcase, literal, subexp... If needed, let the
 author know.."
@@ -3417,7 +3426,7 @@ author know.."
 			     nil)
   (format "Replaced regexp %S with %S" from to))
 
-(defun fs-cp (name dest)
+(defun fsi-cp (name dest)
   (let* ((exn (erbbdb-get-exact-notes name))
 	 (notes (and (stringp exn) (read exn))))
     (unless notes
@@ -3428,12 +3437,12 @@ author know.."
     (format "Copied entries of %S to %S" name dest)))
 
 
-(defun fs-notes (name)
+(defun fsi-notes (name)
   "Internal. Return the notes as a list. "
   (let ((exnotes (erbbdb-get-exact-notes name)))
     (and (stringp exnotes) (read exnotes))))
 
-(defun fs-merge (&optional name dest &rest args)
+(defun fsi-merge (&optional name dest &rest args)
   (unless (and name dest (not args))
     (error (format "Syntax: %s merge TERM1 TERM2" erbnoc-char)))
   (setq name (format "%s" name))
@@ -3457,7 +3466,7 @@ author know.."
 
 
 
-(defun fs-mv (&optional name dest &rest args)
+(defun fsi-mv (&optional name dest &rest args)
   "Rename NAME to DEST. 
 Do not confuse this function with fs-rearrange which rearranges the
 order of entries within a given term. "
@@ -3474,9 +3483,9 @@ order of entries within a given term. "
     (fs-forget name "all")
     (format "Renamed the term %S to %S" name dest))))
 
-(defalias 'fs-rename 'fs-mv)
+(defalias 'fsi-rename 'fs-mv)
 
-(defun fs-mv-change-case (name dest)
+(defun fsi-mv-change-case (name dest)
   (when 
       (let ((bbdb-case-fold-search nil))
 	(erbbdb-get-exact-name dest))
@@ -3489,7 +3498,7 @@ order of entries within a given term. "
 
 
 
-(defun fs-rearrange-from-english-internal (msg)
+(defun fsi-rearrange-from-english-internal (msg)
   (catch 'erbnocmd-tag-foo
     (unless (equal (length msg) 3) 
       (throw 'erbnocmd-tag-foo
@@ -3513,7 +3522,7 @@ order of entries within a given term. "
 
 
 
-(defun fs-replace-string-from-english-internal (msg)
+(defun fsi-replace-string-from-english-internal (msg)
   "Parse the input english message to return an elisp equivalent. 
 MSG here is a list which needs to be combined.  "
   (let* 
@@ -3648,7 +3657,7 @@ MSG here is a list which needs to be combined.  "
     
 			
 
-(defun fs-replace-string (&optional from to term number)
+(defun fsi-replace-string (&optional from to term number)
   (unless (and from to term)
     (error (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbnoc-char)))
   (erbnocmd-iterate-internal 
@@ -3711,19 +3720,19 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 
-(defun fs-info-emacs (&optional regexp)
+(defun fsi-info-emacs (&optional regexp)
   (fs-info-file "emacs" regexp))
 
-(defun fs-info-elisp (&optional regexp)
+(defun fsi-info-elisp (&optional regexp)
   (fs-info-file "elisp" regexp))
 
-(defun fs-info-efaq (&optional regexp)
+(defun fsi-info-efaq (&optional regexp)
   (fs-info-file "efaq" regexp))
 
-(defun fs-info-eintr (&optional regexp)
+(defun fsi-info-eintr (&optional regexp)
   (fs-info-file "eintr" regexp))
 
-(defun fs-info (&optional regexp)
+(defun fsi-info (&optional regexp)
   (or
    (ignore-errors (fs-info-emacs regexp))
    (ignore-errors (fs-info-elisp regexp))
@@ -3735,7 +3744,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 
-(defun fs-info-file (&optional infofile regexp)
+(defun fsi-info-file (&optional infofile regexp)
   (unless regexp 
     (error (format "Syntax: %s info-node nodename REGEXP" erbnoc-char)))
   (unless (stringp regexp) (setq regexp (format "%s" regexp)))
@@ -3764,7 +3773,7 @@ initargs.  Then the function is applied as (function @initargs string
    (t (error "Regexp or infofile not found in the file"))))
 
 
-(defun fs-locate-library (&optional arg &rest rest)
+(defun fsi-locate-library (&optional arg &rest rest)
   "REST WILL be ignored :-)"
   (unless arg (format (error "Syntax: %s locate-library LIB" erbnoc-char)))
   (unless (stringp arg)
@@ -3772,21 +3781,21 @@ initargs.  Then the function is applied as (function @initargs string
   (locate-library arg))
 
 
-(defun fs-avg (&rest numbers)
+(defun fsi-avg (&rest numbers)
   (cond
    ((null numbers) 'NaN)
    (t (fs-// (apply '+ numbers) 
 	       (length numbers)))))
 
 
-(defun fs-dict (&optional word &rest ignore)
+(defun fsi-dict (&optional word &rest ignore)
   (unless word (error (format "Syntax: %s d[ict] word" erbnoc-char)))
   (unless (stringp word) (setq word (format "%s" word)))
   (fs-dictionary-search word))
 
-(defalias 'fs-dictionary 'fs-dict)
+(defalias 'fsi-dictionary 'fs-dict)
 
-(defun fs-dictionary-search (word) 
+(defun fsi-dictionary-search (word) 
   "lispy.. not for interface. "
   (ignore-errors (kill-buffer "*Dictionary buffer*"))
   (unless (stringp word)
@@ -3805,7 +3814,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 ;;8/10/00
 ;;;###autoload
-(defun fs-// (&rest args)
+(defun fsi-// (&rest args)
   "My sensible definition of /.
 Does not say 4 / 3 = 0. Note: this usues equal and not equalp, the
 last time i checked , equalp seemed to work as well.. "
@@ -3815,14 +3824,14 @@ last time i checked , equalp seemed to work as well.. "
       (apply '/ (cons (float (car args)) (cdr args))))))
 
 
-(defun fs-channel-members-all ()
+(defun fsi-channel-members-all ()
   (cond
    ;; for earlier ERC. 
    ((boundp 'channel-members) channel-members)
    ;; for later CVS versions of ERC.
    (t nil)))
 
-(defun fs-channel-members (&optional n m &rest args)
+(defun fsi-channel-members (&optional n m &rest args)
   (when (stringp n) 
     (setq n (ignore-errors (read n))))
   (when (stringp m) 
@@ -3832,7 +3841,7 @@ last time i checked , equalp seemed to work as well.. "
   (subseq (fs-channel-members-all) n m))
 
 
-(defun fs-length-channel-members (&rest args)
+(defun fsi-length-channel-members (&rest args)
   (cond
    ;; for new erc versions
    ((boundp erc-channel-users)
@@ -3840,9 +3849,9 @@ last time i checked , equalp seemed to work as well.. "
    (t (length (fs-channel-members-all)))))
 
 
-(defalias 'fs-number-channel-members 'fs-length-channel-members)
+(defalias 'fsi-number-channel-members 'fs-length-channel-members)
 
-(defun fs-cto (&rest args)
+(defun fsi-cto (&rest args)
   (let* ((page (mapconcat (lambda (arg) (format "%s" arg))
 			 args "%20"))
 	 (pg1 "http://cliki.tunes.org/")
@@ -3881,7 +3890,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;;   (setq arg (downcase (format "%s" arg)))
 ;;;   (erbkarma-increase arg points))
 
-(defun fs-karma-increase (&rest args)
+(defun fsi-karma-increase (&rest args)
   (if (car args)
     (format
      "Noted, %s.  One %s-point for %s!"					
@@ -3913,7 +3922,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;; (defalias 'fs-karma-best 'erbkarma-best)
 
 
-(defalias 'fs-ncm 'fs-length-channel-members)
+(defalias 'fsi-ncm 'fs-length-channel-members)
 (defun fs-superiorp (&rest args)
   (erbutils-random '(t nil)))
 (defun fs-sucksp (&rest args)
@@ -3922,7 +3931,7 @@ last time i checked , equalp seemed to work as well.. "
   (erbutils-random '(t nil)))
 
 
-(defun fs-country (&optional ct)
+(defun fsi-country (&optional ct)
   (unless ct (error (format "Syntax: %s country NM (example , country jp)" erbnoc-char)))
   (setq ct (format "%s" ct))
   (let ((addp (and (> (length ct) 1)
@@ -3932,7 +3941,7 @@ last time i checked , equalp seemed to work as well.. "
   (erbcountry (downcase ct)))
 
 ;;; 2003-02-09 T13:40:04-0500 (Sunday)    D. Goel
-(defun fs-spook (&rest args)
+(defun fsi-spook (&rest args)
   (with-temp-buffer
     (spook)
     (goto-char (point-min))
@@ -3974,12 +3983,12 @@ last time i checked , equalp seemed to work as well.. "
 
 
 
-(defun fs-morse (&rest str)
+(defun fsi-morse (&rest str)
   (apply 'erbutils-region-to-string 'morse-region str))
-(defun fs-unmorse (&rest str)
+(defun fsi-unmorse (&rest str)
   (apply 'erbutils-region-to-string 'unmorse-region str))
 
-(defun fs-rot13 (&rest str)
+(defun fsi-rot13 (&rest str)
   (let (st)
     (cond
      ((= (length str) 1)
@@ -3988,7 +3997,7 @@ last time i checked , equalp seemed to work as well.. "
 		  (lambda (a) (format "%s" a)) str " "))))
     (erbutils-rot13 st)))
 
-(defun fs-studlify (&rest s)
+(defun fsi-studlify (&rest s)
   (apply 'erbutils-region-to-string 
    (lambda (&rest args)
      (ignore-errors (apply 
@@ -3996,7 +4005,7 @@ last time i checked , equalp seemed to work as well.. "
    s))
 
 
-(defun fs-h4x0r (&rest s)
+(defun fsi-h4x0r (&rest s)
   (require 'h4x0r)
   (funcall
    'h4x0r-string
@@ -4020,7 +4029,7 @@ last time i checked , equalp seemed to work as well.. "
   ""
   :group 'erbc)
 
-(defun fs-studlify-maybe (&rest args)
+(defun fsi-studlify-maybe (&rest args)
   (eval 
    (erbutils-random
     '((erbutils-stringify args)
@@ -4034,7 +4043,7 @@ last time i checked , equalp seemed to work as well.. "
   ""
   :group 'erbc)
 
-(defun fs-h4x0r-maybe (&rest args)
+(defun fsi-h4x0r-maybe (&rest args)
   (let*
       ((aa (erbutils-stringify args))
        (bb
@@ -4054,20 +4063,21 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-studlify-word 'studlify-word)
 
 
-(defun fs-princ (a &rest ignore)
+(defun fsi-princ (a &rest ignore)
   (princ a))
 
 
-(defun fs-pray (&rest args)
+(defun fsi-pray (&rest args)
   (require 'faith)
   (faith-quote))
 
 (defalias 'fs-all-hail-emacs 'fs-pray)
 (defalias 'fs-hail-emacs 'fs-pray)
 (defalias 'fs-faith 'fs-pray)
-(erbutils-defalias '(faith-correct-string))
 
-(defun fs-shell-test (string substrings)
+(erbutils-defalias-i '(faith-correct-string))
+
+(defun fsi-shell-test (string substrings)
   "internal"
   (let ((found nil))
     (mapcar (lambda (arg)
@@ -4077,7 +4087,7 @@ last time i checked , equalp seemed to work as well.. "
     found))
 
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
-(defun fs-wserver (&optional site &rest args)
+(defun fsi-wserver (&optional site &rest args)
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
   (if (fs-shell-test site '(" " "<" "-"))
@@ -4087,7 +4097,7 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-webserver 'fs-wserver)
 
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
-(defun fs-web (&optional site &rest args)
+(defun fsi-web (&optional site &rest args)
   "displays a website"
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
@@ -4097,16 +4107,16 @@ last time i checked , equalp seemed to work as well.. "
    (format "w3m -dump %s" site)))
 
 ;;;###autoload
-(defun fs-length-load-history ()
+(defun fsi-length-load-history ()
   (interactive)
   (message "%s%s%S" 
 	   (length load-history)
 	   " ..." (mapcar 'car load-history)))
 
     
-;(defun fs-load-history ()
+;(defun fsi-load-history ()
 ;  load-history)    
-;(defun fs-load-history ()
+;(defun fsi-load-history ()
 ;  load-history)
 
 (defalias 'fs-google: 'fs-google)
@@ -4118,28 +4128,28 @@ last time i checked , equalp seemed to work as well.. "
 (defconst fs-e e)
 (defconst fs-emacs-version emacs-version)
 
-(defalias 'fs-emacs-version 'emacs-version)
-(defalias 'fs-gnus-version 'gnus-version)
+(defalias 'fsi-emacs-version 'emacs-version)
+(defalias 'fsi-gnus-version 'gnus-version)
 
 ;; the short aliases..
-(defalias 'fs-a 'fs-apropos)
+(defalias 'fsi-a 'fs-apropos)
 (defalias 'fs-da 'fs-apropos)
-(defalias 'fs-ac 'fs-apropos-command)
-(defalias 'fs-ad 'fs-apropos-documentation)
-(defalias 'fs-af 'fs-apropos-function)
-(defalias 'fs-av 'fs-apropos-variable)
+(defalias 'fsi-ac 'fs-apropos-command)
+(defalias 'fsi-ad 'fs-apropos-documentation)
+(defalias 'fsi-af 'fs-apropos-function)
+(defalias 'fsi-av 'fs-apropos-variable)
 
-(defalias 'fs-c 'fs-commands)
-(defalias 'fs-d 'fs-dict)
-(defalias 'fs-dict: 'fs-dict)
+(defalias 'fsi-c 'fs-commands)
+(defalias 'fsi-d 'fs-dict)
+(defalias 'fsi-dict: 'fs-dict)
 
-(defalias 'fs-dl 'fs-describe-literally)
-(defalias 'fs-doc 'fs-doctor )
-(defalias 'fs-dkb 'fs-describe-key-briefly )
+(defalias 'fsi-dl 'fs-describe-literally)
+(defalias 'fsi-doc 'fs-doctor )
+(defalias 'fsi-dkb 'fs-describe-key-briefly )
 
-(defalias 'fs-dk 'fs-describe-key)
-(defalias 'fs-dkf 'fs-describe-key-and-function)
-(defalias 'fs-dkl 'fs-describe-key-long)
+(defalias 'fsi-dk 'fs-describe-key)
+(defalias 'fsi-dkf 'fs-describe-key-and-function)
+(defalias 'fsi-dkl 'fs-describe-key-long)
 
 (defalias 'fs-lkgg 'fs-lookup-key-gnus-group)
 (defalias 'fs-dkgg 'fs-lookup-key-gnus-group)
@@ -4151,24 +4161,24 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-lkm 'fs-lookup-key-message)
 
 
-(defalias 'fs-df 'fs-describe-function )
-(defalias 'fs-cond 'cond)
-(defalias 'fs-if 'if)
-(defalias 'fs-when 'when)
-(defalias 'fs-dfl 'fs-describe-function-long )
-(defalias 'fs-dv 'fs-describe-variable )
-(defalias 'fs-ff 'fs-find-function)
-(defalias 'fs-ffb 'fs-find-function-briefly)
-(defalias 'fs-ffo 'fs-find-function-on-key)
-(defalias 'fs-ffob 'fs-find-function-on-key-briefly)
-(defalias 'fs-fv 'fs-find-variable)
-(defalias 'fs-fvb 'fs-find-variable-briefly)
-(defalias 'fs-? 'fs-help)
+(defalias 'fsi-df 'fs-describe-function )
+(defalias 'fsi-cond 'cond)
+(defalias 'fsi-if 'if)
+(defalias 'fsi-when 'when)
+(defalias 'fsi-dfl 'fs-describe-function-long )
+(defalias 'fsi-dv 'fs-describe-variable )
+(defalias 'fsi-ff 'fs-find-function)
+(defalias 'fsi-ffb 'fs-find-function-briefly)
+(defalias 'fsi-ffo 'fs-find-function-on-key)
+(defalias 'fsi-ffob 'fs-find-function-on-key-briefly)
+(defalias 'fsi-fv 'fs-find-variable)
+(defalias 'fsi-fvb 'fs-find-variable-briefly)
+(defalias 'fsi-? 'fs-help)
 (defalias 'fs-32 'fs-help)
-(defalias 'fs-s  'fs-search)
-(defalias 'fs-sw  'fs-search-wide)
-(defalias 'fs-sws  'fs-search-wide-sensitive)
-(defalias 'fs-wi  'fs-where-is)
+(defalias 'fsi-s  'fs-search)
+(defalias 'fsi-sw  'fs-search-wide)
+(defalias 'fsi-sws  'fs-search-wide-sensitive)
+(defalias 'fsi-wi  'fs-where-is)
 (defalias 'fs-wigg  'fs-where-is-gnus-group)
 (defalias 'fs-wigs  'fs-where-is-gnus-summary)
 (defalias 'fs-wim  'fs-where-is-message)
@@ -4176,89 +4186,89 @@ last time i checked , equalp seemed to work as well.. "
 ;;(defalias 'fs-yo 'fs-hi)
 
 ;; basic functions
-(defalias 'fs-lambda 'lambda)
-(defalias 'fs-length 'length)
-(defalias 'fs-sqrt 'sqrt)
+(defalias 'fsi-lambda 'lambda)
+(defalias 'fsi-length 'length)
+(defalias 'fsi-sqrt 'sqrt)
 
-(defalias 'fs-= '=)
-(defalias 'fs-/= '/=)
-(defalias 'fs-< '<)
-(defalias 'fs-> '>)
-(defalias 'fs-<= '<=)
-(defalias 'fs->= '>=)
-(defalias 'fs-not 'not)
-(defalias 'fs-and 'and)
-(defalias 'fs-or 'or)
+(defalias 'fsi-= '=)
+(defalias 'fsi-/= '/=)
+(defalias 'fsi-< '<)
+(defalias 'fsi-> '>)
+(defalias 'fsi-<= '<=)
+(defalias 'fsi->= '>=)
+(defalias 'fsi-not 'not)
+(defalias 'fsi-and 'and)
+(defalias 'fsi-or 'or)
 (defalias 'fs-lart 'fs-flame)
-(defalias 'fs-null 'null)
+(defalias 'fsi-null 'null)
 
-(defalias 'fs-equal 'equal)
-(defalias 'fs-equalp 'equalp)
-(defalias 'fs-eql 'eql)
+(defalias 'fsi-equal 'equal)
+(defalias 'fsi-equalp 'equalp)
+(defalias 'fsi-eql 'eql)
 ;; rr is used for russian-roulette now..
 ;;(defalias 'fs-rr 'fs-replace-regexp)
 (defalias 'fs-rs 'fs-replace-string)
-(defalias 'fs-+ '+)
-(defalias 'fs-- '-)
-(defalias 'fs-* '*)
-(defalias 'fs-/ '/)
-(defalias 'fs-less 'fs-more)
-(defalias 'fs-list 'list)
-(defalias 'fs-car 'car)
+(defalias 'fsi-+ '+)
+(defalias 'fsi-- '-)
+(defalias 'fsi-* '*)
+(defalias 'fsi-/ '/)
+(defalias 'fsi-less 'fs-more)
+(defalias 'fsi-list 'list)
+(defalias 'fsi-car 'car)
 (defalias 'fs-ct 'erbccountry)
-(defalias 'fs-cdr 'cdr)
-(defalias 'fs-cons 'cons)
-(defalias 'fs-append 'append)
-(defalias 'fs-first 'first)
-(defalias 'fs-second 'second)
-(defalias 'fs-third 'third)
-(defalias 'fs-fourth 'fourth)
-(defalias 'fs-fifth 'fifth)
-(defalias 'fs-sixth 'sixth)
-(defalias 'fs-seventh 'seventh)
-(defalias 'fs-eighth 'eighth)
-(defalias 'fs-ninth 'ninth)
-(defalias 'fs-tenth 'tenth)
-(defalias 'fs-subseq 'subseq)
-(defalias 'fs-ceiling 'ceiling)
-(defalias 'fs-ceiling* 'ceiling*)
-(defalias 'fs-concatenate 'concatenate)
-(defalias 'fs-cos 'cos)
-(defalias 'fs-count-lines 'count-lines)
+(defalias 'fsi-cdr 'cdr)
+(defalias 'fsi-cons 'cons)
+(defalias 'fsi-append 'append)
+(defalias 'fsi-first 'first)
+(defalias 'fsi-second 'second)
+(defalias 'fsi-third 'third)
+(defalias 'fsi-fourth 'fourth)
+(defalias 'fsi-fifth 'fifth)
+(defalias 'fsi-sixth 'sixth)
+(defalias 'fsi-seventh 'seventh)
+(defalias 'fsi-eighth 'eighth)
+(defalias 'fsi-ninth 'ninth)
+(defalias 'fsi-tenth 'tenth)
+(defalias 'fsi-subseq 'subseq)
+(defalias 'fsi-ceiling 'ceiling)
+(defalias 'fsi-ceiling* 'ceiling*)
+(defalias 'fsi-concatenate 'concatenate)
+(defalias 'fsi-cos 'cos)
+(defalias 'fsi-count-lines 'count-lines)
 
-(defalias 'fs-last 'last)
-(defalias 'fs-llh 'fs-length-load-history)
-(defalias 'fs-error 'erbutils-error)
-(defalias 'fs-expt 'expt)
-(defalias 'fs-exchange-point-and-mark 'exchange-point-and-mark)
+(defalias 'fsi-last 'last)
+(defalias 'fsi-llh 'fs-length-load-history)
+(defalias 'fsi-error 'erbutils-error)
+(defalias 'fsi-expt 'expt)
+(defalias 'fsi-exchange-point-and-mark 'exchange-point-and-mark)
 (defalias 'fs-rq 'fs-regexp-quote)
 ;; (defalias 'fs-function 'identity)
 
-(defalias 'fs-identity 'identity)
-(defalias 'fs-nth 'nth)
-(defalias 'fs-nthcdr 'nthcdr)
-(defalias 'fs-random 'random)
-(defalias 'fs-random-choose 'erbutils-random)
-(defalias 'fs-remove 'remove)
-(defalias 'fs-replace-regexp-in-string 'replace-regexp-in-string)
-(defalias 'fs-replace-match 'replace-match)
+(defalias 'fsi-identity 'identity)
+(defalias 'fsi-nth 'nth)
+(defalias 'fsi-nthcdr 'nthcdr)
+(defalias 'fsi-random 'random)
+(defalias 'fsi-random-choose 'erbutils-random)
+(defalias 'fsi-remove 'remove)
+(defalias 'fsi-replace-regexp-in-string 'replace-regexp-in-string)
+(defalias 'fsi-replace-match 'replace-match)
 
-(defalias 'fs-number-to-string 'number-to-string)
-(defalias 'fs-format 'format)
-(erbutils-defalias '(format-time-string))
+(defalias 'fsi-number-to-string 'number-to-string)
+(defalias 'fsi-format 'format)
+(erbutils-defalias-i '(format-time-string))
 
-(defalias 'fs-split-string 'split-string)
-(defalias 'fs-rm 'fs-forget)
-(defalias 'fs-progn 'progn)
-(defalias 'fs-ignore-errors 'ignore-errors)
-(defalias 'fs-lcm 'lcm)
-(defalias 'fs-let 'let)
-(defalias 'fs-ll 'fs-locate-library)
-(defalias 'fs-g 'fs-google)
-(defalias 'fs-gcd 'gcd)
+(defalias 'fsi-split-string 'split-string)
+(defalias 'fsi-rm 'fs-forget)
+(defalias 'fsi-progn 'progn)
+(defalias 'fsi-ignore-errors 'ignore-errors)
+(defalias 'fsi-lcm 'lcm)
+(defalias 'fsi-let 'let)
+(defalias 'fsi-ll 'fs-locate-library)
+(defalias 'fsi-g 'fs-google)
+(defalias 'fsi-gcd 'gcd)
 (defalias 'fs-gd 'fs-google-deego)
 
-(defalias 'fs-ge 'fs-google-emacswiki)
+(defalias 'fsi-ge 'fs-google-emacswiki)
 (defalias 'fs-gs 'fs-google-sl4)
 
 (defalias 'fs-gw 'fs-google-wikipedia)
@@ -4273,48 +4283,48 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-gt 'fs-google-twiki)
 (defalias 'fs-gu 'fs-google-usemod)
 
-(defalias 'fs-mark 'mark)
-(defalias 'fs-point 'point)
-(defalias 'fs-pop-mark 'pop-mark)
-(defalias 'fs-push-mark 'push-mark)
-(defalias 'fs-floor 'floor)
-(defalias 'fs-floor* 'floor*)
+(defalias 'fsi-mark 'mark)
+(defalias 'fsi-point 'point)
+(defalias 'fsi-pop-mark 'pop-mark)
+(defalias 'fsi-push-mark 'push-mark)
+(defalias 'fsi-floor 'floor)
+(defalias 'fsi-floor* 'floor*)
 
-(defalias 'fs-round 'round)
-(defalias 'fs-round* 'round*)
+(defalias 'fsi-round 'round)
+(defalias 'fsi-round* 'round*)
 
-(defalias 'fs-setcar 'setcar)
-(defalias 'fs-setcdr 'setcdr)
-(defalias 'fs-sin 'sin)
-(erbutils-defalias '(sleep-for sit-for))
-(defalias 'fs-string 'string)
+(defalias 'fsi-setcar 'setcar)
+(defalias 'fsi-setcdr 'setcdr)
+(defalias 'fsi-sin 'sin)
+(erbutils-defalias-i '(sleep-for sit-for))
+(defalias 'fsi-string 'string)
 
-(defalias 'fs-string-as-multibyte 'string-as-multibyte)
-(defalias 'fs-string-bytes 'string-bytes)
-(defalias 'fs-string-equal 'string-equal)
-(defalias 'fs-string-key-binding 'string-key-binding)
-(defalias 'fs-string-lessp 'string-lessp)
-(defalias 'fs-string-make-multibyte 'string-make-multibyte)
-(defalias 'fs-string-make-unibyte 'string-make-unibyte)
-(defalias 'fs-string-to-char 'string-to-char)
-(defalias 'fs-string-to-int 'string-to-int)
-(defalias 'fs-string-to-list 'string-to-list)
-(defalias 'fs-string-to-number 'string-to-number)
-(defalias 'fs-string-to-sequence 'string-to-sequence)
-(defalias 'fs-string-to-syntax 'string-to-syntax)
-(defalias 'fs-string-to-vector 'string-to-vector)
-(defalias 'fs-string-width 'string-width)
-(defalias 'fs-symbol-file 'symbol-file)
+(defalias 'fsi-string-as-multibyte 'string-as-multibyte)
+(defalias 'fsi-string-bytes 'string-bytes)
+(defalias 'fsi-string-equal 'string-equal)
+(defalias 'fsi-string-key-binding 'string-key-binding)
+(defalias 'fsi-string-lessp 'string-lessp)
+(defalias 'fsi-string-make-multibyte 'string-make-multibyte)
+(defalias 'fsi-string-make-unibyte 'string-make-unibyte)
+(defalias 'fsi-string-to-char 'string-to-char)
+(defalias 'fsi-string-to-int 'string-to-int)
+(defalias 'fsi-string-to-list 'string-to-list)
+(defalias 'fsi-string-to-number 'string-to-number)
+(defalias 'fsi-string-to-sequence 'string-to-sequence)
+(defalias 'fsi-string-to-syntax 'string-to-syntax)
+(defalias 'fsi-string-to-vector 'string-to-vector)
+(defalias 'fsi-string-width 'string-width)
+(defalias 'fsi-symbol-file 'symbol-file)
 
-(defalias 'fs-tan 'tan)
-(defalias 'fs-cos 'cos)
-(defalias 'fs-sin 'sin)
-(defalias 'fs-atan 'atan)
-(defalias 'fs-asin 'asin)
-(defalias 'fs-acos 'acos)
-(defalias 'fs-tanh 'tanh)
+(defalias 'fsi-tan 'tan)
+(defalias 'fsi-cos 'cos)
+(defalias 'fsi-sin 'sin)
+(defalias 'fsi-atan 'atan)
+(defalias 'fsi-asin 'asin)
+(defalias 'fsi-acos 'acos)
+(defalias 'fsi-tanh 'tanh)
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(timezone-world-timezones 
    timezone-months-assoc
    timezone-make-date-arpa-standard timezone-make-date-sortable
@@ -4326,21 +4336,21 @@ last time i checked , equalp seemed to work as well.. "
    timezone-absolute-from-gregorian))
    
 
-(defalias 'fs-truncate 'truncate)
+(defalias 'fsi-truncate 'truncate)
 
-(defalias 'fs-truncate* 'truncate*)
-(defalias 'fs-truncate-string 'truncate-string)
-(defalias 'fs-truncate-string-to-width 'truncate-string-to-width)
+(defalias 'fsi-truncate* 'truncate*)
+(defalias 'fsi-truncate-string 'truncate-string)
+(defalias 'fsi-truncate-string-to-width 'truncate-string-to-width)
 
 
-(defalias 'fs-erc-version 'erc-version)
-(defalias 'fs-sv 'erc-cmd-SV)
-(defalias 'fs-erc-cmd-SV 'erc-cmd-SV)
-(defalias 'fs-smv 'erc-cmd-SMV)
-(defalias 'fs-erc-cmd-SMV 'erc-cmd-SMV)
-(defalias 'fs-sm 'erc-cmd-SM)
-(defalias 'fs-cmd-SM 'erc-cmd-SM)
-(defalias 'fs-stringify 'erbutils-stringify)
+(defalias 'fsi-erc-version 'erc-version)
+(defalias 'fsi-sv 'erc-cmd-SV)
+(defalias 'fsi-erc-cmd-SV 'erc-cmd-SV)
+(defalias 'fsi-smv 'erc-cmd-SMV)
+(defalias 'fsi-erc-cmd-SMV 'erc-cmd-SMV)
+(defalias 'fsi-sm 'erc-cmd-SM)
+(defalias 'fsi-cmd-SM 'erc-cmd-SM)
+(defalias 'fsi-stringify 'erbutils-stringify)
 ;; (defalias 'fs-while 'while)
 
 ;;;====================================================
@@ -4348,7 +4358,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;;====================================================
 ;; ERRORS:
 
-(defun fs-load-library (&rest args)
+(defun fsi-load-library (&rest args)
   (error "Use 'require instead. "))
 
 (defalias 'fs-load 'fs-load-library)
@@ -4358,32 +4368,32 @@ last time i checked , equalp seemed to work as well.. "
 
 ;; cl-extra.el
 
-(defalias 'fs-equalp 'equalp)
+(defalias 'fsi-equalp 'equalp)
 ;; done gcd 
 ;; done lcm 
-(defalias 'fs-isqrt 'isqrt)
-(defalias 'fs-floor* 
+(defalias 'fsi-isqrt 'isqrt)
+(defalias 'fsi-floor* 
   'floor* )
 
-(defalias 'fs-ceiling* 
+(defalias 'fsi-ceiling* 
 'ceiling* )
 
-(defalias 'fs-truncate* 
+(defalias 'fsi-truncate* 
 'truncate*)
 
 ;; done round* 
 
-(defalias 'fs-mod* 
+(defalias 'fsi-mod* 
   'mod* )
 
 (when (ignore-errors
 	(require 'geek))
-  (erbutils-defalias '(geek-code)))
+  (erbutils-defalias-i '(geek-code)))
 
-(defalias 'fs-rem* 
+(defalias 'fsi-rem* 
   'rem* )
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(signum 
    random* 
    ;; yes?
@@ -4413,7 +4423,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (ignore-errors (require 'oct))
 
-(erbutils-defalias 
+(erbutils-defalias-i 
 
 
  '(
@@ -4424,43 +4434,43 @@ last time i checked , equalp seemed to work as well.. "
    oct-sqrt oct-std oct-tanh oct-atanh)
  "" "oct-")
 
-(erbutils-defalias '(oct-/ oct-+ ))
-(erbutils-defalias '(lsh))
-(erbutils-defalias '(obarray))
+(erbutils-defalias-i '(oct-/ oct-+ ))
+(erbutils-defalias-i '(lsh))
+(erbutils-defalias-i '(obarray))
 
 
 ;; files.el
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(auto-mode-alist interpreter-mode-alist
 		   directory-abbrev-alist))
 
 
-(erbutils-defalias '(load-history))
-(erbutils-defalias '(assoc))
-(erbutils-defalias '(eq))
-(erbutils-defalias '(message))
-(erbutils-defalias '(decf))
-(erbutils-defalias '(incf))
-(erbutils-defalias '(faith-quote))
-(erbutils-defalias '(zerop))
-;;(erbutils-defalias '(buffer-substring))
-(erbutils-defalias '(buffer-substring-no-properties))
-;;(erbutils-defalias '(buffer-string))
+(erbutils-defalias-i '(load-history))
+(erbutils-defalias-i '(assoc))
+(erbutils-defalias-i '(eq))
+(erbutils-defalias-i '(message))
+(erbutils-defalias-i '(decf))
+(erbutils-defalias-i '(incf))
+(erbutils-defalias-i '(faith-quote))
+(erbutils-defalias-i '(zerop))
+;;(erbutils-defalias-i '(buffer-substring))
+(erbutils-defalias-i '(buffer-substring-no-properties))
+;;(erbutils-defalias-i '(buffer-string))
 
 ;; We define it to be no-properties, else people can (setq foo
 ;; (buffer-string)).. and cause a huge uservariables file.. 
 
-(defun fs-buffer-string (&rest args)
+(defun fsi-buffer-string (&rest args)
   (buffer-string-no-properties (point-min) (point-max)))
 
-(defalias 'fs-buffer-substring 'buffer-substring-no-properties)
+(defalias 'fsi-buffer-substring 'buffer-substring-no-properties)
 
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(featurep feature-symbols feature-file features
 	    
 		     ))
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(minor-mode-alist minor-mode-map-alist
 		    minor-mode-overriding-map-alist))
 (erbutils-defalias-vars '(major-mode))
@@ -4474,18 +4484,18 @@ last time i checked , equalp seemed to work as well.. "
 (erbutils-defalias-vars '(emacs-lisp-mode-map))
 (erbutils-defalias-vars '(lisp-mode-map))
 
-(erbutils-defalias '(boundp fboundp))
-(erbutils-defalias '(lookup-key))
-(erbutils-defalias '(minor-mode-key-binding))
+(erbutils-defalias-i '(boundp fboundp))
+(erbutils-defalias-i '(lookup-key))
+(erbutils-defalias-i '(minor-mode-key-binding))
 
-(erbutils-defalias '(where-is-internal))
-(erbutils-defalias '(% abs))
+(erbutils-defalias-i '(where-is-internal))
+(erbutils-defalias-i '(% abs))
 
-(erbutils-defalias '(cdr cddr car cadr cdar))
-(erbutils-defalias '(erc-channel-list))
+(erbutils-defalias-i '(cdr cddr car cadr cdar))
+(erbutils-defalias-i '(erc-channel-list))
 
 (when (ignore-errors (require 'units))
-  (erbutils-defalias '(units-version units-load-hook units-dat-file
+  (erbutils-defalias-i '(units-version units-load-hook units-dat-file
 				     units-buffer units-s-to-n
 				     units-prefix-convert
 				     units-si-prefix-list
@@ -4509,7 +4519,7 @@ last time i checked , equalp seemed to work as well.. "
 	
 (defalias 'fs-hand 'fs-give)
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(backward-kill-sentence 
    backward-sentence
    flame-sentence flame-sentence-ify
@@ -4518,26 +4528,26 @@ last time i checked , equalp seemed to work as well.. "
    sentence-end-double-space sentence-end-without-period
    transpose-sentences))
 
-(defalias 'fs-flatten 'erbutils-flatten)
+(defalias 'fsi-flatten 'erbutils-flatten)
 
 
 
-(erbutils-defalias '(log))
-(erbutils-defalias 
+(erbutils-defalias-i '(log))
+(erbutils-defalias-i 
  '(most-positive-fixnum
    most-negative-fixnum))
 
 
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(
    regexp-opt
    regexp-opt-depth
    regexp-opt-group regexp-opt-charset))
 
-(erbutils-defalias '(window-system))
+(erbutils-defalias-i '(window-system))
 
-(erbutils-defalias 
+(erbutils-defalias-i 
  '(kbd read-kbd-macro))
 
 (defconst fs-t t
@@ -4580,8 +4590,8 @@ setq fs-t to nil :-) ")
 ;; (defalias 'fs-sandbox-quoted-maybe 'erblisp-sandbox-quoted-maybe)
 ;; (defalias 'fs-sandbox 'erblisp-sandbox)
 
-(erbutils-defalias '(macroexpand))
-(defun fs-kick (&optional reason &rest ignore)
+(erbutils-defalias-i '(macroexpand))
+(defun fsi-kick (&optional reason &rest ignore)
   (erc-cmd-KICK erbnoc-nick (when reason (format "%s" reason))))
 
 
@@ -4594,13 +4604,13 @@ setq fs-t to nil :-) ")
    ))
 
 
-(erbutils-defalias '(string-match))
+(erbutils-defalias-i '(string-match))
 
-(erbutils-defalias '(parse-time-string))
+(erbutils-defalias-i '(parse-time-string))
 
-(erbutils-defalias '(reverse))
+(erbutils-defalias-i '(reverse))
 
-(defun fs-pp (object &rest ignore)
+(defun fsi-pp (object &rest ignore)
   (pp object))
 
 
@@ -4632,7 +4642,7 @@ query to another user. "
 
 
 
-(erbutils-defalias '(ignore))
+(erbutils-defalias-i '(ignore))
 (provide 'erbc)
 (run-hooks 'fs-after-load-hooks)
 

@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2004-12-17 00:12:38 deego>
+;; Time-stamp: <2004-12-31 23:24:58 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -82,11 +82,11 @@
 
 
 
-(defun fs-set-difference (a b)
+(defun fsi-set-difference (a b)
   (set-difference a b))
 
 
-(defun fs-pp (&optional foo &rest bar)
+(defun fsi-pp (&optional foo &rest bar)
   (pp foo))
 
 
@@ -204,6 +204,8 @@
   `(fs-apply ,symbol ,@args nil))
 
 
+
+;; hm, WTF is this?  Was it me?  silly me.. Why did I do this?? 
 (defalias 'fs-function 'identity)
 
 (defvar erbnoc-read-mode nil)
@@ -211,7 +213,7 @@
 
 (defvar fs-internal-botread-prompt "Enter: ")
 
-(defun fs-botread (&optional prompt)
+(defun fsi-botread (&optional prompt)
   (unless prompt (setq prompt fs-internal-botread-prompt))
   (ignore-errors
     (erbot-reply (concat prompt "") proc nick tgt msg nil))
@@ -226,12 +228,12 @@
     (setq erbnoc-read-mode nil)
     input))
 
-(defun fs-dun-mprinc (str)
+(defun fsi-dun-mprinc (str)
   (ignore-errors
     (erbot-reply str proc nick tgt msg nil))
   (setq fs-internal-botread-prompt str))  
     
-(defun fs-botread-feed-internal (str)
+(defun fsi-botread-feed-internal (str)
   (setq erbnoc-read-input str)
   (format 
    "Thanks for feeding the read-line.  Msg obtained: %s"
@@ -283,7 +285,7 @@
   
 	   
 
-(defun fs-bash-specific-quote (&optional number &rest ignored)
+(defun fsi-bash-specific-quote (&optional number &rest ignored)
   "NUMBER need not be jsut NUMBER.  Any argument to
 bash-specific-quotes, like random, should work."
   (require 'bash-quotes)
@@ -324,7 +326,7 @@ bash-specific-quotes, like random, should work."
 	  (buffer-substring-no-properties aa bb)
 	"No result"))))
 
-(defalias 'fs-bsc 'fs-bash-specific-quote)
+(defalias 'fsi-bsc 'fs-bash-specific-quote)
 (defalias 'fs-bash-quote 'fs-bash-specific-quote)
 (defalias 'fs-bash.org 'fs-bash-specific-quote)
 ;;(defalias 'fs-bash 'fs-bash-specific-quote)
@@ -334,7 +336,7 @@ bash-specific-quotes, like random, should work."
 
 
 
-(defalias 'fs-lexical-let 'lexical-let)
+(defalias 'fsi-lexical-let 'lexical-let)
 (provide 'erbc2)
 (run-hooks 'erbc2-after-load-hooks)
 

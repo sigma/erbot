@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.19 2004/12/02 11:35:04 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.20 2005/01/01 04:37:31 deego Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.19 $")
+  "Version 0.2 $Revision: 1.20 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -239,7 +239,7 @@ Note: magic words are not currently implemented."
 (defalias 'fs-msgs 'fs-msg-mymsgs)
 (defalias 'fs-mymsgs 'fs-msg-mymsgs)
 
-(defun fs-erbmsg-version (&rest ignore)
+(defun fsi-erbmsg-version (&rest ignore)
   "Spits out `erbmsg-version'."
   erbmsg-version)
 (defalias 'fs-msg-version 'fs-erbmsg-version)

@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2004-12-17 00:12:43 deego>
+;; Time-stamp: <2004-12-31 23:35:18 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -175,21 +175,21 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-pf-file "~/public_html/data/userfunctions.el")
 (defvar erbnoc-pv-file "~/public_html/data/uservariables.el")
 
-(defun fs-pfpv-load ()
-  (fs-pf-load)
-  (fs-pv-load))
+(defun fsi-pfpv-load ()
+  (fsi-pf-load)
+  (fsi-pv-load))
 
-(defun fs-pf-load ()
+(defun fsi-pf-load ()
   (when (file-exists-p erbnoc-pf-file)
 	 (ignore-errors (load erbnoc-pf-file))))
 
-(defun fs-pv-load ()
+(defun fsi-pv-load ()
   (when (file-exists-p erbnoc-pv-file)
     (ignore-errors (load erbnoc-pv-file))))
 
 	 
 
-(defun fs-user-function-p (fcn)
+(defun fsi-user-function-p (fcn)
   (member 
    fcn 
    (erbutils-functions-in-file erbnoc-pf-file)))
@@ -233,7 +233,7 @@ to query using PROMPT, or just return t."
 	  
 
 
-(defun fs-pv-get-variables-values ()
+(defun fsi-pv-get-variables-values ()
   (let 
       ((vars 
 	(apropos-internal "^fs-" 'boundp)))
@@ -248,7 +248,7 @@ to query using PROMPT, or just return t."
   "if this is 1000, then file is saved one in as thousand times... ")
 
 ;;;###autoload
-(defun fs-pv-save ()
+(defun fsi-pv-save ()
   (interactive)
   (erbnoc-write-sexps-to-file 
    erbnoc-pv-file 
@@ -258,29 +258,34 @@ to query using PROMPT, or just return t."
 
 
    
-   
+(defun erbnoc-readonly-check (sym)
+  (if (get sym 'readonly)
+      (error "The symbol %s can't be redefined! It is read-only!"
+	     sym)))
 
 
-(defmacro fs-defun (fcn &rest body)
+
+
+(defmacro fsi-defun (fcn &rest body)
   
   ;; the given fcn icould be a number or string, in which
   ;; case sandboxing won't touch it, so we need to override that case.
   (unless (symbolp fcn)
-    (error "Defun symbols only, Einstein! :P"))
+    (error "Defun symbols only! :P"))
 
-  
+  (erbnoc-readonly-check fcn)
 
   (erbnoc-write-sexps-to-file
    erbnoc-pf-file
    (erbnoc-create-defun-overwrite
     (erbutils-file-sexps erbnoc-pf-file)
     (cons 'defun (cons fcn body)) fcn))
-  (fs-pf-load)
+  (fsi-pf-load)
   `(quote ,fcn))
 
 
-(defun fs-defalias (sym1 sym2)
-  (eval `(fs-defun 
+(defun fsi-defalias (sym1 sym2)
+  (eval `(fsi-defun 
 	  ,(erblisp-sandbox-quoted sym1) (&rest fs-bar)
 	  (fs-apply (quote ,(erblisp-sandbox-quoted sym2)) fs-bar))))
 
@@ -293,17 +298,21 @@ to query using PROMPT, or just return t."
 
 
 
-(defun fs-makunbound (&optional sym)
+(defun fsi-makunbound (&optional sym)
   (unless sym (error "Syntax: , (makunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox sym))
   (makunbound sym))
 
 
-(defun fs-fmakunbound (&optional sym)
+(defun fsi-fmakunbound (&optional sym)
   (unless sym (error "Syntax: , (fmakunbound 'symbol)"))
+
   (setq sym
 	(erblisp-sandbox sym))
+
+  (erbnoc-readonly-check sym)
+
   (let 
       ;; this is to be returned..
       ((result (fmakunbound sym))
@@ -320,13 +329,13 @@ to query using PROMPT, or just return t."
 	(lambda (arg) (equal (second arg) sym))
 	sexps))
       sexps))
-    (fs-pf-load)
+    (fsi-pf-load)
     result))
 
 
 (defvar erbnoc-tmpsetq nil)
 
-(defmacro fs-setq (&rest args)
+(defmacro fsi-setq (&rest args)
   `(let ((erbnoc-tmpsetq
 	  (setq ,@args)))
      (fs-pv-save)
