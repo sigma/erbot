@@ -820,10 +820,7 @@ Optional argument FOO ."
                         (string-match fs-web-page-title-p tgt))
                  t))
       (let* ((case-fold-search t)
-             (url (some (lambda (e)
-                          (when (string-match "^http://[^ ]+$" e)
-                            e))
-                        msg)))
+             (url (some 'erbutils-html-url-p msg)))
         (when url
           (setq leave-alone-p nil)
           (setq msg (list "(" "web-page-title" (format "%S" url) ")")))))

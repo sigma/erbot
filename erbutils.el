@@ -670,7 +670,17 @@ lisp file, else error. "
 		    (erbutils-listp-proper (cdr l)))))
 
 
-
+(defun erbutils-html-url-p (str)
+  "Guesses if the string is a url that will yield HTML content.
+Basically, look for any url that doesn't have any extension or
+one that has .html, .shtml, or .htm.  Returns the str if it is
+a valid url that might generate HTML."
+  (when (string-match "^http://[^/]+/?\\(.*\\)?$" str)
+    (let* ((path (match-string 1 str))
+           (pos (position ?. path :from-end)))
+      (when (or (null pos)
+                (string-match "html?" (subseq path pos)))
+        str))))
 
 
 ;;;###autoload
