@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.13 2004/04/11 21:06:52 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.14 2004/05/28 20:53:11 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -13,7 +13,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.1 $Revision: 1.13 $")
+  "Version 0.1 $Revision: 1.14 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -103,15 +103,17 @@ Allowed syntaxes:
 ,memo [to|for] <nick> <nick> <nick>: msg
 
 Note: magic words are not currently implemented."
-  (and erbot-erbmsg-p
-       (let* ((msg-raw (erbutils-stringize msg))
-              (nicks+msg (erbmsg-memo-parse-msg msg-raw)))
-         (mapc (lambda (nick+msg)
-                 (let* ((nick (car nick+msg))
-                        (msg (nth 1 nick+msg)))
-                   (erbmsg-memorize-msg nick msg)))
-               nicks+msg)
-         "msg memorized for delivery")))
+  (or (and erbot-erbmsg-p
+					 msg
+					 (let* ((msg-raw (erbutils-stringize msg))
+									(nicks+msg (erbmsg-memo-parse-msg msg-raw)))
+						 (mapc (lambda (nick+msg)
+										 (let* ((nick (car nick+msg))
+														(msg (nth 1 nick+msg)))
+											 (erbmsg-memorize-msg nick msg)))
+									 nicks+msg)
+						 "msg memorized for delivery"))
+			'noreply))
 (defalias 'fs-msg-wmw 'fs-memo) ;; just for compatibility
 (defalias 'fs-msg-with-magic-words 'fs-memo)
 
