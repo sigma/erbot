@@ -157,13 +157,11 @@ NOTES that matches the regexp REG, if any..."
     (while terms
       (setq thisterm (car terms) terms (cdr terms))
       (setq ctr (+ ctr 1))
+      (setq notes (fs-notes thisterm))
       (setq skipp 
 	    (and prevent-reg
-		 (progn
-		   (setq notes (mapconcat 'identity 
-					  (fs-notes thisterm)
-					  " "))
-		   (string-match prevent-reg notes))))
+		 (string-match prevent-reg 
+			       (mapconcat 'identity notes " "))))
       (cond
        
        (skipp
@@ -177,9 +175,8 @@ NOTES that matches the regexp REG, if any..."
 	    (cond
 	     ((>= num (length notes))
 	      (setq donep t))
-	     ((regexp-match reg (nth notes num))
+	     ((string-match reg (nth num notes))
 	      (setq donep t)
-	      
 	      (message "Forgetting term %S of %S: %S" ctr len thisterm)
 	      (sleep-for 0.1)
 	      (fs-forget thisterm num))
