@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-12 14:50:13 deego>
+;; Time-stamp: <2003-06-13 18:02:43 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1041,7 +1041,7 @@ Optional argument NICK ."
 	
 
 
-(defun erbc-fuck (&optional nick &rest bar)
+(defun erbc-love (&optional nick &rest bar)
   ".
 Optional argument NICK ."
   
@@ -1068,7 +1068,7 @@ Optional argument NICK ."
 	(format "/me looks at %s and yells \"NEVER!\"" nick)
 	(format "/me looks at %s lustfully" nick)))))))
 
-(defalias 'erbc-love 'erbc-fuck)
+(defalias 'erbc-fuck 'erbc-love)
 
 (defun erbc-flame (&rest args)
   "Doesn't really flame right now..
