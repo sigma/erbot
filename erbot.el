@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-07-10 15:30:53 deego>
+;; Time-stamp: <2003-07-10 17:35:33 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -552,8 +552,9 @@ those things..
 ;;;###autoload
 (defun erbot-alive-p ()
   "Is atleast one connection still alive?"
-  (require 'cl-extra)
+  ;;(require 'cl-extra)
   (some 
+   'identity
    (mapcar 
     (lambda (buf)
       (save-excursion
