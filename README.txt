@@ -18,7 +18,7 @@ in this package.
 
 
 +-------+---------------------------------------------------------------------+
-|botbbdb|                                                                     |
+|botbbdb|Name of the bbdb database file used by the bots.                     |
 +-------+---------------------------------------------------------------------+
 |erb    |ErBot stands for erc robot, and started out from erc-robot.el.  We   |
 |       |named the new file erbot, and most namespaces start with erb.        |
