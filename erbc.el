@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-06 12:48:22 deego>
+;; Time-stamp: <2005-04-06 15:27:12 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3651,7 +3651,14 @@ author know.."
   (let ((exnotes (erbbdb-get-exact-notes name)))
     (and (stringp exnotes) (read exnotes))))
 
-(defun fsi-merge (&optional name dest &rest args)
+
+
+(defvar erbn-merge-redirect-p t
+  "When true, merging also redirects.")
+
+
+
+(defun fsi-merge-generic (&optional name dest &rest args)
   (unless (and name dest (not args))
     (error (format "Syntax: %s merge TERM1 TERM2" erbn-char)))
   (setq name (format "%s" name))
@@ -3672,9 +3679,27 @@ author know.."
 	 (fs-set-also dest arg))
       notes)
      (fs-forget name "all"))
+    (when erbn-merge-redirect-p
+      (erbot-working 
+       (fsi-set-term name (format "is redirect %s" dest))))
     (erbbdb-save)
-    (format "Merged %S into %S" name dest)))
+    (if erbn-merge-redirect-p
+	(format "Merged %S into %S, redirected %S to %S" name dest
+		name dest)
+      (format "Merged %S into %S" name dest))))
 
+(defun fsi-merge-redirect (&rest args)
+  (let ((erbn-merge-redirect-p t))
+    (apply 'fsi-merge-generic args)))
+
+
+(defalias 'fsi-merge 'fsi-merge-redirect)
+
+(defun fsi-merge-noredirect (&rest args)
+  (let ((erbn-merge-redirect-p nil))
+    (apply 'fsi-merge-generic args)))
+
+(defalias 'fsi-Merge 'fsi-merge-noredirect)
 
 
 (defun fsi-mv (&optional name dest &rest args)
@@ -3701,7 +3726,28 @@ order of entries within a given term. "
   (when 
       (let ((bbdb-case-fold-search nil))
 	(erbbdb-get-exact-name dest))
-    (error "Destinatino %S already seems to exist" dest))
+    (error "Destination %S already seems to exist" dest))
+  (let ((tmp (format "TMPMV-%S" (random 1000))))
+    (erbbdb-working 
+     (ignore-errors (fs-forget tmp))
+     (fs-mv name tmp)
+     (fs-mv tmp dest))
+    (erbbdb-save)
+    (format "Readjusted case from %S to %S" name dest)))
+
+(defun fsi-swap (name dest)
+  (setq name (format "%s" name))
+  (setq dest (format "%s" dest))
+  (unless
+      (let ((bbdb-case-fold-search nil))
+	(erbbdb-get-exact-name dest))
+    (error "Destination %S does not exist." dest))
+  (unless
+      (let ((bbdb-case-fold-search nil))
+	(erbbdb-get-exact-name name))
+    (error "Source term %S does not exist." name))
+  (when (string= (downcase name) (downcase dest))
+    (error "Can't swap term with itself. "))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
     (erbbdb-working 
      (ignore-errors (fs-forget tmp))
@@ -4109,14 +4155,24 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-karma-increase (&rest args)
   (if (car args)
-    (format
-     "Noted, %s.  One %s-point for %s!"					
-     nick
-     (erbutils-random '("brownie" "karma" "wiki" "rms" "lispy"))
-     (car args))
-    "")
-  ;;(error "Karma system is currently being reworked. ")
-  )
+      (progn 
+	
+	(ignore-errors (incf (gethash (intern (format "%s" (car args))) erbn-money) 1000))
+
+
+	(format
+	 "Noted, %s.  One %s-point for %s!"					
+	 nick
+	 (erbutils-random '("brownie" "karma" "wiki" "rms" "lispy"))
+	 (car args))
+	
+
+	     )
+    ;;(error "Karma system is currently being reworked. ")
+    ""))
+
+
+
 
 (defalias 'fs-karma-decrease 'fs-karma-increase)
 
