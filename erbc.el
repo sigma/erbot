@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-03 16:27:04 deego>
+;; Time-stamp: <2005-03-15 10:12:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4741,7 +4741,7 @@ setq fs-t to nil :-) ")
    ))
 
 
-(erbutils-defalias-i '(string-match))
+(erbutils-defalias-i '(string-match identity))
 
 (erbutils-defalias-i '(parse-time-string))
 
