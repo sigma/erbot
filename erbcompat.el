@@ -1,5 +1,5 @@
 ;;; erbcompat.el --- Erbot GNU Emacs/XEmacs compatibility issues
-;; Time-stamp: <2004-03-28 11:32:07 deego>
+;; Time-stamp: <2004-03-28 12:19:00 deego>
 ;; Copyright (C) 2004 S. Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcompat.el
@@ -8,9 +8,6 @@
 ;; Version: NA
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 
-
-(defvar fs-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
