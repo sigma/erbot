@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-20 17:57:58 deego>
+;; Time-stamp: <2003-06-20 18:13:24 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -120,6 +120,8 @@
 	  (erbnoc-apply-sandbox-args (cdr args))))))
 (defun erbnoc-apply-sandbox-args (args)
   (cond
+   ((not (listp args))
+    (erblisp-sandbox args))
    ((= (length args) 0) nil)
    (t
     (mapcar 'erblisp-sandbox args))))
@@ -138,12 +140,18 @@
 	(erbnoc-tmplen (length args))
 	erbnoc-tmpfirstargs
 	erbnoc-lastargs
-	erbnoc-tmpspecialp 
+	erbnoc-tmpspecialp ;; denotes: NIL: no arguments at all.
+	erbnoc-tmpnoinitialp ;; denotes the case when the len args =1..
 	)
+    (cond
+     ((= (length args) 0)
+      (setq erbnoc-tmpspecialp t))
+     ((= (length args) 1)
+      (setq erbnoc-tmpnoinitialp t)))
     (cond
      ((null args)
       (setq erbnoc-tmpargs nil)
-      (setq erbnoc-tmptastargs nil)
+      (setq erbnoc-tmplastargs nil)
       (setq erbnoc-tmpspecialp nil))
      (t
       (setq erbnoc-tmpargs
@@ -162,9 +170,13 @@
      ((symbolp fcnsym)
       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
      (t (error "No clue how to apply that. ")))
-    (if erbnoc-tmpspecialp
-	`(apply ,fcnsym nil)
-      `(apply ,fcnsym ,@erbnoc-tmpargs ,erbnoc-tmplastargs))))
+    (cond
+     (erbnoc-tmpspecialp
+      `(apply ,fcnsym nil))
+     (erbnoc-tmpnoinitialp
+      `(apply ,fcnsym ,erbnoc-tmplastargs))
+     (t
+      `(apply ,fcnsym ,@erbnoc-tmpargs ,erbnoc-tmplastargs)))))
 
 
 (defmacro fs-apply-old (fcnsym &rest args)
