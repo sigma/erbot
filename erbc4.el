@@ -189,7 +189,7 @@ to query using PROMPT, or just return t."
          (table (case on-what
                   ((empty no-bullet click) erbnoc-RR-empty-bets)
                   ((bullet bang blam) erbnoc-RR-bullet-bets)
-                  (else (error "invalid bet type" on-what))))
+                  (t (error "invalid bet type" on-what))))
          (not-table (if (eq table erbnoc-RR-bullet-bets)
                         erbnoc-RR-empty-bets
                       erbnoc-RR-bullet-bets)))
@@ -200,7 +200,7 @@ to query using PROMPT, or just return t."
      ((< (gethash nick erbnoc-money) how-much)
       (format "%s: Fool, you can't bet more than you've got (%d)."
               nick (gethash nick erbnoc-money)))
-     (else
+     (t
       (erbnoc-move-money nick erbnoc-money table how-much)
       (format "%s has bet %d GEMs so far on a %s."
               nick
