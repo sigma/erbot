@@ -1,3 +1,17 @@
+2004-03-22  D Goel  <deego@gnufans.org>
+
+	* erball.el (noninteractive): dunnet should be required only for
+	noninteractive, else it starts a session!
+
+2004-03-21  D Goel  <deego@gnufans.org>
+
+	* erbc3.el: Redefine and move fs-setq here. 
+	(fs-defun): This function was defined twice. Remove the first
+	definition. 
+
+	* erbc.el (fs-find-variable-internal): add cosmetic space. 
+	(obarray): redefine and mv fs-setq to erbc3
+
 2003-12-30  D Goel  <deego@gnufans.org>
 
 	* erbc.el (reverse): add fs-reverse
