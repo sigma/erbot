@@ -41,6 +41,7 @@
 
 ;;; TODO:
 ;; - functionality to forget the erbmsg-question-* pile
+;; - save erbmsg-msg-hash-table across sessions
 
 ;;; Data
 
@@ -183,7 +184,8 @@ see erbmsg-question part below :)."
                                               (query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
                                               (post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
                                               (flush (erbmsg-flush-pending-msgs ,nick ,msg-cookie))
-                                              (no (erbmsg-flush-msg-cookie ,msg-cookie)))
+                                              (no (erbmsg-flush-msg-cookie ,msg-cookie))
+																							(help (erbmsg-help)))
                                             nick)))))))
 
 
@@ -241,6 +243,12 @@ instead of PRIVMSG you may specify another sending method."
 (defun erbmsg-flush-msg-cookie (msg-cookie)
   "Flushes `msg-cookie'."
   (remhash msg-cookie erbmsg-msg-cookie-hash-table))
+
+
+
+(defun erbmsg-help (&rest ignore)
+	"Spits out some detour to the wiki help page."
+	(erc-send-message "help? whom to help? see http://www.emacswiki.org/cgi-bin/wiki/ErbMsg"))
 
 
 ;;; just some tricks to create gazillions of msgs w/o IRC
