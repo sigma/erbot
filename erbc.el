@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-07-01 11:46:53 deego>
+;; Time-stamp: <2004-07-08 13:36:54 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -621,7 +621,7 @@ Optional argument FOO ."
     (when (and
 	   fs-m8b-p
 	   (if (stringp fs-m8b-p)
-	       (string-match fs-m8b-p tgt)
+	       (and (stringp tgt) (string-match fs-m8b-p tgt))
 	     t))
       (let (len)
 	(when (and (stringp msg)
