@@ -247,12 +247,12 @@ wish elisp supported lexical closures!)"
 	 (entries (apply entry-parser-fn cbargs))
          (delay 0.1)
          (total (length entries))
-         (eta (/ (* total delay) 60)))
+         (eta (* total delay)))
     (when (> eta 10)
-       (apply progress-callback 
-              (format "Processing %d entries from %s will take at least %.1f minutes ..."
-                      total url eta)
-              cbargs))
+      (apply progress-callback 
+             (format "Processing %d entries from %s will take at least %.1f minutes ..."
+                     total url (/ eta 60))
+             cbargs))
     (erbot-working
      (dolist (entry entries)
        (message (format "Adding entry for %s" (first entry)))
