@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-12-31 20:55:53 deego>
+;; Time-stamp: <2004-12-31 21:26:20 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4608,6 +4608,7 @@ setq fs-t to nil :-) ")
   "This macro is carefully constructed so that one user cannot force a
 query to another user. "
   `(cond
+    ;; This can occur when you are requesting a parse..
     ((null erbnoc-nick)
      (progn ,@args))
     (t
