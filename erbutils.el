@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2004-12-31 23:08:39 deego>
+;; Time-stamp: <2005-01-02 16:39:05 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -655,6 +655,12 @@ Thanks to edrx on #emacs for suggesting 'symbol-name.."
   (let* ((strings (mapcar 'symbol-name args))
 	 (str (apply 'concat strings)))
     (intern str)))
+
+
+(defmacro erbutils-working (&rest args)
+  `(let ((erbot-bbdb-save-p nil)
+	 (erbot-notify-p nil))
+     ,@args))
 
 
 ;;; erbutils.el ends here
