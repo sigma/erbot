@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-20 06:41:33 deego>
+;; Time-stamp: <2003-06-20 22:06:18 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -226,7 +226,7 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-tmp-sexps)
 (defvar erbnoc-tmp-newbody)
 
-(defmacro fs-defun (fcn &rest body)
+(defmacro oldfs-defun (fcn &rest body)
   (erbnoc-write-sexps-to-file
    erbnoc-pf-file
    (erbnoc-create-defun-overwrite
@@ -236,6 +236,15 @@ to query using PROMPT, or just return t."
   `(quote ,fcn))
 
 
+
+(defmacro fs-defun (fcn &rest body)
+  (erbnoc-write-sexps-to-file
+   erbnoc-pf-file
+   (erbnoc-create-defun-overwrite
+    (erbutils-file-sexps erbnoc-pf-file)
+    (cons 'defun (cons fcn body)) fcn))
+  (fs-pf-load)
+  `(quote ,fcn))
 
 
 	  
