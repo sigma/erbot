@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-07-30 10:01:34 deego>
+;; Time-stamp: <2003-07-30 13:23:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1091,7 +1091,7 @@ Optional argument NICK ."
 	    (list erbot-nick "yourself" "self"))
     (erbutils-random
      '("This is a complicated operation. Can't (yet) perform operation on self. "
-       "Please train me on this particular maneuver. ")))
+       "Please train me on this maneuver. ")))
    (t
     (eval
      (erbutils-random
