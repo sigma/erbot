@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2003-05-29 09:03:35 deego>
+;; Time-stamp: <2003-06-17 09:17:05 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -112,8 +112,8 @@ nil nil\ nil nil nil nil nil nil nil nil]
    (erbeng-localp localp)
    (erbeng-userinfo userinfo)
    (erbc-found-query-p nil)
-   (erbc-addressedatlast nil)
-   (erbc-message-sans-bot-name erbc-message-sans-bot-name)
+   (erbc-internal-addressedatlast nil)
+   (erbc-internal-message-sans-bot-name erbc-internal-message-sans-bot-name)
    (erbc-prestring erbc-prestring)
    tmpvar
    parsed-msg rep

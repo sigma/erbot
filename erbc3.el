@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-16 16:12:18 deego>
+;; Time-stamp: <2003-06-17 08:52:18 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -212,6 +212,7 @@ to query using PROMPT, or just return t."
 (defun erbnoc-write-sexps-to-file (file sexps)
   (erbutils-mkback-maybe file)
   (find-file file)
+  (widen)
   (delete-region (point-min) (point-max))
   (insert
    (mapconcat
@@ -237,10 +238,24 @@ to query using PROMPT, or just return t."
 	  
 
 
+(defun erbc-pv-get-variables-values ()
+  (let 
+      ((vars 
+	(apropos-internal "^erbc-" 'boundp)))
+    (mapcar
+     (lambda (v)
+       (list 'defvar v 
+	     (eval v)))
+     vars)))
 
 
 
-
+;;;###autoload
+(defun erbc-pv-save ()
+  (interactive)
+  (erbnoc-write-sexps-to-file 
+   erbnoc-pv-file 
+   (erbc-pv-get-variables-values)))
 
 
 

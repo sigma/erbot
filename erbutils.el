@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-16 15:24:07 deego>
+;; Time-stamp: <2003-06-17 09:24:19 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -415,7 +415,7 @@ as many times as it returns a...
    (erbutils-random
     '((erbutils-add-nick msg)
       msg)
-    erbc-add-nick-weights
+    erbc-internal-add-nick-weights
     )))
 
 

@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-16 14:55:53 deego>
+;; Time-stamp: <2003-06-17 09:27:58 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -147,13 +147,13 @@
 (defvar erbnoc-read-mode nil)
 (defvar erbnoc-read-input nil)
 
-(defvar erbc-botread-prompt "Enter: ")
+(defvar erbc-internal-botread-prompt "Enter: ")
 
 (defun erbc-botread (&optional prompt)
-  (unless prompt (setq prompt erbc-botread-prompt))
+  (unless prompt (setq prompt erbc-internal-botread-prompt))
   (ignore-errors
     (erbot-reply (concat prompt "") proc nick tgt msg nil))
-  (setq erbc-botread-prompt "Enter: ")
+  (setq erbc-internal-botread-prompt "Enter: ")
   (setq erbnoc-read-mode t)
   (while 
       (not erbnoc-read-input)
@@ -167,7 +167,7 @@
 (defun erbc-dun-mprinc (str)
   (ignore-errors
     (erbot-reply str proc nick tgt msg nil))
-  (setq erbc-botread-prompt str))  
+  (setq erbc-internal-botread-prompt str))  
     
 (defun erbc-botread-feed-internal (str)
   (setq erbnoc-read-input str)
@@ -269,7 +269,7 @@ bash-specific-quotes, like random, should work."
 
 
 (defun erbc-makunbound (&optional sym)
-  (unless sym (errior "Syntax: , (makunbound 'symbol)"))
+  (unless sym (error "Syntax: , (makunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox-quoted sym))
   (makunbound sym))

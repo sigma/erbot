@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-16 22:28:02 deego>
+;; Time-stamp: <2003-06-17 09:27:14 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -83,12 +83,12 @@ this string shoul dhave a length 2
 
 
 ;; Real code
-(defcustom erbc-botito-mode nil
+(defcustom erbc-internal-botito-mode nil
   "Mode to turn on more english-like bunny-behavior"
   :group 'erbc)
 (defvar erbc-tgt "")
 (defvar erbc-nick "")
-(defcustom erbc-questions
+(defcustom erbc-internal-questions
   '("what" "where" "who" 
     ;; no please: 
     ;;"why" 
@@ -110,10 +110,10 @@ this string shoul dhave a length 2
 ;; (make-variable-buffer-local 'erbc-prestring)
 
 
-(defcustom erbc-google-level 0
+(defcustom erbc-internal-google-level 0
   "75 is a good choice for fsbot. "
   :group 'erbc)
-(defcustom erbc-english-max-matches 20
+(defcustom erbc-internal-english-max-matches 20
   "This check is triggerred only when the users' original request didnot
 succeed and so we have gone into an english-mode and are searching.
 If the number of matches results in 1000, then most likely, the word
@@ -122,33 +122,33 @@ was something like i or you and the user was not intending a search.
 
 :group 'erbc)
 
-(defcustom erbc-questions-all
+(defcustom erbc-internal-questions-all
   '("what" "where" "who" "why" "how" 
     "whose" "which"
     )
   ""
   :group 'erbc)
 
-(defcustom erbc-articles
+(defcustom erbc-internal-articles
   '("the" "a" "an" "this" "that")
   ""
   :group 'erbc)
 
 
-(defcustom erbc-english-target-regexp
+(defcustom erbc-internal-english-target-regexp
   "^$"
   "Targets that prefer english.. so erbot will usually go to a
 english-mode unless near-exact matches.  This shall usually happen on
 the few social channels erbot hangs out on. "
   :group 'erbc)
 
-(defcustom erbc-query-target-regexp
+(defcustom erbc-internal-query-target-regexp
   "^$"
   "Targets where erbot will respond to queries like: 
 Foo ? "
   :group 'erbc)
 
-(defcustom erbc-add-nick-weights
+(defcustom erbc-internal-add-nick-weights
   '(1 ;; yes
     5 ;;no
     )
@@ -404,16 +404,16 @@ automatically."
 When non nil, means that the msg was not meant to the bot, so the
 reply please be abbreviated. ")
 
-(defvar erbc-addressedatlast nil
+(defvar erbc-internal-addressedatlast nil
   "internal.. normally nil")
 
-(defvar erbc-original-message ""
+(defvar erbc-internal-original-message ""
   "internal")
 
-(defvar erbc-message-sans-bot-name ""
+(defvar erbc-internal-message-sans-bot-name ""
   "internal")
 
-(defvar erbc-max-lisp-p nil)
+(defvar erbc-internal-max-lisp-p nil)
 
 
 (defun erbc-respond-to-query-p (msg)
@@ -452,11 +452,11 @@ Optional argument FOO ."
   ;nick
   ;tgtg
   ;foo
-  (setq erbc-original-message msg)
+  (setq erbc-internal-original-message msg)
   (let 
       (
        (origmsg msg)
-       ;;(erbc-message-sans-bot-name erbc-message-sans-bot-name)
+       ;;(erbc-internal-message-sans-bot-name erbc-internal-message-sans-bot-name)
        (foundquery nil)
        (foundkarma nil)
        ;; if t, means either our name was at last, or eevn if at
@@ -564,7 +564,7 @@ Optional argument FOO ."
 	      (null (second msg))
 	      (string-match "^," (second msg))
 	      (string-match "^:" (second msg)))
-	   (setq erbc-addressedatlast t))
+	   (setq erbc-internal-addressedatlast t))
 	 (setq msg (cdr msg))
 	 (setq leave-alone-p nil)))
      ((and (first (last msg)) (string-match erbot-nick (first (last msg))))
@@ -573,7 +573,7 @@ Optional argument FOO ."
       ;;(progn
       ;;(setq msg (reverse (cdr (reverse msg)))))
       (when leave-alone-p
-	(setq erbc-addressedatlast t))
+	(setq erbc-internal-addressedatlast t))
       (setq leave-alone-p nil))
      
      
@@ -588,7 +588,7 @@ Optional argument FOO ."
      (bluemoon
       (setq leave-alone-p nil)))
     
-    (setq erbc-message-sans-bot-name 
+    (setq erbc-internal-message-sans-bot-name 
 	  (mapconcat 'identity msg " "))
 
     (when (and 
@@ -596,7 +596,7 @@ Optional argument FOO ."
 	   ;; if tgt is nil, we are being asked to parse
 	   ;; something.. so cool
 	   tgt
-	   (string-match erbc-query-target-regexp tgt))
+	   (string-match erbc-internal-query-target-regexp tgt))
       ;; if this condition causes the thing to be triggerred, then
       ;; setq temporarily, a global variable... so responses are muted
       ;; in general..
@@ -620,7 +620,7 @@ Optional argument FOO ."
 	  (if  (and goonp
 		    (member 
 		     (erbutils-downcase (first newmsg))
-		     erbc-questions))
+		     erbc-internal-questions))
 	      (setq newmsg (cdr newmsg))
 	    (setq goonp nil))
 	  (if  (and goonp
@@ -636,7 +636,7 @@ Optional argument FOO ."
 	  (if  (and goonp
 		    (member 
 		     (erbutils-downcase (first newmsg)) 
-		     erbc-articles))
+		     erbc-internal-articles))
 	      (setq newmsg (cdr newmsg)))
 	  (unless (equal (length newmsg) 1) 
 	    (setq goonp nil))))
@@ -660,7 +660,7 @@ Optional argument FOO ."
     ;;        ((and
     ;; 	 (equal (length msg) 3)
     ;; 	 (member (erbutils-downcase (first msg))
-    ;; 		 erbc-questions)
+    ;; 		 erbc-internal-questions)
     ;; 	 (member (erbutils-downcase (second msg))
     ;; 		 '("is" "are")))
     ;; 	(setq msg (cons "describe" (cddr msg)))
@@ -670,7 +670,7 @@ Optional argument FOO ."
     ;;        ((and
     ;; 	 (equal (length msg) 3)
     ;; 	 (member (erbutils-downcase (first msg))
-    ;; 		 erbc-questions)
+    ;; 		 erbc-internal-questions)
     ;; 	 (member (erbutils-downcase (second msg))
     ;; 		 '("is" "are")))
     ;; 	(setq msg (cons "describe" (cddr msg)))
@@ -732,8 +732,8 @@ Optional argument FOO ."
 	    ((and lispmsg 
 		  (or
 		   (listp lispmsg)
-		   (and erbc-max-lisp-p (numberp lispmsg))
-		   (and erbc-max-lisp-p (stringp lispmsg))
+		   (and erbc-internal-max-lisp-p (numberp lispmsg))
+		   (and erbc-internal-max-lisp-p (stringp lispmsg))
 		   (and (symbolp lispmsg)
 			(let ((newsym
 			       (intern (format "erbc-%S" lispmsg))))
@@ -790,7 +790,7 @@ Optional argument FOO ."
 		  
 		  )
 	      (member (erbutils-downcase (first msg))
-		      erbc-questions-all
+		      erbc-internal-questions-all
 		      ))
 	     
 
@@ -812,7 +812,7 @@ Optional argument FOO ."
 
 	      ;; do not want to take such cases, 100% are annoying
 	      ;; false matches.
-	      (not erbc-addressedatlast)
+	      (not erbc-internal-addressedatlast)
 
 	      (or 
 	       (erbutils-string= (second msg) "is" t)
@@ -837,7 +837,7 @@ Optional argument FOO ."
 	     (and 
 	      ;; do not want to take such cases, 100% are annoying
 	      ;; false matches.
-	      (not erbc-addressedatlast)
+	      (not erbc-internal-addressedatlast)
 	      
 	      (or (erbutils-string= (second msg) "is")
 		  (erbutils-string= (second msg) "are")))
@@ -851,7 +851,7 @@ Optional argument FOO ."
 
 	    
 	    ((and 
-	      (not erbc-addressedatlast)
+	      (not erbc-internal-addressedatlast)
 	      (or
 	       (erbutils-string= (first msg) "no" t)
 	       (erbutils-string= (first msg) "no," t))
@@ -864,7 +864,7 @@ Optional argument FOO ."
 	    
 	    ((let ((foo (first msg)))
 	       (and
-		(not erbc-addressedatlast)
+		(not erbc-internal-addressedatlast)
 		(<= (length msg) 2)
 		(string-match "\\(++\\|--\\)$" foo)
 		(not (erbc-notes foo
@@ -876,9 +876,9 @@ Optional argument FOO ."
 	       (if plusp
 		   `(erbc-karma-increase ,bar ,sec)
 		 `(erbc-karma-decrease ,bar ,sec))))
-	    ((or erbc-addressedatlast
-		 (and erbc-botito-mode (> (length msg) 3)))
-	     `(funcall 'erbc-english-only ,origmsg ,erbc-addressedatlast))
+	    ((or erbc-internal-addressedatlast
+		 (and erbc-internal-botito-mode (> (length msg) 3)))
+	     `(funcall 'erbc-english-only ,origmsg ,erbc-internal-addressedatlast))
 
 	    (t
 	     ;;`(apply 'erbc-describe ',msg)
@@ -926,7 +926,7 @@ Else, of course, do the usual thing: viz. call describe...
 	mainterm firstterm remainder N M prestring expr tmpv
 	(searchp nil)
 	(multitermp nil)
-	(erbc-google-level erbc-google-level)
+	(erbc-internal-google-level erbc-internal-google-level)
 	)
     (cond
      ((<= len 1)
@@ -955,7 +955,7 @@ Else, of course, do the usual thing: viz. call describe...
       ;; multiple terms, you might as well include a result from
       ;; google among the search results. 
       (when multitermp 
-	(setq erbc-google-level (+ erbc-google-level 25)))
+	(setq erbc-internal-google-level (+ erbc-internal-google-level 25)))
       
       (when (and multitermp
 		 ;; viz. if it will work
@@ -1274,10 +1274,10 @@ EXPR (optional) is the full initial expression.. "
 		     )
 	  
 	  )
-    (when (and (> erbc-google-level 80) (> len 1))
+    (when (and (> erbc-internal-google-level 80) (> len 1))
       (setq str5 
 	    (let ((foo (erbc-google-lucky-raw
-			erbc-message-sans-bot-name)))
+			erbc-internal-message-sans-bot-name)))
 	      (if foo (concat " " foo) str5))))
     (cond
      ((and prestring (= len 1))
@@ -1285,13 +1285,13 @@ EXPR (optional) is the full initial expression.. "
      ((and (> len 0) 
 	   (or
 	    (not prestring)
-	    (< len erbc-english-max-matches)))
+	    (< len erbc-internal-english-max-matches)))
       (unless (stringp prestring)
 	(setq prestring ""))
       (concat prestring str0 str1 str2 str3 str4 str5))
      (t (apply 'erbc-search-wide regexp N M 
 	       "Try: " 
-	       (or expr erbc-original-message)
+	       (or expr erbc-internal-original-message)
 	       rest)))))
 
 
@@ -1324,7 +1324,7 @@ EXPR is the full initial expression, well, mostly..
 	 (str4 "")
 	 (str5 "")
 	 )
-    (when (and (> len erbc-english-max-matches) (not prestring))
+    (when (and (> len erbc-internal-english-max-matches) (not prestring))
       (setq str0 (format "Perhaps try also , s %s .  " regexp)))
     (unless prestring (setq str1 (format "%s match(es). " len)))
     (if (and (integerp N) (> N 0) (not prestring))
@@ -1334,17 +1334,17 @@ EXPR is the full initial expression, well, mostly..
 	  ;;(format "%s" results)
 	  (mapconcat 'identity results " ")
 	  )
-    (when (and (> erbc-google-level 80) (> len 1))
+    (when (and (> erbc-internal-google-level 80) (> len 1))
       (setq str5 
 	    (let ((foo (apply 'erbc-google-lucky-raw
-			      erbc-message-sans-bot-name
+			      erbc-internal-message-sans-bot-name
 			      (erbc-get-google-defaults)
 			      )))
 			
 	      (if foo (concat " " foo) str5))))
     
     ;; why does this not work as expeecteD?  adding a nil for now: 
-    (when (and prestring (>= len erbc-english-max-matches))
+    (when (and prestring (>= len erbc-internal-english-max-matches))
       (setq erbc-prestring 
 	    (concat erbc-prestring
 		    "[Too many DB matches] ")))
@@ -1353,12 +1353,12 @@ EXPR is the full initial expression, well, mostly..
       (erbc-describe (first results)))
      ((and (> len 0)
 	   (or (not prestring)
-	       (< len erbc-english-max-matches)))
+	       (< len erbc-internal-english-max-matches)))
       (unless (stringp prestring)
 	(setq prestring ""))
       (concat prestring str0 str1 str2 str3 str4 str5))
      (t 
-      (erbc-english-only (or expr erbc-original-message)
+      (erbc-english-only (or expr erbc-internal-original-message)
 			   nil
 			   )))))
 
@@ -1371,7 +1371,7 @@ EXPR is the full initial expression, well, mostly..
   "when addressedatlast is t, means that fsbot/botito was triggered because
 it was addressed at last. "
   ;; expr should already be a string ...but just in case:
-  (unless expr (setq expr erbc-original-message))
+  (unless expr (setq expr erbc-internal-original-message))
   (setq expr (erbutils-downcase (erbutils-stringify expr
 
 						    )))
@@ -1514,11 +1514,11 @@ it was addressed at last. "
       )
     
     (if gotit ans
-      (if (and addressedatlast (not erbc-botito-mode))
+      (if (and addressedatlast (not erbc-internal-botito-mode))
 	  'noreply
-	;;(cond ((> rand erbc-doctor-rarity)
-	(if (and (> erbc-google-level 50) (not nogoogle))
-	    (apply 'erbc-google-from-english erbc-message-sans-bot-name
+	;;(cond ((> rand erbc-internal-doctor-rarity)
+	(if (and (> erbc-internal-google-level 50) (not nogoogle))
+	    (apply 'erbc-google-from-english erbc-internal-message-sans-bot-name
 		   (erbc-get-google-defaults)
 		   )
 	  (funcall 'erbc-do-weighted-random (erbutils-stringify
@@ -1693,11 +1693,11 @@ it was addressed at last. "
        (list len (subseq results N M)))))
 		       
 
-(defvar erbc-describe-literally-p nil)
+(defvar erbc-internal-describe-literally-p nil)
 (defun erbc-describe-literally (&rest rest)
   (unless rest
     (error "Format: , describe-literally TERM [FROM] [TO]"))
-  (let ((erbc-describe-literally-p t)
+  (let ((erbc-internal-describe-literally-p t)
 	(fir (first rest))
 	(res (rest rest)))
     (cond
@@ -1775,7 +1775,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	       (ee (cdr bb))
 	       (expandp 
 		(and 
-		 (not erbc-describe-literally-p)
+		 (not erbc-internal-describe-literally-p)
 		 
 		 ;;(equal len 1)
 		 ))
@@ -1891,7 +1891,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	   expr
 	   )))))))
 
-(defvar erbc-doctor-rarity 80
+(defvar erbc-internal-doctor-rarity 80
   "A large number(1--100) means rarer doctor inovcation upon no matches."
   )
 
@@ -1936,7 +1936,7 @@ Optional argument TERMS ."
     ;;(3 (erbc-bottalk))
     )
 
-(defcustom erbc-english-weights
+(defcustom erbc-internal-english-weights
   '(58 ;; doc
     17 ;; yow
     17 ;; fortune
@@ -1959,7 +1959,7 @@ Optional argument TERMS ."
 	(erbc-spook)
 	(erbc-pray)
 	)
-      erbc-english-weights))))
+      erbc-internal-english-weights))))
 
 
 
@@ -2766,10 +2766,10 @@ number N, and ending at M-1. The first record is numbered 0.
 ;; (erc-cmd-MSG google "hi")
 ;; nil)
 
-(defcustom erbc-google-time 4
+(defcustom erbc-internal-google-time 4
   "" :group 'erbc)
 
-(defcustom erbc-dictionary-time 4
+(defcustom erbc-internal-dictionary-time 4
   "" :group 'erbc)
 
 (defun erbc-google-raw (&rest args)
@@ -2779,7 +2779,7 @@ number N, and ending at M-1. The first record is numbered 0.
 		       (format "%s" a))
 		    args " ")))
     (with-timeout 
-	(erbc-google-time 
+	(erbc-internal-google-time 
 	 (list concatted (list "google---TimedOut")))
       (let* ((results
 	      ;; this ignore-errors is very important.
@@ -2821,8 +2821,8 @@ number N, and ending at M-1. The first record is numbered 0.
 		"No match. ")))
      (t
       (erbc-english-only 
-       erbc-original-message
-       erbc-addressedatlast
+       erbc-internal-original-message
+       erbc-internal-addressedatlast
        'nogoogle
        )))))
 
@@ -3265,7 +3265,7 @@ initargs.  Then the function is applied as (function @initargs string
   (unless (stringp word)
     (setq word (format "%s" word)))
   (with-timeout 
-      (erbc-dictionary-time "Dictionary--TimedOut")
+      (erbc-internal-dictionary-time "Dictionary--TimedOut")
     (dictionary-search word)
     (save-window-excursion
      (switch-to-buffer "*Dictionary buffer*")
@@ -3466,7 +3466,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (defalias 'erbc-stud 'erbc-studlify)
 
-(defcustom erbc-studlify-maybe-weights
+(defcustom erbc-internal-studlify-maybe-weights
   '(100 1)
   ""
   :group 'erbc)
@@ -3476,11 +3476,11 @@ last time i checked , equalp seemed to work as well.. "
    (erbutils-random
     '((erbutils-stringify args)
       (apply 'erbc-studlify args))
-    erbc-studlify-maybe-weights
+    erbc-internal-studlify-maybe-weights
     )))
 
 
-(defcustom erbc-h4x0r-maybe-weights
+(defcustom erbc-internal-h4x0r-maybe-weights
   '(100 1)
   ""
   :group 'erbc)
@@ -3494,7 +3494,7 @@ last time i checked , equalp seemed to work as well.. "
 	   (erbutils-random
 	    '(aa
 	      (apply 'erbc-h4x0r args))
-	    erbc-h4x0r-maybe-weights
+	    erbc-internal-h4x0r-maybe-weights
 	    )))))
     (or bb aa)))
 
