@@ -1,5 +1,5 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2004-03-19 22:20:40 deego>
+;; Time-stamp: <2005-01-02 16:43:59 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
@@ -165,8 +165,14 @@ If no record exists, then a nil is returned.
       (bbdb-save-db))))
 
 (defun erbbdb-save ()
-  (bbdb-save-db))
+  (when 
+      erbbdb-save-p
+      (bbdb-save-db)))
 
+(defvar erbbdb-save-p t
+  "Should normally be t, except inside special constructions. ")
+
+  
 (defun erbbdb-create (name newnotes)
   "also used by other functions in here.."
   (bbdb-records)
