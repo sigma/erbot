@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2003-06-20 12:33:30 deego>
+;; Time-stamp: <2003-06-23 08:27:51 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -311,7 +311,7 @@ to query using PROMPT, or just return t."
                              (round unpercent))))
                    winning-table))))
     (clrhash winning-table)
-    (clrhash losing-table)))
+    (clrhash losing-table))))
 
 (defvar erbnoc-chamber (random 6))
 
