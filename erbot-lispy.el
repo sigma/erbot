@@ -17,6 +17,8 @@
 (require 'lispy)
 (require 'erbot)
 
+(defvar backup-buffer nil)
+
 (defun erbot-lispy-remote (line)
    (let* ((nick nil)
           (tgt nil)
@@ -34,7 +36,7 @@
        (setq tgt "#chan")
        (setq msg (match-string 2 line)))
       )
-
+     (setq backup-buffer (current-buffer))
      (when (and lispy-connected nick)
        (progn
          (setq erbot-end-user-nick-latest nick)
@@ -68,6 +70,7 @@
 	 (equal main-reply "noreply"))
       ;; now we are actually gonna reply.
       (setq reply (fs-limit-lines reply))
+      (set-buffer backup-buffer)
       (let ((lines (split-string reply "\n")))
         (mapc
          (lambda (line)
