@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-03-16 09:35:39 deego>
+;; Time-stamp: <2004-03-23 12:18:17 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -497,7 +497,7 @@ reply please be abbreviated. ")
   ;; kensanata is, and is not asking for information. So, please don't
   ;; respond in such a case.
   (not
-   (member msg (mapcar 'first channel-members))))
+   (member msg (mapcar 'first (fs-channel-members-all)))))
 
 (defcustom fs-internal-parse-preprocess-message-remove-end-chars
   ;; remove trailing ^A's that occur on action strings...
@@ -3021,7 +3021,7 @@ here."
 	    (setq function g))))
     (let ((fstr
 	   (save-excursion
-	     (find-function-do-it function t'set-buffer)
+	     (find-function-do-it function t 'set-buffer)
 	     (buffer-substring (point)
 			       (save-excursion 
 				 (forward-sexp 1)
@@ -3767,6 +3767,13 @@ last time i checked , equalp seemed to work as well.. "
       (apply '/ (cons (float (car args)) (cdr args))))))
 
 
+(defun fs-channel-members-all ()
+  (cond
+   ;; for earlier ERC. 
+   ((boundp 'channel-members) channel-members)
+   ;; for later CVS versions of ERC.
+   (t nil)))
+
 (defun fs-channel-members (&optional n m &rest args)
   (when (stringp n) 
     (setq n (ignore-errors (read n))))
@@ -3774,11 +3781,11 @@ last time i checked , equalp seemed to work as well.. "
     (setq m (ignore-errors (read m))))
   (unless (integerp n) (setq n 0))
   (unless (integerp m) (setq m nil))
-  (subseq channel-members n m))
+  (subseq (fs-channel-members-all) n m))
 
 
 (defun fs-length-channel-members (&rest args)
-  (length channel-members))
+  (length (fs-channel-members-all)))
 (defalias 'fs-number-channel-members 'fs-length-channel-members)
 
 (defun fs-cto (&rest args)
@@ -4365,7 +4372,6 @@ last time i checked , equalp seemed to work as well.. "
 
 (erbutils-defalias '(oct-/ oct-+ ))
 (erbutils-defalias '(lsh))
-(erbutils-defalias '(setq))
 (erbutils-defalias '(obarray))
 
 
