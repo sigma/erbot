@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.18 2004/07/26 20:18:59 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.19 2004/12/02 11:35:04 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.18 $")
+  "Version 0.2 $Revision: 1.19 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -313,7 +313,8 @@ see erbmsg-question part below :)."
 
 (defun erbmsg-generate-msg-cookie (message)
   "Generates a message cookie for `message' and returns it."
-  (let* ((msg-cookie (format "%.8x" (random))))
+  (let* ((msg-cookie (format "%.4x%.4x"
+                             (mod (random) 65536) (mod (random) 65536))))
     (puthash msg-cookie message erbmsg-msg-cookie-hash-table)
     msg-cookie))
 
