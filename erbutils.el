@@ -1,4 +1,5 @@
-;;; erbutils.el --- ;; Time-stamp: <2003-05-23 08:43:59 deego>
+;;; erbutils.el --- 
+;; Time-stamp: <03/05/24 22:52:26 freundt>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -118,24 +119,24 @@
       msg-list
     (mapconcat 
      '(lambda (arg)
-	(if (stringp arg) arg
-	  (format "%s" arg)))
+  (if (stringp arg) arg
+    (format "%s" arg)))
      msg-list " " )))
 
 
 (defun erbutils-string= (foo bar &optional ignore-case)
   (and foo bar 
        (if ignore-case 
-	   (string= (downcase foo) (downcase bar))
-	 (string= foo bar))))
+     (string= (downcase foo) (downcase bar))
+   (string= foo bar))))
 
 
 (defun erbutils-errors-toggle ()
   (interactive)
   (setq erbutils-ignore-errors-p 
-	(not erbutils-ignore-errors-p))
+  (not erbutils-ignore-errors-p))
   (message "erbutils-ignore-errors-p set to %s"
-	   erbutils-ignore-errors-p))
+     erbutils-ignore-errors-p))
 
 
 (defvar erbutils-ignore-errors-p t)
@@ -144,47 +145,47 @@
   (let ((err (gensym)))
     `(condition-case ,err (progn ,@body)
        (error
-	(progn
-					;(ding t)
-					;(ding t)
-	  ;;(message "ERROR: %s" (error-message-string ,err))
-	  ;;(sit-for 1)
-	  (ding t)
-	  (unless erbutils-ignore-errors-p
-	    (error (error-message-string ,err)))
-	  (unless erbc-found-query-p 
-	    (erbutils-error 
-	     "%s"
-	     (erbc-limit-lines
-	      (error-message-string ,err)))))))))
+  (progn
+          ;(ding t)
+          ;(ding t)
+    ;;(message "ERROR: %s" (error-message-string ,err))
+    ;;(sit-for 1)
+    (ding t)
+    (unless erbutils-ignore-errors-p
+      (error (error-message-string ,err)))
+    (unless erbc-found-query-p 
+      (erbutils-error 
+       "%s"
+       (erbc-limit-lines
+        (error-message-string ,err)))))))))
 
 
 (defun erbutils-error (&rest args)
   (unless args (error 
-		(format "Syntax: , (erbc-error msg &rest format-args)")))
+    (format "Syntax: , (erbc-error msg &rest format-args)")))
   (let* ((main
-	  (erbutils-random 
-	   '("oops, error.  %s"
-	     ;;"Blue Screen: %s"
-	     "BEEEP: %s"
-	     "ERROR: %s"
-	     "err..%s"
-	     ":(   %s"
-	     "Doh!  %s"
-	     "Oh sh**!  %s"
-	     "Nooo!  %s"
-	     "oops,  %s"
-	     "Uh oh,  %s"
-	     "whoops,  %s"
-	     )))
-	 (result
-	  (format main
-		  (apply 'format args))))
+    (erbutils-random 
+     '("oops, error.  %s"
+       ;;"Blue Screen: %s"
+       "BEEEP: %s"
+       "ERROR: %s"
+       "err..%s"
+       ":(   %s"
+       "Doh!  %s"
+       "Oh sh**!  %s"
+       "Nooo!  %s"
+       "oops,  %s"
+       "Uh oh,  %s"
+       "whoops,  %s"
+       )))
+   (result
+    (format main
+      (apply 'format args))))
     (or
      (ignore-errors
        (erbc-h4x0r-maybe
-	(erbc-studlify-maybe
-	 result)))
+  (erbc-studlify-maybe
+   result)))
      result)))
 
 
@@ -192,20 +193,20 @@
 (defun erbutils-matching-functions (string)
   "returns all functions that start with string"
   (apropos-internal (concat "^" (regexp-quote string))
-		    'fboundp)
+        'fboundp)
   
   ;; (let* ((results nil)
-;;; 	 (len (- (length obarray) 1))
-;;; 	 (ctr 0))
+;;;    (len (- (length obarray) 1))
+;;;    (ctr 0))
 ;;;     (while (< ctr len)
 ;;;       (incf ctr)
 ;;;       (if (and
-;;; 	   (equal (string-match string (format "%s" (aref obarray
-;;; 							  ctr)))
-;;; 		  0)
-;;; 	   (fboundp (aref obarray ctr))
-;;; 	   )
-;;; 	  (push (aref obarray ctr) results)))
+;;;      (equal (string-match string (format "%s" (aref obarray
+;;;                 ctr)))
+;;;       0)
+;;;      (fboundp (aref obarray ctr))
+;;;      )
+;;;     (push (aref obarray ctr) results)))
 ;;;     results)
 )
 
@@ -222,8 +223,8 @@
 
  "
    (mapcar '(lambda (arg)
- 	     (list 'quote arg))
- 	  ls))
+       (list 'quote arg))
+    ls))
 
 (defun erbutils-random (list &optional weights)
   "Return a random element from list. 
@@ -236,23 +237,23 @@ as many times as it returns a...
     (nth (random (length list)) list))
    (t
     (let* ((len (length list))
-	   (revw (reverse weights))
-	   (fir (car revw))
-	   )
+     (revw (reverse weights))
+     (fir (car revw))
+     )
       (while (< (length revw) len)
-	(setq revw (cons fir revw)))
+  (setq revw (cons fir revw)))
       (setq weights (reverse revw))
       (let* ((total (apply '+ weights))
-	     (choice (random total))
-	     (curw weights)
-	     (ctr 0)
-	     (num 0))
-	
-	(while (>= choice (+ ctr (car curw)))
-	  (setq ctr (+ ctr (car curw)))
-	  (incf num)
-	  (setq curw (cdr curw)))
-	(nth num list))))))
+       (choice (random total))
+       (curw weights)
+       (ctr 0)
+       (num 0))
+  
+  (while (>= choice (+ ctr (car curw)))
+    (setq ctr (+ ctr (car curw)))
+    (incf num)
+    (setq curw (cdr curw)))
+  (nth num list))))))
 
 
 
@@ -260,145 +261,145 @@ as many times as it returns a...
   "Like describe-variable, but doesn't print the actual value.."
   ;;   (interactive
   ;;    (let ((v (variable-at-point))
-  ;; 	 (enable-recursive-minibuffers t)
-  ;; 	 val)
+  ;;   (enable-recursive-minibuffers t)
+  ;;   val)
   ;;      (setq val (completing-read (if (symbolp v)
-  ;; 				    (format
-  ;; 				     "Describe variable (default %s): " v)
-  ;; 				  "Describe variable: ")
-  ;; 				obarray 'boundp t nil nil
-  ;; 				(if (symbolp v) (symbol-name v))))
+  ;;            (format
+  ;;             "Describe variable (default %s): " v)
+  ;;          "Describe variable: ")
+  ;;        obarray 'boundp t nil nil
+  ;;        (if (symbolp v) (symbol-name v))))
   ;;      (list (if (equal val "")
-  ;; 	       v (intern val)))))
+  ;;         v (intern val)))))
   (unless (bufferp buffer) (setq buffer (current-buffer)))
   (if (not (symbolp variable))
       (message "Unknown variable or You did not specify a variable")
     (let (valvoid)
       (with-current-buffer buffer
-	(with-output-to-temp-buffer "*Help*"
-	  ;; (prin1 variable)
-	  ;; 	  (if (not (boundp variable))
-	  ;; 	      (progn
-	  ;; 		(princ " is void")
-	  ;; 		(setq valvoid t))
-	  ;; 	    (let ((val (symbol-value variable)))
-	  ;; 	      (with-current-buffer standard-output
-	  ;; 		(princ "'s value is ")
-	  ;; 		(terpri)
-	  ;; 		(let ((from (point)))
-	  ;; 		  (pp val)
-	  ;; 		  (help-xref-on-pp from (point))
-	  ;; 		  (if (< (point) (+ from 20))
-	  ;; 		      (save-excursion
-	  ;; 			(goto-char from)
-	  ;; 			(delete-char -1)))))))
-	  (terpri)
-	  (if (local-variable-p variable)
-	      (progn
-		(princ (format "Local in buffer %s; " (buffer-name)))
-		;; (if (not (default-boundp variable))
-		;; 		    (princ "globally void")
-		;; 		  (let ((val (default-value variable)))
-		;; 		    (with-current-buffer standard-output
-		;; 		      (princ "global value is ")
-		;;  (terpri) Fixme: pp can take an age if you happen
-		;; 		      ;; to ask for a very large
-		;; 		      ;; expression.  We should
-		;; 		      ;; probably print it raw once
-		;; 		      ;; and check it's a sensible
-		;; 		      ;; size before prettyprinting.
-		;; 		      ;; -- fx
-		;; 		      (let ((from (point)))
-		;; 			(pp val)
-		;; 			(help-xref-on-pp from (point))
-		;; 			(if (< (point) (+ from 20))
-		;; 			    (save-excursion
-		;; 			      (goto-char from)
-		;; 			      (delete-char -1)))))))
-		(terpri)))
-	  (terpri)
-	  ;; (with-current-buffer standard-output
-	  ;; 	    (if (> (count-lines (point-min) (point-max)) 10)
-	  ;; 		(progn
-	  ;; 		  ;; Note that setting the syntax table like below
-	  ;; 		  ;; makes forward-sexp move over a `'s' at the end
-	  ;; 		  ;; of a symbol.
-	  ;; 		  (set-syntax-table emacs-lisp-mode-syntax-table)
-	  ;; 		  (goto-char (point-min))
-	  ;; 		  (if valvoid
-	  ;; 		      (forward-line 1)
-	  ;; 		    (forward-sexp 1)
-	  ;; 		    (delete-region (point) (progn
-	  ;; 		    (end-of-line) (point)))
-	  ;; 		    (insert " value is shown below.\n\n")
-	  ;; 		    (save-excursion
-	  ;; 		      (insert "\n\nValue:"))))))
-	  ;; (princ "Documentation:")
-	  (terpri)
-	  (let ((doc 
-		 (documentation-property variable 'variable-documentation)))
-	    (princ (or doc "not documented as a variable.")))
+  (with-output-to-temp-buffer "*Help*"
+    ;; (prin1 variable)
+    ;;    (if (not (boundp variable))
+    ;;        (progn
+    ;;    (princ " is void")
+    ;;    (setq valvoid t))
+    ;;      (let ((val (symbol-value variable)))
+    ;;        (with-current-buffer standard-output
+    ;;    (princ "'s value is ")
+    ;;    (terpri)
+    ;;    (let ((from (point)))
+    ;;      (pp val)
+    ;;      (help-xref-on-pp from (point))
+    ;;      (if (< (point) (+ from 20))
+    ;;          (save-excursion
+    ;;      (goto-char from)
+    ;;      (delete-char -1)))))))
+    (terpri)
+    (if (local-variable-p variable)
+        (progn
+    (princ (format "Local in buffer %s; " (buffer-name)))
+    ;; (if (not (default-boundp variable))
+    ;;        (princ "globally void")
+    ;;      (let ((val (default-value variable)))
+    ;;        (with-current-buffer standard-output
+    ;;          (princ "global value is ")
+    ;;  (terpri) Fixme: pp can take an age if you happen
+    ;;          ;; to ask for a very large
+    ;;          ;; expression.  We should
+    ;;          ;; probably print it raw once
+    ;;          ;; and check it's a sensible
+    ;;          ;; size before prettyprinting.
+    ;;          ;; -- fx
+    ;;          (let ((from (point)))
+    ;;      (pp val)
+    ;;      (help-xref-on-pp from (point))
+    ;;      (if (< (point) (+ from 20))
+    ;;          (save-excursion
+    ;;            (goto-char from)
+    ;;            (delete-char -1)))))))
+    (terpri)))
+    (terpri)
+    ;; (with-current-buffer standard-output
+    ;;      (if (> (count-lines (point-min) (point-max)) 10)
+    ;;    (progn
+    ;;      ;; Note that setting the syntax table like below
+    ;;      ;; makes forward-sexp move over a `'s' at the end
+    ;;      ;; of a symbol.
+    ;;      (set-syntax-table emacs-lisp-mode-syntax-table)
+    ;;      (goto-char (point-min))
+    ;;      (if valvoid
+    ;;          (forward-line 1)
+    ;;        (forward-sexp 1)
+    ;;        (delete-region (point) (progn
+    ;;        (end-of-line) (point)))
+    ;;        (insert " value is shown below.\n\n")
+    ;;        (save-excursion
+    ;;          (insert "\n\nValue:"))))))
+    ;; (princ "Documentation:")
+    (terpri)
+    (let ((doc 
+     (documentation-property variable 'variable-documentation)))
+      (princ (or doc "not documented as a variable.")))
           (help-setup-xref (list #'describe-variable variable (current-buffer))
-			   (interactive-p))
-	  
-	  ;; Make a link to customize if this variable can be customized.
-	  ;; Note, it is not reliable to test only for a custom-type property
-	  ;; because those are only present after the var's definition
-	  ;; has been loaded.
-	  (if (or (get variable 'custom-type) ; after defcustom
-		  (get variable 'custom-loads) ; from loaddefs.el
-		  (get variable 'standard-value)) ; from cus-start.el
-	      (let ((customize-label "customize"))
-		(terpri)
-		(terpri)
-		(princ (concat "You can " customize-label " this variable."))
-		(with-current-buffer "*Help*"
-		  (save-excursion
-		    (re-search-backward
-		     (concat "\\(" customize-label "\\)") nil t)
-		    (help-xref-button 1 (lambda (v)
-					  (if help-xref-stack
-					      (pop help-xref-stack))
-					  (customize-variable v))
-				      variable
-				      "mouse-2, RET: customize variable")))))
-	  ;; Make a hyperlink to the library if appropriate.  (Don't
-	  ;; change the format of the buffer's initial line in case
-	  ;; anything expects the current format.)
-	  (let ((file-name (symbol-file variable)))
-	    (when file-name
-	      (princ "\n\nDefined in `")
-	      (princ file-name)
-	      (princ "'.")
-	      (with-current-buffer "*Help*"
-		(save-excursion
-		  (re-search-backward "`\\([^`']+\\)'" nil t)
-		  (help-xref-button
-		   1 (lambda (arg)
-		       (let ((location
-			      (find-variable-noselect arg)))
-			 (pop-to-buffer (car location))
-			 (goto-char (cdr location))))
-		   variable "mouse-2, RET: find variable's definition")))))
+         (interactive-p))
+    
+    ;; Make a link to customize if this variable can be customized.
+    ;; Note, it is not reliable to test only for a custom-type property
+    ;; because those are only present after the var's definition
+    ;; has been loaded.
+    (if (or (get variable 'custom-type) ; after defcustom
+      (get variable 'custom-loads) ; from loaddefs.el
+      (get variable 'standard-value)) ; from cus-start.el
+        (let ((customize-label "customize"))
+    (terpri)
+    (terpri)
+    (princ (concat "You can " customize-label " this variable."))
+    (with-current-buffer "*Help*"
+      (save-excursion
+        (re-search-backward
+         (concat "\\(" customize-label "\\)") nil t)
+        (help-xref-button 1 (lambda (v)
+            (if help-xref-stack
+                (pop help-xref-stack))
+            (customize-variable v))
+              variable
+              "mouse-2, RET: customize variable")))))
+    ;; Make a hyperlink to the library if appropriate.  (Don't
+    ;; change the format of the buffer's initial line in case
+    ;; anything expects the current format.)
+    (let ((file-name (symbol-file variable)))
+      (when file-name
+        (princ "\n\nDefined in `")
+        (princ file-name)
+        (princ "'.")
+        (with-current-buffer "*Help*"
+    (save-excursion
+      (re-search-backward "`\\([^`']+\\)'" nil t)
+      (help-xref-button
+       1 (lambda (arg)
+           (let ((location
+            (find-variable-noselect arg)))
+       (pop-to-buffer (car location))
+       (goto-char (cdr location))))
+       variable "mouse-2, RET: find variable's definition")))))
 
-	  (print-help-return-message)
-	  (save-excursion
-	    (set-buffer standard-output)
-	    ;; Return the text we displayed.
-	    (buffer-string)))))))
+    (print-help-return-message)
+    (save-excursion
+      (set-buffer standard-output)
+      ;; Return the text we displayed.
+      (buffer-string)))))))
 
 (defun erbutils-itemize (result &optional N shortenedp)
   (unless (integerp N) (setq N 0))
   (let ((ctr N)
-	(rem result)
-	(sofar ""))
+  (rem result)
+  (sofar ""))
     (if (equal (length result) 1)
-	(setq sofar (format "%s" (car result)))
+  (setq sofar (format "%s" (car result)))
       (while rem
-	(setq sofar (concat sofar (format "[%s] %s\n\n" ctr (car
-							     rem))))
-	(setq ctr (+ ctr 1))
-	(setq rem (cdr rem))))
+  (setq sofar (concat sofar (format "[%s] %s\n\n" ctr (car
+                   rem))))
+  (setq ctr (+ ctr 1))
+  (setq rem (cdr rem))))
     (when shortenedp 
       (setq sofar (concat sofar " .. + more entries")))
     sofar))
@@ -407,17 +408,17 @@ as many times as it returns a...
 (defun erbutils-function-minus-doc (fstr &rest ignore)
   "fstr is the string containing the function"
   (let* ((fdoc (if (stringp fstr) fstr (format "%s" fstr)))
-	 newdoc)
+   newdoc)
     (setq newdoc
-	  (with-temp-buffer 
-	    (insert fdoc)
-	    (goto-char (point-min))
-	    (search-forward "(" nil t)
-	    (forward-sexp 4)
-	    (if (stringp (sexp-at-point))
-		;; this sets mark.. bad programming, i know..
-		(backward-kill-sexp 1))
-	    (buffer-string)))
+    (with-temp-buffer 
+      (insert fdoc)
+      (goto-char (point-min))
+      (search-forward "(" nil t)
+      (forward-sexp 4)
+      (if (stringp (sexp-at-point))
+    ;; this sets mark.. bad programming, i know..
+    (backward-kill-sexp 1))
+      (buffer-string)))
     (erbutils-single-lines newdoc)))
 
 (defun erbutils-single-lines (str)
@@ -428,7 +429,7 @@ as many times as it returns a...
     (lambda (str) 
       (string-match "^[ \t]*$" str))
     (split-string str
-		  "\n"))
+      "\n"))
    "\n"))
 
 
@@ -446,17 +447,17 @@ as many times as it returns a...
 (defun erbutils-add-nick (msg)
   (if
       (and (not erbc-found-query-p)
-	   (not erbc-directed)
-	   (> (random 100) 30)
-	   (stringp msg))
+     (not erbc-directed)
+     (> (random 100) 30)
+     (stringp msg))
       (eval 
        (erbutils-random
-	'(
-	  ;;(concat msg ", " erbc-nick)
-	  (concat erbc-nick ": " msg)
-	  (concat erbc-nick ", " msg)
-	  )
-	'(1 1 )))
+  '(
+    ;;(concat msg ", " erbc-nick)
+    (concat erbc-nick ": " msg)
+    (concat erbc-nick ", " msg)
+    )
+  '(1 1 )))
     msg))
 
 
@@ -481,32 +482,43 @@ as many times as it returns a...
       ((ans nil) (donep nil))
     (while (not donep)
       (setq ans
-	    (eval expr))
+      (eval expr))
       (setq donep (<= (length (format "%s" ans)) 
-		     erbutils-eval-until-limited-length)))
+         erbutils-eval-until-limited-length)))
     ans))
 
 
 
 (defun erbutils-replace-strings-in-string (froms tos str &rest
-						 args)
+             args)
   (let ((st str))
     (mapcar*
      (lambda (a b)
        (setq st (apply 'erbutils-replace-string-in-string
-		       a b st args)))
+           a b st args)))
      froms tos)
     st))
   
 ;;;###autoload
-(defun erbutils-replace-string-in-string (from to string &optional
-					       delimited start end)
-  (save-excursion
-    (with-temp-buffer
-      (insert string)
-      (goto-char (point-min))
-      (replace-string from to delimited start end)
-      (buffer-substring-no-properties (point-min) (point-max)))))
+(if (featurep 'xemacs)
+    (defun erbutils-replace-string-in-string (from to string &optional
+                   delimited start end)
+    (save-excursion
+      (with-temp-buffer
+        (insert string)
+        (save-restriction
+          (narrow-to-region (or start (point-min)) (or end (point-max)))
+          (goto-char (point-min))
+          (replace-string from to delimited))
+        (buffer-substring-no-properties (point-min) (point-max)))))
+  (defun erbutils-replace-string-in-string (from to string &optional
+                   delimited start end)
+    (save-excursion
+      (with-temp-buffer
+        (insert string)
+        (goto-char (point-min))
+        (replace-string from to delimited start end)
+        (buffer-substring-no-properties (point-min) (point-max))))))
 
 (defun erbutils-sublist-p (a b &optional start)
   "tells if list a is a member of list b.  If start is true, the match
@@ -515,21 +527,21 @@ should start at the beginning of b."
   ((null a) t)
   ((null b) nil)
   (start (and
-	  (equal (car a) (car b))
-	  (erbutils-sublist-p (cdr a) (cdr b) t)))
+    (equal (car a) (car b))
+    (erbutils-sublist-p (cdr a) (cdr b) t)))
   (t
    (let ((foo (member (car a) b)))
      (and foo 
-	  (or 
-	   (erbutils-sublist-p (cdr a) (cdr foo) t)
-	   (erbutils-sublist-p a (cdr foo))))))))
+    (or 
+     (erbutils-sublist-p (cdr a) (cdr foo) t)
+     (erbutils-sublist-p a (cdr foo))))))))
 
 ;;;###autoload
 (defun erbutils-flatten (tree)
   (cond
    ((null tree) nil)
    ((listp tree) (apply 'append
-		  (mapcar 'erbutils-flatten tree)))
+      (mapcar 'erbutils-flatten tree)))
    (t (list tree))))
  
 (provide 'erbutils)
@@ -553,56 +565,56 @@ the form prefix-rmENTRY. And we then (defalias erbc-prefixENTRY
 prefix-rmENTRY. "
 
   (let* ((pref (if prefix (format "%s" prefix) ""))
-	 (pref-rm (if prefix-rm (format "%s" prefix-rm) ""))
-	 (lenrm (length pref-rm))
-	 (reg (concat "^" (regexp-quote pref-rm))))
+   (pref-rm (if prefix-rm (format "%s" prefix-rm) ""))
+   (lenrm (length pref-rm))
+   (reg (concat "^" (regexp-quote pref-rm))))
     (mapcar 
      (lambda (arg)
-       (let* (	    
-	      (argst (format "%s" arg))
-	      (gop (string-match reg argst))
-	      (arg2 (and gop (substring argst lenrm)))
-	      (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
+       (let* (      
+        (argst (format "%s" arg))
+        (gop (string-match reg argst))
+        (arg2 (and gop (substring argst lenrm)))
+        (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
 
-	 (when gop
-	   (if (functionp arg)
-	       (defalias foo arg)
-	     (erbutils-defalias-vars (list arg prefix prefix-rm))
-	      ;;`(defun ,foo () 
-	      ;;	 ,(concat "Pseudo function that returns the value of `"
-	      ;;	  argst "'. ")
-	      ;;,arg)
-	     ))))
+   (when gop
+     (if (functionp arg)
+         (defalias foo arg)
+       (erbutils-defalias-vars (list arg prefix prefix-rm))
+        ;;`(defun ,foo () 
+        ;;   ,(concat "Pseudo function that returns the value of `"
+        ;;    argst "'. ")
+        ;;,arg)
+       ))))
      ls)))
 
 (defun erbutils-defalias-vars (ls &optional prefix prefix-rm)
   (let* ((pref (if prefix (format "%s" prefix) ""))
-	 (pref-rm (if prefix-rm (format "%s" prefix-rm) ""))
-	 (lenrm (length pref-rm))
-	 (reg (concat "^" (regexp-quote pref-rm))))
+   (pref-rm (if prefix-rm (format "%s" prefix-rm) ""))
+   (lenrm (length pref-rm))
+   (reg (concat "^" (regexp-quote pref-rm))))
     (mapcar 
      (lambda (arg)
-       (let* (	    
-	      (argst (format "%s" arg))
-	      (gop (string-match reg argst))
-	      (arg2 (and gop (substring argst lenrm)))
-	      (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
+       (let* (      
+        (argst (format "%s" arg))
+        (gop (string-match reg argst))
+        (arg2 (and gop (substring argst lenrm)))
+        (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
 
-	 (when gop
-	   (eval 
-	    `(defun ,foo () 
-	       ,(concat "Pseudo function that returns the value of `"
-			argst "'. ")
-	       ,arg)))))
+   (when gop
+     (eval 
+      `(defun ,foo () 
+         ,(concat "Pseudo function that returns the value of `"
+      argst "'. ")
+         ,arg)))))
      ls)))
-			
+      
 
 (defun erbutils-region-to-string (fcn &rest  str)
   (with-temp-buffer
     (while str 
       (let ((aa (car str)))
-	(when aa
-	  (insert (format "%s " aa))))
+  (when aa
+    (insert (format "%s " aa))))
       (pop str))
     (goto-char (point-min))
     (funcall fcn (point-min) (point-max))
@@ -615,7 +627,7 @@ prefix-rmENTRY. "
    (mapcar
     (lambda (i)
       (let ((foo (aref rot13-display-table i)))
-	(if foo (aref foo 0) i)))
+  (if foo (aref foo 0) i)))
     str)))
 
 
