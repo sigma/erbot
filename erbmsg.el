@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.14 2004/05/28 20:53:11 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.15 2004/06/20 22:31:30 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -13,7 +13,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.1 $Revision: 1.14 $")
+  "Version 0.1 $Revision: 1.15 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -42,6 +42,8 @@
 
 ;;; TODOs that have been done:
 
+;; 2004/06/20:
+;; - added interval to not notify on channel joins 
 ;; 2004/04/09:
 ;; - added support for multiple recipients (see fs-memo for syntax)
 ;; - abstracted fs-memo stuff to two defuns (erbmsg-memo-parse-msg and erbmsg-memorize-msg)
@@ -199,23 +201,38 @@ Note: magic words are not currently implemented."
 (defalias 'fs-msg-version 'fs-erbmsg-version)
 
 
+(defcustom erbmsg-notify-on-join-timeout 2
+  "Interval in seconds to wait between notification on channel joins."
+  :group 'erbmsg)
+
+(defvar erbmsg-last-nicks-join nil
+  "List of nicks with last join time.")
 
 (defun erbmsg-notify-msg-on-JOIN (process parsed)
   "Notifies users about left messages
 when joining the channel"
   (and erbot-erbmsg-p
-       (let* ((usernickhost (aref parsed 1))
-              (channel (aref parsed 2))
-              (nick (erc-parse-user usernickhost)))
+       (let* ((usernickhost (if erbot-on-new-erc-p
+																(erc-response.sender parsed)
+															(aref parsed 1)))
+              (channel (if erbot-on-new-erc-p
+													 (nth 0 (erc-response.command-args parsed))
+												 (aref parsed 2)))
+              (nick (car (erc-parse-user usernickhost)))
+              (last-access (cdr-safe (assoc nick erbmsg-last-nicks-join))))
+         (set-alist 'erbmsg-last-nicks-join nick (current-time))
          (setq erbmsg-internal-msg-cookie (random))
-         (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie (car nick))))
+         (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie nick)))
            (and msgs
+                (> (- (nth 1 (current-time)) (nth 1 last-access)) erbmsg-notify-on-join-timeout)
                 (erc-message "PRIVMSG"
                              (format "%s %s"
                                      channel
                                      msgs)))
 					 'noreply))))
-(add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN)
+(if erbot-on-new-erc-p
+		(add-hook 'erc-server-JOIN-functions 'erbmsg-notify-msg-on-JOIN)
+	(add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN))
 
 
 
