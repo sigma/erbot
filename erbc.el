@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-18 12:22:40 deego>
+;; Time-stamp: <2003-06-19 08:49:15 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -850,7 +850,10 @@ Optional argument FOO ."
 	      (or 
 	       (erbutils-string= (second msg) "is" t)
 	       (erbutils-string= (second msg) "are" t))
-	      (erbutils-string= (third msg) "also" t))
+	      ;;(erbutils-string= (third msg) "also" t)
+	      (member-ignore-case (third msg) 
+				  (list "also" "also,"))
+	      )
 	     (erblisp-sandbox-fuzzy
 	      `(
 		erbc-set-also ,(first msg)
@@ -3678,7 +3681,8 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'erbc-equal 'equal)
 (defalias 'erbc-equalp 'equalp)
 (defalias 'erbc-eql 'eql)
-(defalias 'erbc-rr 'erbc-replace-regexp)
+;; rr is used for russian-roulette now..
+;;(defalias 'erbc-rr 'erbc-replace-regexp)
 (defalias 'erbc-rs 'erbc-replace-string)
 (defalias 'erbc-+ '+)
 (defalias 'erbc-- '-)

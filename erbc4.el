@@ -180,6 +180,7 @@ to query using PROMPT, or just return t."
     (incf erbnoc-rr-bullet) (erbc-describe "rr-click")))
 
 (defalias 'erbc-RR 'erbc-russian-roulette)
+(defalias 'erbc-rr 'erbc-russian-roulette)
 
 (provide 'erbc4)
 (run-hooks 'erbc4-after-load-hook)
