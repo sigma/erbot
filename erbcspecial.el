@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-04-22 22:26:33 deego>
+;; Time-stamp: <2004-04-22 22:40:39 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -87,16 +87,17 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 
-(defun fs-mapconcat (fcn ls)
+(defun fs-mapconcat (fcn ls sep)
   (apply 'mapconcat
 	 (erblisp-sandbox-quoted fcn)
-	 ls nil))
+	 ls sep nil))
 
 
 
 
 
 (defun fs-maplist (fcn ls &rest args)
+  (require 'cl)
   (apply 'maplist
 	 (erblisp-sandbox-quoted fcn)
 	 ls args))
@@ -104,11 +105,13 @@ With prefix ARG, insert version string into current buffer at point."
 
 
 (defun fs-mapl (fcn ls &rest args)
+  (require 'cl)
   (apply 'mapl
 	 (erblisp-sandbox-quoted fcn)
 	 ls args))
 
 (defun fs-mapcar* (fcn ls &rest args)
+  (require 'cl)
   (apply 'mapcar*
 	 (erblisp-sandbox-quoted fcn)
 	 ls args))
