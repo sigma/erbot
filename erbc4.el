@@ -339,10 +339,25 @@ to query using PROMPT, or just return t."
                        erbnoc-RR-bullet-bets)
     (erbnoc-rr-click)))
 
-(defun erbnoc-init-money (init &rest nicks)
+(defvar erbnoc-auth-bankers '())
+
+(defun erbnoc-add-banker (nick)
+  (add-to-list 'erbnoc-auth-bankers nick))
+
+(defun fs-auth-bankerp ()
+  (member (intern nick) erbnoc-auth-bankers))
+
+(defun fs-reset-money ()
+  (if (not (fs-auth-bankerp))
+      (error (concat nick "You can't reset the money.")))
   (clrhash erbnoc-money)
   (clrhash erbnoc-RR-empty-bets)
   (clrhash erbnoc-RR-bullet-bets)
+  "Money cleared.")
+
+(defun fs-init-money (init &rest nicks)
+  (if (not (member (intern nick) erbnoc-auth-money-initters nick))
+      (error (concat nick ": you can't initialize the money")))
   (mapc (lambda (nick)
           (setf (gethash nick erbnoc-money) init))
         nicks)
