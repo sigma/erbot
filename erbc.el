@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-22 12:16:27 deego>
+;; Time-stamp: <2005-03-23 09:42:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4538,6 +4538,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fsi-ignore-errors 'ignore-errors)
 (defalias 'fsi-lcm 'lcm)
 (defalias 'fsi-let 'let)
+(defalias 'fsi-let* 'let*)
 (defalias 'fsi-ll 'fs-locate-library)
 (defalias 'fsi-g 'fs-google)
 (defalias 'fsi-gcd 'gcd)
