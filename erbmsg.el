@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.22 2005/02/21 15:43:37 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.23 2005/03/29 20:06:51 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.22 $")
+  "Version 0.2 $Revision: 1.23 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -252,11 +252,25 @@ Note: magic words are not currently implemented."
 (defvar erbmsg-last-nicks-join nil
   "List of nicks with last join time.")
 
+(defun erbmsg-put-alist (item value alist)
+  "Modify ALIST to set VALUE to ITEM.
+If there is a pair whose car is ITEM, replace its cdr by VALUE.
+If there is not such pair, create new pair (ITEM . VALUE) and
+return new alist whose car is the new pair and cdr is ALIST.
+\[tomo's ELIS like function]"
+  (let ((pair (assoc item alist)))
+    (if pair
+        (progn
+          (setcdr pair value)
+          alist)
+      (cons (cons item value) alist)
+      )))
+
 (defun erbmsg-set-alist (symbol item value)
   "Modify a alist indicated by SYMBOL to set VALUE to ITEM."
   (or (boundp symbol)
       (set symbol nil))
-  (set symbol (put-alist item value (symbol-value symbol))))
+  (set symbol (erbmsg-put-alist item value (symbol-value symbol))))
 
 (defun erbmsg-notify-msg-on-JOIN (process parsed)
   "Notifies users about left messages
