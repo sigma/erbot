@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-01-02 17:02:45 deego>
+;; Time-stamp: <2005-01-06 21:43:49 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -342,21 +342,44 @@ as many times as it returns a...
       ;; Return the text we displayed.
       (buffer-string)))))))
 
-(defun erbutils-itemize (result &optional N shortenedp)
+
+(defvar erbutils-itemize-style
+  (list "[%s] %s,\n\n" "and also [%s] %s\n\n" "and [%s] %s\n\n")
+  "Another choice, for example is 
+\(list \"[%s] %s\n\n\" \"[%s] %s\n\n\" \"[%s] %s\n\n\")
+")
+
+(defun erbutils-itemize (result &optional N shortenedp style)
+  (unless style (setq style erbutils-itemize-style))
   (unless (integerp N) (setq N 0))
-  (let ((ctr N)
-  (rem result)
-  (sofar ""))
+  (let 
+      ((st1 (first style))
+       (st2 (second style))
+       (st3 (third style))
+       (ctr N)
+       (rem result)
+       (sofar ""))
     (if (equal (length result) 1)
-  (setq sofar (format "%s" (car result)))
+	(setq sofar (format "%s" (car result)))
       (while rem
-  (setq sofar (concat sofar (format "[%s] %s\n\n" ctr (car
-                   rem))))
-  (setq ctr (+ ctr 1))
-  (setq rem (cdr rem))))
+	(setq sofar 
+	      (concat 
+	       sofar 
+	       (format 
+		(cond 
+		 ((= ctr 0) 
+		  st1)
+		 ((null (rest rem))
+		  st2)
+		 (t st3))
+		ctr 
+		(car rem))))
+	(setq ctr (+ ctr 1))
+	(setq rem (cdr rem))))
     (when shortenedp 
       (setq sofar (concat sofar " .. + other entries")))
     sofar))
+
 
 
 (defun erbutils-function-minus-doc (fstr &rest ignore)
