@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-01-02 16:39:05 deego>
+;; Time-stamp: <2005-01-02 16:43:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -658,7 +658,7 @@ Thanks to edrx on #emacs for suggesting 'symbol-name.."
 
 
 (defmacro erbutils-working (&rest args)
-  `(let ((erbot-bbdb-save-p nil)
+  `(let ((erbbdb-save-p nil)
 	 (erbot-notify-p nil))
      ,@args))
 

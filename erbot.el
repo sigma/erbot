@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-12-31 23:24:45 deego>
+;; Time-stamp: <2005-01-02 16:46:09 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -287,7 +287,15 @@ may have unspecified and unpleasant results..."
 (defcustom erbot-erbmsg-p nil
   "When true, erball.el loads the erbmsg module by default ")
 
-;; This part suggested by forcer, See
+
+(defcustom erbot-notify-p t 
+  "Set it to t if you want RSS notification
+for your erbot. 
+
+Note that even if it is t, we will internally setq it to nil temporarily during
+the inner workings of the bot.  ")
+
+;; The next part suggested by forcer, See
 ;; http://www.kollektiv-hamburg.de/~forcer/erbot-notify.txt, which is
 ;; also copied here: 
 
