@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2004-08-06 11:16:24 deego>
+;; Time-stamp: <2004-08-09 15:39:07 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -238,7 +238,7 @@ to query using PROMPT, or just return t."
      )
 
 
-B    ("cw"
+    ("cw"
      "http://www.emacswiki.org/cgi-bin/community/"
      "\"http://www.emacswiki.org/cgi-bin/community?action=index;raw=1\""
      nil
