@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2003-05-23 08:43:58 deego>
+;; Time-stamp: <03/05/24 21:08:04 freundt>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -155,65 +155,66 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 "
   (let* (
-	 (erbeng-nick nick)
-	 (erbeng-msg msg)
-	 (erbeng-proc proc)
-	 (erbeng-tgt tgt)
-	 (erbeng-localp localp)
-	 (erbeng-userinfo userinfo)
-	 (erbc-found-query-p nil)
-	 (erbc-addressedatlast nil)
-	 (erbc-message-sans-bot-name erbc-message-sans-bot-name)
-	 (erbc-prestring erbc-prestring)
-	 tmpvar
-	 parsed-msg rep
-	 )
+   (erbeng-nick nick)
+   (erbeng-msg msg)
+   (erbeng-proc proc)
+   (erbeng-tgt tgt)
+   (erbeng-localp localp)
+   (erbeng-userinfo userinfo)
+   (erbc-found-query-p nil)
+   (erbc-addressedatlast nil)
+   (erbc-message-sans-bot-name erbc-message-sans-bot-name)
+   (erbc-prestring erbc-prestring)
+   tmpvar
+   parsed-msg rep
+   )
     ;;(concat nick ": " "/leave Test.. one big big test...")
     ;;(erbutils-ignore-errors
      
      ;; this can also modify erbc-found-query
     (setq parsed-msg 
-	  (condition-case tmpvar
-	      (erbc-parse msg proc nick tgt localp userinfo)
-	    (error 
-	     ;;"(error \"Please supply a completed lisp form\")"
-	     ;; Note that this could be bad: 
-	     ;; someone may not even be referring to the bot here:
-	     (format "(erbc-english-only %S)" msg)
-	     
-	     )))
+    (or (condition-case tmpvar
+            (erbc-parse msg proc nick tgt localp userinfo)
+          (error 
+          ;;"(error \"Please supply a completed lisp form\")"
+          ;; Note that this could be bad: 
+          ;; someone may not even be referring to the bot here:
+          (format "(erbc-english-only %S)" msg)
+         ))
+       (and (featurep 'erbmsg)
+            (erbmsg-parse msg proc nick tgt localp userinfo))))
 
     ;;(if (and (first parsed-msg) erbot-nick
-    ;;	      (string= (first parsed-msg)
-    ;;		       erbot-nick))
+    ;;        (string= (first parsed-msg)
+    ;;           erbot-nick))
     ;; parsed-msg will never be null if the msg was addressed to fsbot..
     (cond
      (parsed-msg
       (setq rep 
-	    ;;(erbutils-ignore-errors
-	     (with-timeout 
-		 (erbeng-reply-timeout
-		  "overall timeout")
-	       (erbutils-ignore-errors
-		(erbeng-get-reply parsed-msg proc nick tgt )))
-	     )
+      ;;(erbutils-ignore-errors
+       (with-timeout 
+     (erbeng-reply-timeout
+      "overall timeout")
+         (erbutils-ignore-errors
+    (erbeng-get-reply parsed-msg proc nick tgt )))
+       )
       
       (when rep
-	(if (erbeng-lisp-object-p parsed-msg)
-	    (setq rep (format "%S" rep)))
-	
-	(progn (setq rep 
-		     (format 
-		      (if (stringp rep) "%s%s" 
-			"%s%S")
-		      erbc-prestring rep))
+  (if (erbeng-lisp-object-p parsed-msg)
+      (setq rep (format "%S" rep)))
+  
+  (progn (setq rep 
+         (format 
+          (if (stringp rep) "%s%s" 
+      "%s%S")
+          erbc-prestring rep))
 
-	       (if (null (split-string rep))
-		   (if 
-		       erbc-found-query-p ""
-		     "EMPTY STRING RETURNED.." )
-		 
-		 rep))))
+         (if (null (split-string rep))
+       (if 
+           erbc-found-query-p ""
+         "EMPTY STRING RETURNED.." )
+     
+     rep))))
      (t 'noreply))))
 
 
@@ -221,22 +222,22 @@ nil nil\ nil nil nil nil nil nil nil nil]
   (setq msg (ignore-errors (read msg)))
   (and (listp msg)
        (let ((fir (format "%s" (first msg))))
-	 (or
-	  (string-match "concat" fir)
-	  (string-match "regexp-quote" fir)
-	 ;; want to allow erbc-rq to show the regexp without quoting..
-	 ;;(string-match "erbc-rq" fir)
-	  ))))
+   (or
+    (string-match "concat" fir)
+    (string-match "regexp-quote" fir)
+   ;; want to allow erbc-rq to show the regexp without quoting..
+   ;;(string-match "erbc-rq" fir)
+    ))))
 
 
 
 ;(defun erbeng-init-parse (msg)
 ;  (if (equal 0 (string-match "," msg))
 ;      (setq msg (concat "erbot " 
-;			(substring msg 1 (length msg)))))
+;     (substring msg 1 (length msg)))))
 ;  (let ((spl (split-string msg)))
 ;    (if (> (length spl) 0)
-;	(erbeng-init-frob-split-string spl)
+; (erbeng-init-frob-split-string spl)
 ;      nil)));;;
 
 ;;; ;(defun erbeng-init-frob-split-string (spl)
@@ -253,33 +254,33 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 ;;; ;"
 ;;;  ; (let* ((do-again t)
-;;; 	; (new-spl
-;;; 	 ; (cond
-;;; 	  ; ;; , foo bar
-;;; 	   ;((string= (first spl) ",")
-;;; 	    (cons erbot-nick (cdr spl)))
-;;; 	   ((equal 
-;;; 	     (string-match "," (first spl)) 0)
-;;; 	    (cons erbot-nick
-;;; 		  (append (split-string (first spl) ",")
-;;; 			  (cdr spl))))
-;;; 	   ((equal
-;;; 	     ;; erbot:
-;;; 	     (string-match (concat erbot-nick ":") (first spl)) 0)
-;;; 	    (append (split-string (first spl) ":")
-;;; 		    (cdr spl)))
-;;; 	   ((equal 
-;;; 	     ;; fdbot,
-;;; 	     (string-match (concat erbot-nick ",") (first spl)) 0)
-;;; 	    (append (split-string (first spl) ",")
-;;; 		    (cdr spl)))
-;;; 	   (t (progn (setq do-again nil) spl)))))
+;;;   ; (new-spl
+;;;    ; (cond
+;;;     ; ;; , foo bar
+;;;      ;((string= (first spl) ",")
+;;;       (cons erbot-nick (cdr spl)))
+;;;      ((equal 
+;;;        (string-match "," (first spl)) 0)
+;;;       (cons erbot-nick
+;;;       (append (split-string (first spl) ",")
+;;;         (cdr spl))))
+;;;      ((equal
+;;;        ;; erbot:
+;;;        (string-match (concat erbot-nick ":") (first spl)) 0)
+;;;       (append (split-string (first spl) ":")
+;;;         (cdr spl)))
+;;;      ((equal 
+;;;        ;; fdbot,
+;;;        (string-match (concat erbot-nick ",") (first spl)) 0)
+;;;       (append (split-string (first spl) ",")
+;;;         (cdr spl)))
+;;;      (t (progn (setq do-again nil) spl)))))
 ;;;     (if do-again
-;;; 	(erbeng-init-frob-split-string new-spl)
+;;;   (erbeng-init-frob-split-string new-spl)
 ;;;       ;; removed the extra ""  etc. and all , ; erc. etc. 
 ;;;       (split-string
 ;;;        (mapconcat 'identity
-;;; 		  new-spl " ")
+;;;       new-spl " ")
 ;;;        "[ \f\t\n\r\v,;]+"))))
 
 
@@ -290,13 +291,13 @@ nil nil\ nil nil nil nil nil nil nil nil]
   ;; evals it.."
   (eval (read msg)))
 ;  (let* (
-;	 (lispmsg 
-;	  (erbeng-read (erbutils-stringify msg))))
+;  (lispmsg 
+;   (erbeng-read (erbutils-stringify msg))))
 ;    (if (and lispmsg (listp lispmsg))
-;	(erblisp-process-msg proc nick tgt 
-;			     lispmsg)
+; (erblisp-process-msg proc nick tgt 
+;          lispmsg)
 ;      (let ((englispmsg (erbc-parse-english msg proc nick)))
-;	(erblisp-process-msg proc nick tgt englispmsg)))))
+; (erblisp-process-msg proc nick tgt englispmsg)))))
 
 
 
