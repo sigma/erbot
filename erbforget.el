@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2005-01-01 21:05:14 deego>
+;; Time-stamp: <2005-01-02 22:18:43 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -130,6 +130,8 @@ Deepak (author) <and of course, terms like emacs> in prevent-reg
 when using this command.
 \\(bot\\|emacs\\|deego\\|goel\\|deepak\\|alex\\|bpt\\|oddmuse\\|iam\\)
 .. for example..
+Return len, which may (or may not) correspond to the number of items
+removed. 
 "
   (interactive "sRegex to forget: ")
   (let* 
@@ -140,8 +142,9 @@ when using this command.
     (cond
      ((= len 0 ) (message "No such terms. "))
      (t 
-      (when (y-or-n-p (format "Forget %S terms? " len))
-	(erbforget-slowly terms prevent-reg matchingonly reg))))))
+      (when (erbforget-y-or-n-p 40 (format "Forget %S terms? " len))
+	(erbforget-slowly terms prevent-reg matchingonly reg))))
+    len))
 
 
 (defun erbforget-slowly (terms &optional prevent-reg matchingonly reg)
