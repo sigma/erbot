@@ -261,8 +261,12 @@ to query using PROMPT, or just return t."
     amount))
 
 (defun fs-money (&optional maybe-nick)
-  (let ((amount (or (gethash (or maybe-nick (intern nick)) erbnoc-money)
-                    0)))
+  (let* ((nick (or (and maybe-nick
+                        (if (symbolp maybe-nick)
+                            maybe-nick
+                          (intern maybe-nick)))
+                   (intern nick)))
+         (amount (or (gethash nick erbnoc-money) 0)))
     (if maybe-nick
         (format "%s has %d GEMs."
                 maybe-nick
