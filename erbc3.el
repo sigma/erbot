@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-16 15:38:25 deego>
+;; Time-stamp: <2003-06-16 16:12:18 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -215,7 +215,7 @@ to query using PROMPT, or just return t."
   (delete-region (point-min) (point-max))
   (insert
    (mapconcat
-    (lambda (arg) (format "%S" arg)) sexps "\n\n\n"))
+    (lambda (arg) (pp-to-string arg)) sexps "\n\n\n"))
   (insert "\n\n\n")
   (save-buffer))
 

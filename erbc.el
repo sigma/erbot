@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-16 14:40:27 deego>
+;; Time-stamp: <2003-06-16 22:28:02 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3984,7 +3984,7 @@ setq erbc-t to nil :-) ")
   "See the doc of erbc-t ")
 
 
-(defun erbc-revive (&optional name)
+(defun erbc-revive (&optional name &rest ignore)
   (unless name (error "no one to revive"))
   (setq name (format "%s" name))
 
@@ -4002,7 +4002,9 @@ setq erbc-t to nil :-) ")
 	(list
 	 (format "%s wakes up" name)
 	 "Nothing happens."
-	 (format "%s wakes up, all refreshed. " name)))))))
+	 (format "%s wakes up, all refreshed. " name)
+	 (format "%s wakes up, all confused. " name)
+	 ))))))
     
 
 
