@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-19 14:42:26 deego>
+;; Time-stamp: <2003-06-20 07:01:46 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -616,5 +616,11 @@ lisp file, else error. "
   (ignore-errors 
     (let ((mkback-interactivity -100))
       (mkback file))))
+
+
+(defun erbutils-listp-proper (l) 
+  "from <Riastradh>"
+  (or (null l) (and (consp l)
+		    (erbutils-listp-proper (cdr l)))))
 
 ;;; erbutils.el ends here

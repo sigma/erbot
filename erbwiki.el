@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-05-29 09:03:33 deego>
+;; Time-stamp: <2003-06-20 07:00:43 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -576,10 +576,12 @@ the actual wiki fields."
      (erbutils-flatten
       (remove-if 
        (lambda (field) 
-	 (or (not (< (length field) 3))
-	     (string-match "--" 
-			   (format "%s" 
-				   (first field)))))
+	 (or 
+	  (not (erbutils-listp-proper field))
+	  (not (< (length field) 3))
+	  (string-match "--" 
+			(format "%s" 
+				(first field)))))
        fields)))))
 
 
