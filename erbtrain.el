@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-05-29 09:03:33 deego>
+;; Time-stamp: <2003-05-29 15:14:42 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -249,10 +249,19 @@ to query using PROMPT, or just return t."
 ;;;###autoload
 (defun erbtrain (str)
   (delete-other-windows)
-  (switch-to-buffer erbtrain-buffer)
-  (goto-char (point-max))
-  (insert str)
-  (erc-send-current-line))
+  (let ((buf (get-buffer erbtrain-buffer)))
+    (cond
+     (buf
+      (switch-to-buffer buf)
+      (goto-char (point-max))
+      (insert str)
+      (erc-send-current-line))
+     (t 
+      (beep)
+      (message  "No buffer!  Trying to recreate the idledo. ")
+      (sit-for 0.3)
+      (idledo-add-action
+       `(erbtrain ,str))))))
 
 
 ;;;====================================================
