@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-18 10:01:58 deego>
+;; Time-stamp: <2003-06-18 12:22:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -443,7 +443,19 @@ reply please be abbreviated. ")
   (not
    (member msg (mapcar 'first channel-members))))
 
+(defcustom erbc-internal-parse-preprocess-message-remove-end-chars
+  ;; remove trailing ^A's that occur on action strings...
+  (list 1)
+  "")
 
+(defun erbc-parse-preprocess-message (msg)
+  (let ((len (length msg)))
+    (when (and
+	   (> len 0)
+	   (member (aref msg (- len 1)) 
+		   erbc-internal-parse-preprocess-message-remove-end-chars)
+	   (setq msg (subseq msg 0 -1)))))
+  msg)
 
 (defun erbc-lispify (&optional msg proc nick tgt localp
 				 userinfo &rest foo)
@@ -473,6 +485,7 @@ Optional argument FOO ."
   ;tgtg
   ;foo
   (setq erbc-internal-original-message msg)
+  (setq msg (erbc-parse-preprocess-message msg))
   (let 
       (
        (origmsg msg)
