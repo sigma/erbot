@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2004-03-07 16:19:13 deego>
+;; Time-stamp: <2004-03-28 11:27:24 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -610,7 +610,7 @@ connected."
 the actual wiki fields."
   (let (field)
     (remove-if
-     (lambda (arg) (member arg (list '.... '*    
+     (lambda (arg) (member arg (list '*    
 				     '[]
 				     'Search:
 				     )))

@@ -1,10 +1,10 @@
 ;;; erbcompat.el --- Erbot GNU Emacs/XEmacs compatibility issues
-;; Time-stamp: <2004-03-23 12:18:17 deego>
+;; Time-stamp: <2004-03-28 11:29:03 deego>
 ;; Copyright (C) 2004 S. Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
-;; Author: D. Goel <deego@gnufans.org>
+;; Author:  Sebastian Freundt <freundt@math.TU-Berlin.DE>
 ;; Version: NA
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 
@@ -36,13 +36,14 @@
 	"Whether erbot is run on xemacs.")
 
 (setq erbot-on-xemacs-p
-			(and (string-match "xemacs" emacs-version) t))
+      (and (string-match "xemacs" emacs-version) t))
+
 
 (or (and erbot-on-xemacs-p
-				 (defun erbcompat-local-variable-p (variable &optional buffer)
-					 "Just in compatibilty to GNU Emacs"
-					 (local-variable-p variable (or buffer (current-buffer)))))
-		(defalias 'erbcompat-local-variable-p 'local-variable-p))
+	 (defun erbcompat-local-variable-p (variable &optional buffer)
+	   "Just in compatibilty to GNU Emacs"
+	   (local-variable-p variable (or buffer (current-buffer)))))
+    (defalias 'erbcompat-local-variable-p 'local-variable-p))
 
 (provide 'erbcompat)
 
