@@ -356,7 +356,7 @@ to query using PROMPT, or just return t."
   "Money cleared.")
 
 (defun fs-init-money (init &rest nicks)
-  (if (not (member (intern nick) erbnoc-auth-money-initters nick))
+  (if (not (fs-auth-bankerp))
       (error (concat nick ": you can't initialize the money")))
   (mapc (lambda (nick)
           (setf (gethash nick erbnoc-money) init))
