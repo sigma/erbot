@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-15 14:31:36 deego>
+;; Time-stamp: <2005-03-17 16:06:13 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4175,6 +4175,17 @@ last time i checked , equalp seemed to work as well.. "
 			       typep vectorp windowp xemacsp zerop))
 
 			      
+(erbutils-defalias-i 
+ '(char-to-string string-to-char string-to-int
+		  string-to-number string-to-list
+		  string-to-number-with-radix number-to-string
+		  pp-to-string int-to-string number-to-string
+		  prin1-to-string rational-to-string rational-to-float
+		  radians-to-degrees rx-to-string degrees-to-radians))
+
+
+
+
 			       
 (defun erbn-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
