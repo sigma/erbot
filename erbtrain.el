@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-06-19 12:25:56 deego>
+;; Time-stamp: <2003-08-21 13:26:23 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -175,10 +175,13 @@ to query using PROMPT, or just return t."
 
 (defvar erbtrain-list nil)
 
+(defvar erbtrain-idledo-interval-small 2)
+(defvar erbtrain-idledo-interval 120)
 ;;;###autoload
 (defun erbtrain-file  (file)
   (interactive "f")
-  (setq idledo-interval-small 2)
+  (setq idledo-interval-small erbtrain-idledo-interval-small)
+  (setq idledo-interval erbtrain-idledo-interval)
   (save-window-excursion
     (find-file file)
     (let ((allstrings (buffer-substring-no-properties
