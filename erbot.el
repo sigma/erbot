@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-05-06 10:04:04 deego>
+;; Time-stamp: <04/06/13 22:56:36 freundt>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -364,22 +364,40 @@ may have unspecified and unpleasant results..."
 listen and do everything but never reply back.")
 
 
+(defvar erbot-on-new-erc-p nil
+  "Whether we use erc >1.660 with new erc-backend.
+The value should not be set but is auto-guessed within
+`erbot-install'.")
+
+
 ;; A very very main function..
 (defun erbot-remote (proc parsed)
   "Implements a simple robot for erc.  Messages to the robot are of the form:
 \"nick: !command args\", where:
 nick	- the nickname of the user who is the target of the command,
 command	- the specific command,
-args	- arguments to the command (optional)."
+args	- arguments to the command (optional).
+
+For newer erc, see `erbot-on-new-erc-p' and read the specs of
+the new erc-backend functions."
   (set-buffer (process-buffer proc))
-  (let* ((sspec (aref parsed 1))
+  (let* ((sspec (cond (erbot-on-new-erc-p
+                  (erc-response.sender parsed))
+                  (t (aref parsed 1))))
 	 (userinfo (erc-parse-user sspec))
 	 (nick (nth 0 userinfo))
-	 (tgta (aref parsed 2))
+
+   (cmdargs (and erbot-on-new-erc-p
+     (erc-response.command-args parsed)))
+	 (tgta (cond (cmdargs
+           (nth 0 cmdargs))
+           (t (aref parsed 2))))
 	 (tgt (if (equalp tgta erbot-nick)
 		  nick
 		tgta))
-	 (msg (aref parsed 3))
+	 (msg (cond (cmdargs
+     (nth 1 cmdargs))
+     (t (aref parsed 3))))
 	 (erbot-end-user-nick nick)
 	 )
     ;; changing the structure here..
@@ -545,13 +563,22 @@ those things..
 ;;;###autoload
 (defun erbot-install ()
   (interactive)
-  (add-hook 'erc-server-PRIVMSG-hook 'erbot-remote t)
-  ;; Do we need this local command thing...?
-  ;;(add-hook 'erc-send-completed-hook 'erbot-local t)
-  
-  (add-hook 'erc-server-376-hook
-            'erbot-autojoin-channels)
-  )
+  (setq erbot-on-new-erc-p
+    (and (boundp 'erc-server-PRIVMSG-functions)
+         (boundp 'erc-backend-version)))
+	(cond (erbot-on-new-erc-p
+    (add-hook 'erc-server-PRIVMSG-functions 'erbot-remote t)
+		;; Do we need this local command thing...?
+		;;(add-hook 'erc-send-completed-hook 'erbot-local t)
+    (add-hook 'erc-server-376-functions
+							'erbot-autojoin-channels))
+				(t
+    (add-hook 'erc-server-PRIVMSG-hook 'erbot-remote t)
+		;; Do we need this local command thing...?
+		;;(add-hook 'erc-send-completed-hook 'erbot-local t)
+    (add-hook 'erc-server-376-hook
+							'erbot-autojoin-channels))
+  ))
 
 
 ;;;###autoload
