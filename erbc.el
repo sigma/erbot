@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-13 18:02:43 deego>
+;; Time-stamp: <2003-06-16 08:34:58 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3970,6 +3970,18 @@ last time i checked , equalp seemed to work as well.. "
 
 (erbutils-defalias 
  '(kbd read-kbd-macro))
+
+(defconst erbc-t t
+  "As such, when we sandbox a lisp expression, t remains t, so this is
+not needed. 
+However, inside macros like (cond (t....)), t becomes erbc-t because
+it occurs in an unusual place.  this const should take care of it.. 
+Of course, this also opens the bot to some FUN user abuse, when they
+setq erbc-t to nil :-) ")
+
+
+(defconst erbc-nil nil
+  "See the doc of erbc-t ")
 
 (provide 'erbc)
 (run-hooks 'erbc-after-load-hooks)
