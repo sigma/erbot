@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2003-07-10 15:19:40 deego>
+;; Time-stamp: <2003-07-10 15:58:22 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -12,7 +12,6 @@
 ;; Usually maintenance
 ;; not all of these may be required depending on how you use erbot..
 (require 'cl)
-(require 'cl-extra)
 
 (require 'doctor)
 (require 'erc)
