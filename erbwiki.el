@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-11-15 15:41:06 deego>
+;; Time-stamp: <2004-03-07 16:19:13 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -8,7 +8,7 @@
 ;; Keywords:
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-
+;; Thanks: Alex Schroeder
 
 (defconst erbwiki-home-page
   "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
@@ -162,12 +162,38 @@ to query using PROMPT, or just return t."
 (defcustom erbwiki-index-pages
   '(
 
-    ("ai"
-     "http://www.gnufans.net/cgi-bin/ai.pl?"
-     "http://www.gnufans.net/cgi-bin/ai.pl?action=index"
+
+    ("ai2"
+     "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?"
+     "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?action=index"
      nil
-     "aisbot: "
+     "singbot: "
      )
+
+    ("si"
+     "http://www.gnufans.net/cgi-bin/singularity.pl?"
+     "http://www.gnufans.net/cgi-bin/singularity.pl?action=index"
+     nil
+     "singbot: "
+     )
+
+    ("sl"
+     "http://www.sl4.org/bin/wiki.pl?"
+     "http://www.sl4.org/bin/wiki.pl?action=index"
+     nil
+     "singbot: "
+     )
+
+
+
+    ("cw"
+     "http://www.emacswiki.org/cgi-bin/community/"
+     "http://www.emacswiki.org/cgi-bin/community?action=index;raw=1"
+     nil
+     "fsbot: "
+     )
+
+
 
     ("ew"
      "http://www.emacswiki.org/cgi-bin/wiki.pl?"
@@ -184,12 +210,22 @@ to query using PROMPT, or just return t."
      "wikibot: ")
 
     
-    ("fs"
+    ("fskdfhukdfhjkdfjk"
      "http://www.gnufans.net/fsedu.pl?"
      "http://www.gnufans.net/cgi-bin/fsedu.pl?action=index"
      nil
-     "fsbot: "
+     "nobot: "
      )
+
+
+    ("ipfoobar"
+
+     "http://imminst.org/pedia/PageIndex"
+     "http://new.imminst.org/pedia/"
+     nil
+     "singbot: "
+     )
+
 
 
     ("mb"
@@ -255,12 +291,6 @@ to query using PROMPT, or just return t."
      )
 
 
-    ("sl"
-     "http://www.sl4.org/bin/wiki.pl?"
-     "http://www.sl4.org/bin/wiki.pl?action=index"
-     nil
-     "aisbot: "
-     )
 
     ;;("sm"
      ;;"http://www.scarymath.org/math.pl?"
@@ -458,7 +488,7 @@ connected."
 
 ;;;###autoload
 (defun erbwiki-train  ()
-  ;;(interactive)
+  (interactive)
   (run-hooks 'erbwiki-before-train-hooks)
   (erbtrain-file 
    (concat erbwiki-train-file-name
@@ -500,6 +530,7 @@ connected."
 	   (set-difference currentfields oldfields
 			   :test 'equal
 			   ))
+     (setq newfields (funcall erbwiki-filter-fields-function newfields))
      (kill-buffer (get-file-buffer newfile))
      (kill-buffer (get-file-buffer lastfile))
      (when (file-exists-p train-name) 
@@ -521,6 +552,16 @@ connected."
   (erbwiki-display)
   )
 			
+
+(defcustom erbwiki-filter-fields-function
+  'erbwiki-filter-fields-default "")
+
+(defun erbwiki-filter-fields-default (fields)
+  ;; remove non-ascii characters
+  (delete-if 
+   (lambda (arg) (string-match "[\200-\377]" (format "%s" arg)))
+   (copy-list fields)))
+
 ;;;###autoload
 (defun erbwiki-display ()
   (interactive)

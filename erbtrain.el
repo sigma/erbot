@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-08-29 07:25:10 deego>
+;; Time-stamp: <2003-12-20 17:32:53 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -307,7 +307,7 @@ to query using PROMPT, or just return t."
        (save-window-excursion
 	 (let ((bufname (buffer-name-p-my arg)))
 	   (when bufname
-	     (switch-to-buffer bufname)
+	     (switch-to-buffer arg)
 	     ;;(erc-cmd-PING "nickserv")
 	     (when (erc-process-alive) (erc-send-command "PING"))))))
      (if (listp erbtrain-keep-alive-buffer) erbtrain-keep-alive-buffer

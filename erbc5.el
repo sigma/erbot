@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2003-11-22 21:17:29 deego>
+;; Time-stamp: <2003-12-04 13:51:08 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -204,6 +204,26 @@ which is why turned off by default.
 
 (erbutils-defalias '(process-list))
 (defalias 'fs-list-processes 'fs-process-list)
+
+(defcustom erbnoc-sregex-p nil
+  "Nil by default for safety. Enable to permit fs-sregex.
+I think it is safe, but not 100% sure, so disabled by default. --DG"
+  )
+
+
+(defun fs-sreg (&rest args)
+  (format "%S" 
+	  (apply 'fs-sregex args)))
+
+
+(defun fs-sregex (&rest args)
+  (cond
+   (erbnoc-sregex-p
+    (apply 'sregex args))
+   (t
+    (error "sregexp is disabled in this bot. "))))
+
+
 
 (provide 'erbc5)
 (run-hooks 'erbc5-after-load-hook)

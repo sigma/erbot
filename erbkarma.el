@@ -1,5 +1,5 @@
 ;;; erbkarma.el ---
-;; Time-stamp: <2003-06-19 12:25:57 deego>
+;; Time-stamp: <2004-01-22 07:18:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbkarma.el
@@ -36,6 +36,15 @@
 ;; removed
 ;;         Dheeraj Buduru  <dbuduru@yahoo.com>
 ;; from authors' list at his request. :(
+
+
+;;; 2004-01-22 T07:18:36-0500 (Thursday)    D. Goel
+;; <kensanata> deego: fsbot should get the old silly karma system back.  fsbot
+;;             forget all karma points whenever he disconnects.  the only
+;;             important thing is that we can say b0ef++ and fsbot responds with
+;;             "Noted, kensanata.  One (brownie|karma|wiki|rms|lispy)-point for
+;;             b0ef!"
+[06:56]
 
 ;; See also:
 

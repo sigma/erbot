@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2003-11-22 21:15:08 deego>
+;; Time-stamp: <2003-12-13 02:37:06 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -236,12 +236,12 @@ to query using PROMPT, or just return t."
             (gethash to-whom erbnoc-money))))
 
 (defun erbnoc-keyshash (hash-table)
-  (let ((keys '()))
+  (let ((keys nil))
     (maphash (lambda (key val) (push key keys)) hash-table)
     keys))
 
 (defun erbnoc-valueshash (hash-table)
-  (let ((values '()))
+  (let ((values nil))
     (maphash (lambda (key val) (push val values)) hash-table)
     values))
 
@@ -378,7 +378,7 @@ to query using PROMPT, or just return t."
                        erbnoc-RR-bullet-bets)
     (erbnoc-rr-click)))
 
-(defvar erbnoc-auth-bankers '())
+(defvar erbnoc-auth-bankers nil)
 
 (defun erbnoc-add-banker (nick &rest ignored)
   (add-to-list 'erbnoc-auth-bankers nick))
