@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-03-29 18:03:16 deego>
+;; Time-stamp: <2004-05-06 10:04:04 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -350,12 +350,19 @@ may have unspecified and unpleasant results..."
 	  " I am in dunnet mode.  For regular fsbot, type , (dunnet-mode)")))
       full)))
 
-(defvar erbot-quiet-p nil)
+(defvar erbot-quiet-p nil 
+  "When non-nil, the erbot only listens, never replies")
 (defun erbot-quiet ()
   (interactive)
   (setq erbot-quiet-p 
 	(not erbot-quiet-p))
   (message "set to %S" erbot-quiet-p))
+
+(defvar erbot-quiet-target-p-function nil
+  "A function.   The function should take up to 3 arguments, TARGET
+\(channel) , nick and msg.  If it returns non-nil, then erbot will
+listen and do everything but never reply back.")
+
 
 ;; A very very main function..
 (defun erbot-remote (proc parsed)
@@ -393,11 +400,18 @@ args	- arguments to the command (optional)."
 	   (erbeng-main msg proc nick tgt nil userinfo)))	   
       ;; erbot-reply needs a correct buffer...
       (set-buffer (process-buffer proc))
-      (unless erbot-quiet-p
-	(erbot-reply 
-	 msgg
-	 proc nick tgt msg nil
-	 ))))
+
+      (cond
+       (erbot-quiet-p nil)
+       ((and erbot-quiet-target-p-function
+	     (funcall erbot-quiet-target-p-function tgt nick msg))
+	nil)
+       (t (erbot-reply 
+	   msgg
+	   proc nick tgt msg nil
+	   )))
+      
+      ))
   nil)
 
 
