@@ -837,6 +837,12 @@ Optional argument FOO ."
     (let ((ui (format "%S" userinfo)))
       (when 
 	  (or
+           (and erbot-use-whitelist
+                (stringp nick)
+                (not (member-if
+                      (lambda (arg)
+                        (string-match arg nick))
+                      erbot-whitelist-nicks)))
 	   (and (stringp nick)
 		(member-if 
 		 (lambda (arg)

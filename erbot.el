@@ -218,7 +218,18 @@ generate replies.
 I would suggest including atleast bot, google and serv here to prevent
 infinite chat loops with other bots.  :)
 " 
+:type '(repeat regexp)
+:group 'erbot)
 
+(defcustom erbot-use-whitelist nil "Use a whitelist for accessing the bot. 
+Any request from another source will be ignored. If a source is present in whitelist
+and in `erbot-ignore-nicks' it is ignored"
+:type 'boolean
+:group 'erbot)
+
+(defcustom erbot-whitelist-nicks nil
+"List of the entries that have access to the bot. Used only when `erbot-use-whitelist' is non-nil"
+:type '(repeat regexp)
 :group 'erbot)
 
 (defcustom erbot-ignore-userinfos "" "list of regex's" :group 'erbot)
