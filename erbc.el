@@ -4159,18 +4159,22 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (defalias 'fsi-shell-test 'erbn-shell-test)
 
+(defcustom fs-internal-web-page-time 10
+  "" :group 'erbc)
+
 (defmacro erbn-with-web-page-buffer (site &rest body)
   (let ((buffer (make-symbol "web-buffer")))
-    `(let ((,buffer (url-retrieve-synchronously ,site)))
-       (when (null ,buffer)
-         (error "Invalid URL %s" site))
-       (save-excursion
-         (set-buffer ,buffer)
-         (goto-char (point-min))
-         (prog1
-             (progn
-               ,@body)
-           (kill-buffer ,buffer))))))
+    `(with-timeout (fs-internal-web-page-time "HTTP time out")
+       (let ((,buffer (url-retrieve-synchronously ,site)))
+         (when (null ,buffer)
+           (error "Invalid URL %s" site))
+         (save-excursion
+           (set-buffer ,buffer)
+           (goto-char (point-min))
+           (prog1
+               (progn
+                 ,@body)
+             (kill-buffer ,buffer)))))))
 
 (defun fsi-web-page-title (&optional site &rest args)
   (unless site (error (format "Syntax: %s web-page-title SITE" erbn-char)))
