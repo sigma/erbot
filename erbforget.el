@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2003-06-19 12:25:57 deego>
+;; Time-stamp: <2005-01-01 20:53:24 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -121,10 +121,12 @@ to query using PROMPT, or just return t."
 
 
 (defun erbforget-sw (reg &optional prevent-reg)
-  "Forget all terms containing occurrence of regexp REG. 
+  "RUN THIS WHEN AS MYBOT WHEN SU-ED TO THE BOT. 
+
+Forget all terms containing occurrence of regexp REG. 
 
 REMINDER: DO NOT FORGET TO exclude terms like fsbot hbot erbot deego
-Deepak (author) <and of courser, terms like emacs> in prevent-reg
+Deepak (author) <and of course, terms like emacs> in prevent-reg
 when using this command.
 \\(bot\\|emacs\\|deego\\|goel\\|deepak\\|alex\\|bpt\\|oddmuse\\|iam\\)
 .. for example..
