@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2004-12-31 23:35:18 deego>
+;; Time-stamp: <2005-01-01 17:34:19 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -260,7 +260,7 @@ to query using PROMPT, or just return t."
    
 (defun erbnoc-readonly-check (sym)
   (if (get sym 'readonly)
-      (error "The symbol %s can't be redefined! It is read-only!"
+      (error "The symbol %S can't be redefined! It is read-only!"
 	     sym)))
 
 
