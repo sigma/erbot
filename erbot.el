@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-12-29 17:29:41 deego>
+;; Time-stamp: <2004-12-29 17:36:30 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -305,8 +305,9 @@ entry")
 ;;  erbot-notify-forget-functions
 ;;    arguments: nick channel term entry-num entry
 ;;    If entry-num is 'all, entry is a list of entries
-;; SPECS CHANGED!
 
+
+;; SPECS CHANGED!
 (defvar erbot-notify-forget-functions nil
   "Functions to call when an erbot forget takes place.  Each of these
 is called with the arguments arguments: nick channel term entry-num
@@ -334,7 +335,6 @@ entries. ")
 
 ;;  erbot-notify-substitute-functions
 ;;    arguments: nick channel term entry-num old-entry new-entry
-;; NOW CHANGED SPEC. 
 (defvar erbot-notify-substitute-functions nil 
   "Functions to call when an erbot substitute operation takes place.
 Each of these is called with the arguments arguments: nick channel
@@ -350,7 +350,7 @@ term entry-num old-entry new-entry")
 (defvar erbot-notify-merge-functions nil
  "Functions to call when an erbot merge operation takes place.
 Each of these is called with the arguments arguments: nick channel
-from-term to-term from-entries to-entries merge-entries")
+from-term to-term from-entries to-entries final-entries")
 
 
 
