@@ -365,13 +365,16 @@ from-term to-term from-entries to-entries final-entries")
 ; This function is used by the example above.
 (defun erbot-doctor (args)
   "Glue the doctor into the ERC robot."
-  (let* ((dbuf "*doctor*")
+  (let* ((thisbuf (current-buffer))
+         (dbuf (concat "*doctor: " (buffer-name thisbuf) "*"))
 	 (docbuf (get-buffer dbuf))
 	 outpoint
 	 res)
     (if (not docbuf)
 	(progn
-	  (doctor)
+          (set-buffer (get-buffer-create dbuf))
+          (make-doctor-variables)
+          (set-buffer thisbuf)
 	  (setq docbuf (get-buffer dbuf))
 	  (bury-buffer docbuf)))
     (save-excursion

@@ -1,3 +1,9 @@
+2005-04-01  Michael Olson  <mwolson@gnu.org>
+
+	* erbot.el (erbot-doctor): Create separate doctor sessions for
+	each channel or query buffer so that responses make sense to the
+	user.
+
 2005-02-21  S Freundt  <hroptatyr@gna.org>
 
 	* erbmsg.el: (erbmsg-notify-msg-on-JOIN) [fix] add function set-alist for
