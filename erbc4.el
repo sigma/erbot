@@ -279,19 +279,65 @@ to query using PROMPT, or just return t."
 
 (defvar erbnoc-chamber (random 6))
 
+;; Someone tell Riastradh if this is a good way to do this... (the
+;; click and bang messages)
+(defvar erbnoc-rr-bangs
+  (list (lambda ()
+          (concat "/me blows " nick "'s cerebellum all over "
+                  tgt "... *BANG*"))
+        (lambda ()
+          (concat "/me blows " nick "'s brains all over "
+                  tgt "... *BANG* ...reloading."))
+        (lambda ()
+          (concat nick " has to pick his brains off of the walls and "
+                  " floor... *BANG*"))
+        (lambda ()
+          (concat nick "'s luck just ran out... *BANG*"))
+        (lambda ()
+          (concat "/me offers " nick " a cold "
+                  (fs-describe "beer-data")
+                  " before giving him the fatal blow... *KABLAM*"))))
+(defvar erbnoc-rr-clicks
+  (list (lambda ()
+          (concat "/me points the gnu and " nick
+                  " trembles... *CLICK*"))
+        (lambda ()
+          (concat nick "shudders as the great and powerful fsbot aims "
+                  "the all-powerful barrel of the gnu... *CLICK"))
+        (lambda ()
+          (concat nick " is one lucky punk... *CLICK*"))
+        (lambda ()
+          (concat "/me picks up the gnu and points it at " nick
+                  "'s head... *CLICK*"))
+        (lambda ()
+          (concat "/me raises the gnu to " nick "'s head and " nick
+                  " trembles as the *CLICK* sounds."))))
+
+(defun erbnoc-rr-bang ()
+  (funcall (fs-random-choose erbnoc-rr-bangs)))
+(defun erbnoc-rr-click ()
+  (funcall (fs-random-choose erbnoc-rr-clicks)))
+
+(defun fs-add-bang (bang)
+  (setq erbnoc-rr-bangs
+        (cons bang erbnoc-rr-bangs)))
+(defun fs-add-click (click)
+  (setq erbnoc-rr-clicks
+        (cons click erbnoc-rr-clicks)))
+
 (defun fs-russian-roulette ()
   (if (= erbnoc-chamber 5)
       (progn
         (setq erbnoc-chamber (random 6))
-        (fs-describe "rr-bang")
         (erbnoc-distribute (intern nick)
                            erbnoc-RR-bullet-bets
-                           erbnoc-RR-empty-bets))
+                           erbnoc-RR-empty-bets)
+        (erbnoc-rr-bang))
     (incf erbnoc-chamber)
-    (fs-describe "rr-click")
     (erbnoc-distribute nil
                        erbnoc-RR-empty-bets
-                       erbnoc-RR-bullet-bets)))
+                       erbnoc-RR-bullet-bets)
+    (erbnoc-rr-click)))
 
 (defun erbnoc-init-money (init &rest nicks)
   (clrhash erbnoc-money)
