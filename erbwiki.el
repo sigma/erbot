@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2004-05-07 15:48:04 deego>
+;; Time-stamp: <2004-05-11 13:06:19 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -199,7 +199,7 @@ to query using PROMPT, or just return t."
     ("fu"
      "http://futures.wiki.taoriver.net/moin.cgi/"
      "\"http://futures.wiki.taoriver.net/moin.cgi/TitleIndex?action=titleindex&mimetype=text/xml\""
-     erbwiki-get-fields-spaced
+     nil
      "singbot: "
      erbwiki-fetch-wiki-remove-tags
      
@@ -248,12 +248,6 @@ to query using PROMPT, or just return t."
 
 
 
-    ("mb"
-     "http://www.usemod.com/cgi-bin/mb.pl?"
-     "\"http://www.usemod.com/cgi-bin/mb.pl?action=index\""
-     nil
-     "wikibot: "
-    )
 
     ("hwh"
      "http://hurd.gnufans.org/bin/view/Hurd/"
