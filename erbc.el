@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-23 23:16:57 deego>
+;; Time-stamp: <2005-01-23 23:19:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1275,7 +1275,7 @@ anything useful. ")))
 
 
 
-(defun fsi-eval-maybe (str &optional fs-victim)
+(defun fsi-eval-or-say (str &optional fs-victim)
   (unless fs-victim (setq fs-victim fs-nick))
   (let ((aa (when (stringp str)
 	      (ignore-errors (read str)))))
@@ -1297,7 +1297,7 @@ anything useful. ")))
     ;; Check for flame.el support
     (cond
      ((and (consp flames) (> (length flames) 0))
-      (fsi-eval-maybe (fs-random-choose flames) fs-flame-target))
+      (fsi-eval-or-say (fs-random-choose flames) fs-flame-target))
      (t (fs-flame-mild fs-flame-target)))))
 
 
