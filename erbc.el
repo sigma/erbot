@@ -1,10 +1,10 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-23 08:27:39 deego>
+;; Time-stamp: <2003-05-23 08:43:56 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 0.1dev
 ;; Author's homepage: http://deego.gnufans.org/~deego
 ;; For latest version:
@@ -1169,7 +1169,7 @@ Optional argument ARGS ."
 ;;;        ((equal fir 'homepage)
 ;;; 	"homepage: http://deego.gnufans.org/~deego/pub/emacspub/lisp-mine/erbot/
 ;;; Data: http://deego.gnufans.org/~erbot/data/
-;;; Suggestions to D. Goel: deego@glue.umd.edu")
+;;; Suggestions to D. Goel: deego@gnufans.org")
 ;;;        ((equal fir 'code)
 ;;; 	(erbc-help 'homepage))
 ;;;        ((equal fir 'data)

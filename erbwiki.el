@@ -1,10 +1,10 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-05-16 07:36:26 deego>
+;; Time-stamp: <2003-05-23 08:43:13 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
 ;; Package: erbwiki
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
 ;; Author's homepage: http://deego.gnufans.org/~deego

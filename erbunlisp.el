@@ -1,10 +1,10 @@
 ;;; erbunlisp.el --- Help Simplify functions for nonlisp channels. 
-;; Time-stamp: <2003-01-25 22:13:11 deego>
+;; Time-stamp: <2003-05-23 08:43:56 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbunlisp.el
 ;; Package: erbunlisp
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
 ;; Author's homepage: http://deego.gnufans.org/~deego

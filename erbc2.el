@@ -1,10 +1,10 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-05-06 00:00:24 deego>
+;; Time-stamp: <2003-05-23 08:43:56 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
 ;; Package: erbc2
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
 ;; Author's homepage: http://gnufans.net/~deego

@@ -1,10 +1,10 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-05-01 09:07:14 deego>
+;; Time-stamp: <2003-05-23 08:43:56 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
 ;; Package: erbtrain
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
 ;; Author's homepage: http://deego.gnufans.org/~deego

@@ -1,10 +1,10 @@
 ;;; erblog.el --- 
-;; Time-stamp: <02/10/01 09:30:37 deego>
+;; Time-stamp: <2003-05-23 08:43:59 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblog.el
 ;; Package: erblog
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
 ;; Author's homepage: http://deego.gnufans.org/~deego
 ;; For latest version: 

@@ -1,3 +1,14 @@
+;;; erball.el --- Functions on all files. 
+;; Time-stamp: <2003-05-23 08:43:45 deego>
+;; Copyright (C) 2002 D. Goel
+;; Emacs Lisp Archive entry
+;; Filename: erbc.el
+;; Package: erbc
+;; Author: D. Goel <deego@gnufans.org>
+;; Version: 
+;; Author's homepage: http://deego.gnufans.org/~deego
+;; For latest version:
+;; Usually maintenance
 ;; not all of these may be required depending on how you use erbot..
 (require 'doctor)
 (require 'erc)
@@ -54,6 +65,7 @@
   (mapcar 
    'load
    erball-files))
+
 (defun erball-visit ()
   (interactive)
   (mapcar 
@@ -61,6 +73,20 @@
      (find-file a)
      (auto-revert-mode 1))
    erball-files))
+
+;;;###autoload
+(defun erball-compile ()
+  (interactive)
+  (ignore-errors (kill-buffer "*Compile-Log*"))
+  (erball-visit)
+  (erball-reload)
+  (mapcar
+   (lambda (arg)
+     (byte-compile-file (locate-library arg)))
+   erball-files)
+  (switch-to-buffer "*Compile-Log*")
+  (delete-other-windows)
+  (goto-char (point-min)))
 
 
 

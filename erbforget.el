@@ -1,10 +1,10 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2003-01-18 19:06:31 deego>
+;; Time-stamp: <2003-05-23 08:43:58 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
 ;; Package: erbforget
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
 ;; Author's homepage: http://deego.gnufans.org/~deego

@@ -1,9 +1,9 @@
-;;; erbutils.el --- ;; Time-stamp: <2003-05-13 09:16:55 deego>
+;;; erbutils.el --- ;; Time-stamp: <2003-05-23 08:43:59 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
 ;; Package: erbutils
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
 ;; Author's homepage: http://deego.gnufans.org/~deego
 ;; For latest version: 
