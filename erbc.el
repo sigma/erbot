@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-05 13:12:33 deego>
+;; Time-stamp: <2005-01-06 16:26:43 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3002,7 +3002,7 @@ here."
 (defun fsi-apropos-variable (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'erbnoc-apropos-variable regexp n m ))
 (defun fsi-apropos-function (&optional regexp n m &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos-variable regexp n m ))
+  (fs-apropos-basic 'erbnoc-apropos-function regexp n m ))
 (defun fsi-apropos-value (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'apropos-value regexp n m ))
 (defun fsi-apropos-documentation (&optional regexp n m &rest ignored)

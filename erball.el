@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2005-01-05 14:16:07 deego>
+;; Time-stamp: <2005-01-06 10:02:20 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -16,7 +16,7 @@
 (defmacro erball-ignore-errors-loudly (&rest body)
   "Like ignore-errors, but tells the error..
 
-Copied from deego's 'ignore-errors-my', which owes some of its work
+Copied from deego's `ignore-errors-my', which owes some of its work
 to: Kalle on 7/3/01:
  * used backquote: something i was too lazy to convert my macro to..
  * removed the progn: condition-case automatically has one..
