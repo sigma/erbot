@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2005-01-01 20:53:24 deego>
+;; Time-stamp: <2005-01-01 21:02:13 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -120,7 +120,7 @@ to query using PROMPT, or just return t."
 ;;; Real Code:
 
 
-(defun erbforget-sw (reg &optional prevent-reg)
+(defun erbforget-sw (reg &optional prevent-reg matchingonly)
   "RUN THIS WHEN AS MYBOT WHEN SU-ED TO THE BOT. 
 
 Forget all terms containing occurrence of regexp REG. 
@@ -141,10 +141,12 @@ when using this command.
      ((= len 0 ) (message "No such terms. "))
      (t 
       (when (y-or-n-p (format "Forget %S terms? " len))
-	(erbforget-slowly terms prevent-reg))))))
+	(erbforget-slowly terms prevent-reg matchingonly reg))))))
 
 
-(defun erbforget-slowly (terms &optional prevent-reg)
+(defun erbforget-slowly (terms &optional prevent-reg matchingonly reg)
+  "When matchingonly is t, we forget only the particular entry in the
+NOTES that matches the regexp REG, if any..."
   (let 
       ((len (length terms))
        (ctr 0)
@@ -168,6 +170,21 @@ when using this command.
 	(message "NOT FORGETTING term %S of %S: %S" ctr len thisterm)
 	(sleep-for 1)
 	)
+       (matchingonly
+	(let ((num -1) (donep nil))
+	  (while (not donep)
+	    (incf num 1)
+	    (cond
+	     ((>= num (length notes))
+	      (setq donep t))
+	     ((regexp-match reg (nth notes num))
+	      (setq donep t)
+	      
+	      (message "Forgetting term %S of %S: %S" ctr len thisterm)
+	      (sleep-for 0.1)
+	      (fs-forget thisterm num))
+	     (t nil)))))
+
        (t
 	(message "Forgetting term %S of %S: %S" ctr len thisterm)
 	(sleep-for 0.1)

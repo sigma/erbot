@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2004-12-14 16:26:16 deego>
+;; Time-stamp: <2005-01-01 20:38:54 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -180,7 +180,7 @@ to query using PROMPT, or just return t."
 (defvar erbtrain-idledo-interval-subsequent 10)
 
 ;;;###autoload
-(defun erbtrain-file  (file)
+(defun erbtrain-file-through-irc  (file)
   (interactive "f")
   (setq idledo-interval-small erbtrain-idledo-interval-small)
   (setq idledo-interval erbtrain-idledo-interval)
@@ -192,6 +192,46 @@ to query using PROMPT, or just return t."
       (setq allstrings (split-string allstrings "\n"))
       (setq erbtrain-list allstrings)
       (erbtrain-resume))))
+
+;;;###autoload
+(defalias  'erbtrain-file 'erbtrain-file-through-irc)
+
+
+(defvar erbtrain-local-buffer "*erbtrain-log*")
+
+(defun erbtrain-file-locally (file)
+  "Can use this when you ARE su'ed so that you are in the bot's account.
+
+su to your bot's account and then use this... This has the minor
+advantage of being much faster. "
+  (unless
+      (yes-or-no-p 
+       (concat "Are you really logged in as the bot? "))
+    (error "Please use M-x erbtrain-file instead. "))
+  (save-window-excursion
+    (find-file file)
+    (let ((allstrings (buffer-substring-no-properties
+		       (point-min) (point-max))))
+      (setq allstrings (split-string allstrings "\n"))
+      (mapcar 'erbtrain-local allstrings))))
+
+(defun erbtrain-local (str)
+  "See the doc for erbtrain-file-locally. "
+  ;;(require 'erball)
+  (let* ((strlisp (fs-parse str))
+	 (result (ignore-errors (fs-eval strlisp))))
+    (erbtrain-local-log str strlisp result)))
+
+(defun erbtrain-local-log (str expr result)
+  (save-excursion 
+    (set-buffer (get-buffer-create erbtrain-local-buffer))
+    (goto-char (point-max))
+    (insert "\n")
+    (let ((msg (concat str "\n" "=> " expr "\n" "==> " result)))
+      (message (format "%s" msg))
+      (insert msg))))
+
+    
 
 
 (defun erbtrain-resume ()
