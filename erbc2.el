@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2004-04-22 22:26:52 deego>
+;; Time-stamp: <2004-08-20 15:28:20 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -327,6 +327,9 @@ bash-specific-quotes, like random, should work."
 (defalias 'fs-bash-quote 'fs-bash-specific-quote)
 (defalias 'fs-bash.org 'fs-bash-specific-quote)
 ;;(defalias 'fs-bash 'fs-bash-specific-quote)
+
+
+
 
 
 
