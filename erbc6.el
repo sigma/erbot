@@ -1,5 +1,5 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2004-04-22 23:19:12 deego>
+;; Time-stamp: <2004-04-23 18:18:17 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
@@ -57,7 +57,6 @@ Coded by bojohann on #emacs."
    ((eq sym 'k)
     (apply 'dk thing)) 
     ((eq sym 'c)
-     more
      (apply 'describe-key-briefly thing))
     ((eq sym 'w)
      (apply 'dw thing))
