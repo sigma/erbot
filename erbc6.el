@@ -1,5 +1,5 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2004-03-28 11:44:23 deego>
+;; Time-stamp: <2004-04-22 23:19:12 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
@@ -34,6 +34,15 @@
  
 
 ;;; Real Code:
+
+
+
+(defun fs-m8b nil
+  (fs-random-choose 
+   '("Yes" "No" "Definitely" "Of course not!" "Highly likely." 
+     "Ask yourself, d\o you really want to know?" 
+     "I'm telling you, you don't want to know." "mu!")))
+
 
 
 
