@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-01-06 21:43:49 deego>
+;; Time-stamp: <2005-01-06 21:49:29 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -344,9 +344,9 @@ as many times as it returns a...
 
 
 (defvar erbutils-itemize-style
-  (list "[%s] %s,\n\n" "and also [%s] %s\n\n" "and [%s] %s\n\n")
+  (list "[%s] %s,\n\n" "and also [%s] %s\n\n" "and [%s] %s,\n\n")
   "Another choice, for example is 
-\(list \"[%s] %s\n\n\" \"[%s] %s\n\n\" \"[%s] %s\n\n\")
+\(list \"[%s] %s\n\n\" \"[%s] %s\n\n\" \"[%s] %s,\n\n\")
 ")
 
 (defun erbutils-itemize (result &optional N shortenedp style)
