@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-06 15:27:12 deego>
+;; Time-stamp: <2005-04-06 15:32:16 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3749,9 +3749,10 @@ order of entries within a given term. "
   (when (string= (downcase name) (downcase dest))
     (error "Can't swap term with itself. "))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
-    (erbbdb-working 
+    (erbot-working 
      (ignore-errors (fs-forget tmp))
      (fs-mv name tmp)
+     (fs-mv dest name)
      (fs-mv tmp dest))
     (erbbdb-save)
     (format "Readjusted case from %S to %S" name dest)))
