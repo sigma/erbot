@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-02-09 13:02:06 deego>
+;; Time-stamp: <2005-02-09 13:09:38 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -271,6 +271,10 @@ to query using PROMPT, or just return t."
   
   ;; the given fcn icould be a number or string, in which
    ;; case sandboxing won't touch it, so we need to override that case.
+  (unless 
+      (and (listp body)
+	   (> (length body) 1))
+    (error "Function body should have a length of 2 or more"))
   (unless (symbolp fcn)
     (error "Defun symbols only! :P"))
   
