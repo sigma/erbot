@@ -1,3 +1,10 @@
+2004-03-28  D Goel  <deego@gnufans.org>
+
+	* erbcompat.el: name Sebastian as the author :)
+
+	* erbwiki.el (erbwiki-get-fields): remove '... since not
+	recognized by xemacs
+
 2004-03-22  D Goel  <deego@gnufans.org>
 
 	* erball.el (noninteractive): dunnet should be required only for
