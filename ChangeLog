@@ -1,0 +1,4 @@
+2003-12-30  D Goel  <deego@gnufans.org>
+
+	* erbc.el (reverse): add fs-reverse
+
