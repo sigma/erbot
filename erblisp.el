@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-05-29 09:03:34 deego>
+;; Time-stamp: <2003-06-17 11:02:27 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -81,6 +81,20 @@ This command sandboxes the message and then processes it.."
 	  (mapcar 'erblisp-sandbox (cdr expr))))
    (t (erblisp-sandbox expr))))
 
+
+(defvar erblisp-allowed-words
+  '(nil t 
+	;; Also consider:
+	;; &rest
+	;; &optional
+	
+	)
+  "You should add &rest and &optional to this list. 
+We WON'T do this by default since this could lead to exploits if you
+*happen* to have bound these keywords to weird stuff like 
+(setq &rest (shell-command \"rm -rf /\")) in your .emacs."
+)
+
 (defun erblisp-sandbox (expr)
   (cond 
    ;; first condition
@@ -96,7 +110,8 @@ This command sandboxes the message and then processes it.."
 	;; if quoted, it is fine...
 	expr)
        (t (cons 
-	   (if (equal 0 (string-match "erbc-" (format "%S" fir)))
+	   (if (or (equal 0 (string-match "erbc-" (format "%S" fir)))
+		   (member fir erblisp-allowed-words))
 	       fir
 	     (intern (concat "erbc-" (format "%S" fir))))
 	   (mapcar 'erblisp-sandbox (cdr expr)))))))
@@ -109,6 +124,7 @@ This command sandboxes the message and then processes it.."
 	     (equal 0 (string-match "erbc-" (format "%s" expr))))
 	expr)
        ((equal expr t) expr)
+       ((member expr erblisp-allowed-words) expr)
        ((symbolp expr)
 	;;(boundp (intern (concat "erbc-" (format "%S" expr)))))
 	(intern (concat "erbc-" (format "%s" expr))))
