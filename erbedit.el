@@ -1,10 +1,10 @@
 ;;; erbedit.el --- quicker operator editing of bots' bbdb
-;; Time-stamp: <2003-06-20 10:29:16 deego>
+;; Time-stamp: <2004-03-28 11:44:19 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbedit.el
 ;; Package: erbedit
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:  
 ;; Version:  
 ;; URL: http://gnufans.net/~deego

@@ -1,10 +1,10 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2003-12-04 13:51:08 deego>
+;; Time-stamp: <2004-03-28 11:44:24 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
 ;; Package: erbc5
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:  
 ;; Version:  
 ;; URL: http://gnufans.net/~deego

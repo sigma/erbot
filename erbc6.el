@@ -1,10 +1,10 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2003-08-16 15:19:25 deego>
+;; Time-stamp: <2004-03-28 11:44:23 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
 ;; Package: erbc6
-;; Author: D. Goel <deego@glue.umd.edu> and #emacsers
+;; Author: D. Goel <deego@gnufans.org> and #emacsers
 ;; Keywords:
 ;; Version:
 ;; URL: http://gnufans.net/~deego
