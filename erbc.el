@@ -4151,6 +4151,19 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
                ,@body)
            (kill-buffer ,buffer))))))
 
+(defun fsi-web-page-title (&optional site &rest args)
+  (unless site (error (format "Syntax: %s web-page-title SITE" erbnoc-char)))
+  (setq site (format "%s" site))
+  (erbnoc-with-web-page-buffer site
+    (let* ((case-fold-search t)
+           (beg (search-forward "<title>" nil t))
+           (end (search-forward "</title>" nil t)))
+      (concat "That page title is "
+              (if (and beg end)
+                  (erbutils-cleanup-whitespace 
+                   (buffer-substring beg (- end 8)))
+                "not available")))))
+
 (defun fsi-wserver (&optional site &rest args)
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
