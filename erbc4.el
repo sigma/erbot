@@ -1,10 +1,10 @@
-;;; erbc4.el --- Functions contributed by #emacsers. 
-;; Time-stamp: <2003-06-20 11:11:39 deego>
+;;; erbc4.el --- Russian Roulette 
+;; Time-stamp: <2003-06-20 12:21:02 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
 ;; Package: erbc4
-;; Author: D. Goel <deego@glue.umd.edu>
+;; Author: Taylor Campbell
 ;; Keywords:
 ;; Version:
 ;; URL: http://gnufans.net/~deego
