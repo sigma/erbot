@@ -1,3 +1,7 @@
+2004-04-06  D Goel  <deego@gnufans.org>
+
+	* erbc.el (fs-kick): Kicking syntax different?  remove nil?
+
 2004-03-28  D Goel  <deego@gnufans.org>
 
 	* erbcompat.el: name Sebastian as the author :)
