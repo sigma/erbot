@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-26 16:39:27 deego>
+;; Time-stamp: <2003-08-04 17:51:52 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el

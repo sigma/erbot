@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2003-08-04 17:42:24 deego>
+;; Time-stamp: <2003-08-04 17:52:34 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -183,6 +183,14 @@ no timeout build in... leading to DOS attacks. ")
 
 
 (defun fs-calc-eval (&optional str)
+  "
+Note that  even though this function has a with-timeout built into it,
+that doesn't save us from a DOS attack..since emacs polls only when
+waiting for user input.. 
+
+which is why turned off by default.
+
+"
   (unless erbnoc-calc-p 
     (error "Sorry, but i am a bot! not a calc!"))
   (unless str (error "Eval what?"))
