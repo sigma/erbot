@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-26 16:34:48 deego>
+;; Time-stamp: <2003-06-26 16:51:17 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -226,14 +226,6 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-tmp-sexps)
 (defvar erbnoc-tmp-newbody)
 
-(defmacro oldfs-defun (fcn &rest body)
-  (erbnoc-write-sexps-to-file
-   erbnoc-pf-file
-   (erbnoc-create-defun-overwrite
-    (erbutils-file-sexps erbnoc-pf-file)
-    (cons 'defun (cons fcn body)) fcn))
-  (fs-pf-load)
-  `(quote ,fcn))
 
 
 
@@ -290,9 +282,42 @@ to query using PROMPT, or just return t."
 
 (defun fs-defalias (sym1 sym2)
   (eval `(fs-defun 
-	  ,(erblisp-sandbox-quoted sym1) 
-	  ,(erblisp-sandbox-quoted sym2))))
+	  ,(erblisp-sandbox-quoted sym1) (&rest fs-bar)
+	  (fs-apply (quote ,(erblisp-sandbox-quoted sym2)) fs-bar))))
 
+
+
+
+
+
+
+
+
+
+(defun fs-makunbound (&optional sym)
+  (unless sym (error "Syntax: , (makunbound 'symbol)"))
+  (setq sym
+	(erblisp-sandbox sym))
+  (makunbound sym))
+
+
+(defun fs-fmakunbound (&optional sym)
+  (unless sym (error "Syntax: , (fmakunbound 'symbol)"))
+  (setq sym
+	(erblisp-sandbox sym))
+  (let 
+      ;; this is to be returned..
+      ((result (fmakunbound sym)))
+    ;; now we want to remove any definition of sym from the user
+    ;; file: 
+    
+    (erbnoc-write-sexps-to-file
+     erbnoc-pf-file
+     (first (member-if
+	     (lambda (arg) (equal (second arg) sym))
+	     (erbutils-file-sexps erbnoc-pf-file))))
+    (fs-pf-load)
+    result))
 
 
 
