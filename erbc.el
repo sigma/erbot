@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-26 11:46:58 deego>
+;; Time-stamp: <2003-05-27 14:14:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3962,6 +3962,22 @@ last time i checked , equalp seemed to work as well.. "
 				     units-si-short-prefix-list
 				     units-convert-1 units-convert)))
 
+
+
+
+(defun erbc-give (&optional nini &rest stuff)
+  (unless nini (setq nini "self"))
+  (when (string= "me" nini)
+    (setq nini nick))
+  (unless stuff (setq stuff '("a" "beer")))
+  (format "/me gives %s %s"
+	  nini
+	  (mapconcat 
+	   (lambda (arg) (format "%s" arg))
+	   stuff " ")))
+	
+	
+(defalias 'erbc-hand 'erbc-give)
 
 
 (provide 'erbc)
