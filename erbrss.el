@@ -1,5 +1,5 @@
 ;;; erbrss.el --- Provide an RSS feed from your erbot.
-;; Time-stamp: <2004-12-14 18:46:04 forcer>
+;; Time-stamp: <2004-12-29 23:54:33 forcer>
 ;; Copyright (C) 2004 Jorgen Schaefer
 ;; Emacs Lisp Archive entry
 ;; Filename: erbrss.el
@@ -150,14 +150,39 @@ This is suitable for `erbot-notify-substitue-functions'."
                          entry-num term old-entry new-entry)
                  (format "%s in %s" nick channel)))
 
-(defun erbrss-merge (nick channel old-term new-term new-entries)
+(defun erbrss-merge (nick channel from-term to-term
+                     from-entries to-entries final-entries)
   "Note a merge in the erbot database.
 This is suitable for `erbot-notify-merge-functions'."
-  (erbrss-rc-add term
-                 (format "Merged %s into %s. New contents:\n%s"
-                         old-term new-term
-                         (mapconcat #'identity new-entries "\n"))
-                 (format "%s in %s" nick channel)))
+  (erbrss-rc-add
+   term
+   (format (concat "Merged %s into %s. New contents:\n"
+                   "(1 means from %s, 2 from %s and + from both)\n"
+                   "%s")
+           old-term new-term
+           old-term new-term
+           (erbrss-merge-description from-entries
+                                     to-entries
+                                     final-entries))
+   (format "%s in %s" nick channel)))
+
+(defun erbrss-merge-description (from-entries to-entries final-entries)
+  "Return a string describing the merge. The string contains a
+line per entry in FINAL-ENTRIES, prefixed with a 1 if that
+entry is from FROM-ENTRIES, 2 if it is from TO-ENTRIES, and +
+if it is from both."
+  (mapconcat (lambda (entry)
+               (format "%s %s"
+                       (let ((fromp (member entry from-entries))
+                             (top (member entry to-entries)))
+                         (cond
+                          ((and fromp top) "+")
+                          (fromp           "1")
+                          (top             "2")
+                          (t               "?")))
+                       entry))
+             final-entries
+             "\n"))
 
 
 ;;; Recent Changes
