@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-25 12:52:40 deego>
+;; Time-stamp: <2003-07-30 10:01:34 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -381,7 +381,7 @@ Use with caution only in privmsgs please, for may produce long outputs. "
   "Similar to describe-variable, but does not limit strings.."
   (fs-describe-variable variable 'nolimit))
 
-(defun fs-describe-variable (&optional variable nolimit)
+(defun fs-describe-variable (&optional variable &rest ignore)
   "Describes a VARIABLE.."
   (unless variable (error "Syntax: , dv 'variable"))
   (let* ((f variable))
@@ -389,9 +389,7 @@ Use with caution only in privmsgs please, for may produce long outputs. "
 	(setq f (read f)))
     (cond
      ((symbolp f) 
-      (if (equal nolimit 'nolimit)
-	  (erbutils-describe-variable f)
-	(erbutils-describe-variable f)))
+      (erbutils-describe-variable f))
      
      ;; if list, DO NOT wanna eval it-->
      (t
