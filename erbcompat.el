@@ -1,9 +1,9 @@
 ;;; erbcompat.el --- Erbot GNU Emacs/XEmacs compatibility issues
-;; Time-stamp: <2004-03-28 11:29:03 deego>
+;; Time-stamp: <2004-03-28 11:32:07 deego>
 ;; Copyright (C) 2004 S. Freundt
 ;; Emacs Lisp Archive entry
-;; Filename: erbc.el
-;; Package: erbc
+;; Filename: erbcompat.el
+;; Package: erbot
 ;; Author:  Sebastian Freundt <freundt@math.TU-Berlin.DE>
 ;; Version: NA
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
