@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-10 13:48:23 deego>
+;; Time-stamp: <2003-06-12 14:50:13 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3958,6 +3958,7 @@ last time i checked , equalp seemed to work as well.. "
    sentence-end-double-space sentence-end-without-period
    transpose-sentences))
 
+(defalias 'erbc-flatten 'erbutils-flatten)
 
 (erbutils-defalias 
  '(
