@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-06 16:33:25 deego>
+;; Time-stamp: <2003-06-09 11:35:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3963,6 +3963,9 @@ last time i checked , equalp seemed to work as well.. "
    regexp-opt-group regexp-opt-charset))
 
 (erbutils-defalias '(window-system))
+
+(erbutils-defalias 
+ '(kbd read-kbd-macro))
 
 (provide 'erbc)
 (run-hooks 'erbc-after-load-hooks)
