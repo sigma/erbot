@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-09 11:35:40 deego>
+;; Time-stamp: <2003-06-10 13:48:23 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3412,6 +3412,9 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defalias 'erbc-die 'erbc-explode)
+(defalias 'erbc-die! 'erbc-explode)
+(defalias 'erbc-Die! 'erbc-explode)
+(defalias 'erbc-Die 'erbc-explode)
 (defalias 'erbc-DIE 'erbc-explode)
 (defalias 'erbc-leave 'erbc-explode)
 (defalias 'erbc-exit 'erbc-explode)
