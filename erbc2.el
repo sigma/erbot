@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-19 12:25:58 deego>
+;; Time-stamp: <2003-06-20 13:43:17 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -109,6 +109,15 @@
 (defvar erbnoc-tmp-avar nil)
 (defvar erbnoc-tmp-newargs nil)
 
+(defun erbnoc-apply-sandbox-args-old (args)
+  (cond
+   ((= (length args) 0) nil)
+   ((= (length args) 1) 
+    (if (equal (caar args) 'quote) args
+      (mapcar 'erblisp-sandbox-quoted args)))
+   (t
+    (cons (erblisp-sandbox-quoted (car args))
+	  (erbnoc-apply-sandbox-args (cdr args))))))
 (defun erbnoc-apply-sandbox-args (args)
   (cond
    ((= (length args) 0) nil)
@@ -119,24 +128,44 @@
     (cons (erblisp-sandbox-quoted (car args))
 	  (erbnoc-apply-sandbox-args (cdr args))))))
 
+(defvar erbnoc-apptmpa)
+(defvar erbnoc-apptmpb)
+(defvar erbnoc-apptmpc)
+(defvar erbnoc-apptmpd)
+(defvar erbnoc-tmpsymbolp)
 
-
-(defmacro fs-apply (symbol &rest args)
-  (let (
-	(erbnoc-tmp-newargs (erbnoc-apply-sandbox-args args)))
+(defmacro fs-apply (fcnsym &rest args)
+  (unless fcnsym (error "No function to fs-apply!"))
+  (let (erbnoc-tmpargs
+	(erbnoc-len (length args))
+	erbnoc-tmpnewargs
+	)
     (cond
-     ((listp symbol)
-      (setq symbol (erblisp-sandbox-quoted symbol)))
-     ((symbolp symbol)
-      (setq symbol (erblisp-sandbox-quoted symbol)))
+     ((null args)
+      (setq erbnoc-tmpargs nil))
+     (t
+      (setq erbnoc-tmpargs
+	    (append (subseq args 0 2)
+		    (first (last args))))))
+      
+    (let* (
+	   (erbnoc-tmp-newargs (erbnoc-apply-sandbox-args args))
+	   (erbnoc-tmp-newlen (length erbnoc-tmp-newargs)))
+    (cond
+     ((listp fcnsym)
+      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
+     ((symbolp fcnsym)
+      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
      (t (error "No clue how to apply that. ")))
-    `(let ((erbnoc-tmp-avar ,symbol))
+    `(let ((erbnoc-tmp-avar ,fcnsym))
        (cond
 	((symbolp erbnoc-tmp-avar)
 	 (setq erbnoc-tmp-avar
 	       (erblisp-sandbox-quoted erbnoc-tmp-avar)))
 	(t "nada"))
-       (apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs))))
+       ,(if (= erbnoc-tmp-newlen 0)
+	    `(apply erbnoc-tmp-avar nil)
+	  `(apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs))))))
 
 (defmacro fs-funcall (symbol &rest args)
   `(fs-apply ,symbol ,@args nil))
