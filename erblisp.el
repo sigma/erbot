@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-06-17 11:02:27 deego>
+;; Time-stamp: <2003-06-18 09:14:25 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -72,7 +72,7 @@ This command sandboxes the message and then processes it.."
       (setq msg (read msg)))
   (format "%s" (eval (erblisp-sandbox-fuzzy msg))))
 
-(defun erblisp-sandbox-quoted (expr)
+(defun erblisp-sandbox-quoted-maybe (expr)
   "sandboxes the whole expression even if it starts with a quote."
   (cond
    ((and (listp expr)
@@ -80,6 +80,17 @@ This command sandboxes the message and then processes it.."
     (cons 'quote
 	  (mapcar 'erblisp-sandbox (cdr expr))))
    (t (erblisp-sandbox expr))))
+
+
+(defun erblisp-sandbox-quoted (expr)
+  "Assumes that the expression will result in a quoted thingy and
+tries to make sure that we sandbox that whole quoted thing.. "
+  (cond
+   ((and (listp expr)
+	 (equal (first expr) 'quote))
+    (cons 'quote
+	  (mapcar 'erblisp-sandbox (cdr expr))))
+   (t (list 'erbc-sandbox-quoted (erblisp-sandbox expr)))))
 
 
 (defvar erblisp-allowed-words

@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-17 17:27:06 deego>
+;; Time-stamp: <2003-06-18 09:15:32 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4013,6 +4013,9 @@ setq erbc-t to nil :-) ")
 	 (format "%s wakes up, all confused. " name)
 	 ))))))
     
+(defalias 'erbc-sandbox-quoted 'erblisp-sandbox-quoted)
+(defalias 'erbc-sandbox-quoted-maybe 'erblisp-sandbox-quoted-maybe)
+(defalias 'erbc-sandbox 'erblisp-sandbox)
 
 (defun erbc-kick (&optional reason &rest ignore)
   (erc-cmd-KICK erbnoc-nick nil (when reason (format "%s" reason))))
