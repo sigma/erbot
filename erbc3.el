@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-20 22:06:18 deego>
+;; Time-stamp: <2003-06-26 16:34:48 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -272,6 +272,26 @@ to query using PROMPT, or just return t."
    (fs-pv-get-variables-values) 1000))
    ;; this should lead to a few saves every day... not too many one hopes..
 ;;1000))
+
+
+   
+   
+
+
+(defmacro fs-defun (fcn &rest body)
+  (erbnoc-write-sexps-to-file
+   erbnoc-pf-file
+   (erbnoc-create-defun-overwrite
+    (erbutils-file-sexps erbnoc-pf-file)
+    (cons 'defun (cons fcn body)) fcn))
+  (fs-pf-load)
+  `(quote ,fcn))
+
+
+(defun fs-defalias (sym1 sym2)
+  (eval `(fs-defun 
+	  ,(erblisp-sandbox-quoted sym1) 
+	  ,(erblisp-sandbox-quoted sym2))))
 
 
 

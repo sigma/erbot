@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-20 18:39:17 deego>
+;; Time-stamp: <2003-06-26 16:33:19 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -355,9 +355,6 @@ bash-specific-quotes, like random, should work."
 	(erblisp-sandbox sym))
   (fmakunbound sym))
 
-(defun fs-defalias (sym1 sym2)
-  (defalias (erblisp-sandbox-quoted sym1)
-    (erblisp-sandbox-quoted sym2)))
 
 (defalias 'fs-lexical-let 'lexical-let)
 (provide 'erbc2)
