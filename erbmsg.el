@@ -52,7 +52,7 @@
 	"The erbmsg module for erbot"
 	:group 'applications)
 
-(defcustom erbmsg-default-magic-words '("mymsgs")
+(defcustom erbmsg-default-magic-words nil
 	"List of default magic words for messages with magic words."
 	:group 'erbmsg)
 
@@ -81,6 +81,31 @@ Note: magic words are not currently implemented and just
 (defalias 'fs-msg-wmw 'fs-msg-with-magic-words)
 
 
+(defun fs-msg-mymsgs (&rest ignore)
+	"This is redundant but more clean than in `erbmsg-parse'."
+	(let* ((nick fs-nick)
+				 (nicks-ht (gethash nick erbmsg-msg-hash-table))
+				 pending-msgs)
+		(and nicks-ht
+         (maphash (lambda (fromnick msg-data)
+										(add-to-list 'pending-msgs (vconcat (vector fromnick) msg-data)))
+									nicks-ht))
+		(or (and pending-msgs 
+						 (let ((msg-cookie (erbmsg-generate-msg-cookie pending-msgs)))
+							 (format "erm, %s msgs pending, see them? %s"
+											 (length pending-msgs)
+											 (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ,msg-cookie))
+																					(query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
+																					(post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
+																					(flush (erbmsg-flush-pending-msgs ,nick ,msg-cookie))
+																					(no (ignore)))
+																				nick))))
+				(format ":( no msgs for you, %s" nick))))
+(defalias 'fs-msgs 'fs-msg-mymsgs)
+(defalias 'fs-mymsgs 'fs-msg-mymsgs)
+
+
+
 (defun erbmsg-parse (msg proc nick tgt localp userinfo)
   "When having (require 'erbmsg) this function is called with
 every message typed.
@@ -104,7 +129,9 @@ see erbmsg-question part below :)."
                       (add-to-list 'magic-words fromnick)
                       (nconc magic-words erbmsg-default-magic-words)
                       (and (string-match
-                            (mapconcat 'identity magic-words "\\|")
+                            (concat "^\\(?:"
+																		(mapconcat 'identity magic-words "\\|")
+																		"\\)")
                             msg)
                            (add-to-list 'pending-msgs (vconcat (vector fromnick) msg-data)))))
                   nicks-ht))
@@ -126,7 +153,7 @@ see erbmsg-question part below :)."
 													 (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ,msg-cookie))
 																							(query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
 																							(post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
-																							(flush (erbmsg-flush-pending-msgs ,nick))
+																							(flush (erbmsg-flush-pending-msgs ,nick ,msg-cookie))
 																							(no (ignore)))
 																						nick)))))))
 
@@ -142,31 +169,42 @@ see erbmsg-question part below :)."
 ;; reply functions
 (defun erbmsg-notice-pending-msgs (nick msg-cookie)
 	"NOTICEs all `msgs' to the user `nick'."
-	(ignore))
+	(erbmsg-send-pending-msgs nick msg-cookie "NOTICE" nick))
 
 (defun erbmsg-query-pending-msgs (nick msg-cookie)
 	"PRIVMSGs all `msgs' to the user `nick'."
-	(ignore))
+	(erbmsg-send-pending-msgs nick msg-cookie "PRIVMSG" nick))
 
 (defun erbmsg-post-pending-msgs (nick msg-cookie)
 	"Publically post all `msgs' to current channel"
-	(let ((tgt fs-tgt)
-				(msgs (gethash msg-cookie erbmsg-msg-hash-table)))
-		(mapc (lambda (msg)
-						(let ((msgfrom (aref msg 0))
-									(msgtext (aref msg 1))
-									(msgtime (aref msg 2)))
-							(erc-send-message (format "%s %s: %s"
+	(erbmsg-send-pending-msgs nick msg-cookie "PRIVMSG" fs-tgt))
+
+(defun erbmsg-send-pending-msgs (nick msg-cookie &optional method target)
+	"PRIVMSGs all `msgs' to the user `nick',
+instead of PRIVMSG you may specify another sending method."
+	(let ((msgs (gethash msg-cookie erbmsg-msg-hash-table))
+				(method (or method "PRIVMSG"))
+				(target (or target fs-nick)))
+		(and msgs
+				 (mapc (lambda (msg)
+								 (let ((msgfrom (aref msg 0))
+											 (msgtext (aref msg 1))
+											 (msgtime (aref msg 2)))
+									 (erc-message method
+																(format "%s %s %s: %s"
+																				target
 																				msgfrom
 																				(format-time-string "%D %T (%Z)" msgtime)
 																				msgtext))))
-					msgs)
-		(remhash msg-cookie erbmsg-msg-hash-table)
-		(erbmsg-flush-pending-msgs nick)))
+							 msgs)
+				 (remhash msg-cookie erbmsg-msg-hash-table))))
 
-(defun erbmsg-flush-pending-msgs (nick)
+(defun erbmsg-flush-pending-msgs (nick msg-cookie)
 	"Flushes all pending messages for user `nick'."
-	(erc-send-message "messages are currently not flushed due to debugging reasons."))
+	(remhash msg-cookie erbmsg-msg-hash-table)
+	(remhash nick erbmsg-msg-hash-table)
+	(remhash nick erbmsg-question-hash-table)
+	(erc-send-message "flushed"))
 
 
 ;;; just some tricks to create gazillions of msgs w/o IRC
