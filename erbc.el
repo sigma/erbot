@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-16 17:34:17 deego>
+;; Time-stamp: <2003-05-18 23:06:54 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1396,6 +1396,10 @@ EXPR is the full initial expression, well, mostly..
 			   )))))
 
 
+(defcustom erbnoc-greeting-string
+  "Greetings and Salutations from %s" "")
+
+
 (defun erbc-english-only (expr &optional addressedatlast nogoogle)
   "when addressedatlast is t, means that fsbot/botito was triggered because
 it was addressed at last. "
@@ -1420,7 +1424,8 @@ it was addressed at last. "
 	    (string-match erbot-nick (first exprlist))))
       (setq gotit t
 	    ans
-	    (format "Greetings and Salutations from %s" erbot-nick)))
+	    (format erbnoc-greeting-string
+	     erbot-nick)))
       ((or
 	(member "hi" exprlist)
 	(member "hello" exprlist)
