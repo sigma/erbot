@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-27 14:14:40 deego>
+;; Time-stamp: <2003-05-28 09:43:09 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3979,6 +3979,14 @@ last time i checked , equalp seemed to work as well.. "
 	
 (defalias 'erbc-hand 'erbc-give)
 
+(erbutils-defalias 
+ '(backward-kill-sentence 
+   backward-sentence
+   flame-sentence flame-sentence-ify
+   flame-sentence-loop forward-sentence kill-sentence
+   mark-end-of-sentence sentence-at-point sentence-end
+   sentence-end-double-space sentence-end-without-period
+   transpose-sentences))
 
 (provide 'erbc)
 (run-hooks 'erbc-after-load-hooks)
