@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-14 17:18:52 deego>
+;; Time-stamp: <2003-11-15 15:39:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -132,6 +132,14 @@ Make this t at your own risk. ")
   (cond
    (erbnoc-shell-command-p
     (apply 'shell-command-to-string args))
+   (t
+    (error "The bot-operator has shell commands disabled"))))
+
+
+(defun erbnoc-shell-command (&rest args)
+  (cond
+   (erbnoc-shell-command-p
+    (apply 'shell-command args))
    (t
     (error "The bot-operator has shell commands disabled"))))
 
