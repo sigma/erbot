@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-01 13:14:13 deego>
+;; Time-stamp: <2005-04-06 12:48:22 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4156,6 +4156,15 @@ last time i checked , equalp seemed to work as well.. "
 		   (not (= (aref ct 0) 46)))))
     (if addp (setq ct (concat "." ct))))
   (erbcountry (downcase ct)))
+
+
+
+(defun fsi-country-search (&rest names)
+  (unless names (error 
+	      (format "Syntax: %s country-search NM (example , country japa)" erbn-char)))
+  (erbcountry-search
+   (mapconcat (lambda (arg) (format "%s" arg)) names " ")))
+
 
 ;;; 2003-02-09 T13:40:04-0500 (Sunday)    D. Goel
 (defun fsi-spook (&rest args)

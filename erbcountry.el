@@ -493,6 +493,16 @@
 (erbcountry-create-list)
 
 
+
+(defun erbcountry-search (name)
+  (with-temp-buffer
+    (insert erbcountry-string)
+    (goto-char (point-min))
+    (if (search-forward name nil t)
+	(buffer-substring-no-properties (line-beginning-position)
+					(line-end-position))
+      (error "No match. "))))
+
   
 (defun erbcountry-lookup (ct)
   ;;(unless (stringp ct) (setq ct (format "%s" ct)))
