@@ -199,7 +199,7 @@ to query using PROMPT, or just return t."
      ((gethash nick not-table)
       (format "%s: Idiot, you can can only bet on one outcome."
               nick on-what))
-     ((< (gethash nick erbnoc-money) how-much)
+     ((< (or (gethash nick erbnoc-money) 0) how-much)
       (format "%s: Fool, you can't bet more than you've got (%d)."
               nick (gethash nick erbnoc-money)))
      (t
@@ -319,8 +319,8 @@ to query using PROMPT, or just return t."
           (concat "/me points the gnu and " nick
                   " trembles... *CLICK*"))
         (lambda ()
-          (concat nick "shudders as the great and powerful fsbot aims "
-                  "the all-powerful barrel of the gnu... *CLICK"))
+          (concat nick " shudders as the great and powerful fsbot aims "
+                  "the all-powerful barrel of the gnu... *CLICK*"))
         (lambda ()
           (concat nick " is one lucky punk... *CLICK*"))
         (lambda ()
