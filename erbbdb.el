@@ -1,5 +1,5 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2003-05-29 09:03:38 deego>
+;; Time-stamp: <2004-03-19 22:20:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
@@ -52,6 +52,7 @@
 ;;; Code:
 (ignore-errors (require 'bbdb))
 (ignore-errors (require 'bbdb-com))
+(ignore-errors (require 'bbdb-hooks))
 
 (require 'erbc)
 
