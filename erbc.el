@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-24 08:00:32 deego>
+;; Time-stamp: <2005-03-03 16:27:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4163,6 +4163,7 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-faith 'fs-pray)
 
 (erbutils-defalias-i '(faith-correct-string))
+(erbutils-defalias-i '(member))
 
 (defun erbn-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
