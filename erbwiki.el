@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2004-12-06 10:16:26 deego>
+;; Time-stamp: <2004-12-17 10:59:14 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el

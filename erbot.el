@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <17/11/2004 16:41:03 Yann Hodique>
+;; Time-stamp: <2004-12-17 11:27:15 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -397,7 +397,10 @@ the new erc-backend functions."
 		      (t (aref parsed 1))))
 	 (userinfo (erc-parse-user sspec))
 	 (nick (nth 0 userinfo))
-
+	 ;; bind fs-nick in a let.. so that changes to fs-nick are
+	 ;; independent and do not affect each other.. when it is
+	 ;; parsing too many messages once..
+	 (fs-nick fs-nick)
 	 (cmdargs (and erbot-on-new-erc-p
 		       (erc-response.command-args parsed)))
 	 (tgta (cond (cmdargs
