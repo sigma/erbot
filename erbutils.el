@@ -1,16 +1,16 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <03/05/24 22:52:26 freundt>
+;; Time-stamp: <2003-05-29 09:03:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
 ;; Package: erbutils
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erbutils-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -45,57 +45,6 @@
   (interactive)
   (with-electric-help
    '(lambda () (insert erbutils-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbutils-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbutils-introduction ()
-  "Provides electric help regarding variable `erbutils-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbutils-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erbutils-commentary
-  "Help..."
-)
-
-(defun erbutils-commentary ()
-  "Provides electric help regarding variable `erbutils-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbutils-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erbutils-new-features
-  "Help..."
-)
-
-(defun erbutils-new-features ()
-  "Provides electric help regarding variable `erbutils-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbutils-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erbutils-todo
-  "Help..."
-)
-
-(defun erbutils-todo ()
-  "Provides electric help regarding variable `erbutils-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbutils-todo) nil) "*doc*"))
 
 (defvar erbutils-version "99.99")
 

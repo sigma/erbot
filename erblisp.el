@@ -1,16 +1,16 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-05-23 08:43:57 deego>
+;; Time-stamp: <2003-05-29 09:03:34 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
 ;; Package: erblisp
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erblisp-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -46,56 +46,7 @@
   (with-electric-help
    '(lambda () (insert erblisp-quick-start) nil) "*doc*"))
 
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erblisp-introduction
-  "Help..."
-)
 
-;;;###autoload
-(defun erblisp-introduction ()
-  "Provides electric help regarding variable `erblisp-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblisp-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erblisp-commentary
-  "Help..."
-)
-
-(defun erblisp-commentary ()
-  "Provides electric help regarding variable `erblisp-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblisp-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erblisp-new-features
-  "Help..."
-)
-
-(defun erblisp-new-features ()
-  "Provides electric help regarding variable `erblisp-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblisp-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erblisp-todo
-  "Help..."
-)
-
-(defun erblisp-todo ()
-  "Provides electric help regarding variable `erblisp-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblisp-todo) nil) "*doc*"))
 
 (defvar erblisp-version "99.99")
 

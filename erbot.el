@@ -1,17 +1,17 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-05-23 08:43:33 deego>
+;; Time-stamp: <2003-05-29 09:03:34 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
 ;; Authors:  David Edmunston (dme@dme.org) 
 ;; Modified by: D. Goel <deego@gnufans.org>
 ;; Version: 0.0
-;; Author's homepage: http://deego.gnufans.org/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; Maintainer: Deepak Goel <deego@gnufans.org>
 
-;; For latest version: 
+ 
 (defvar erbot-home-page
-  "http://deego.gnufans.org/~deego/pub/emacspub/lisp-mine/erbot/")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot/pub/emacspub/lisp-mine/erbot/")
 
 ;; Version: 
 ;; Keywords: ERC, IRC, chat, robot, bot

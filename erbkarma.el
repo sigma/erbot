@@ -1,5 +1,5 @@
 ;;; erbkarma.el ---
-;; Time-stamp: <2003-05-23 08:43:57 deego>
+;; Time-stamp: <2003-05-29 09:03:35 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbkarma.el
@@ -7,11 +7,11 @@
 ;; Authors: D. Goel <deego@gnufans.org> 
 ;; Keywords:
 ;; Version:
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 (defconst erbkarma-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -51,56 +51,6 @@
   (with-electric-help
    '(lambda () (insert erbkarma-quick-start) nil) "*doc*"))
 
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbkarma-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbkarma-introduction ()
-  "Provides electric help from variable `erbkarma-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbkarma-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbkarma-commentary
-  "Help..."
-)
-
-(defun erbkarma-commentary ()
-  "Provides electric help from variable `erbkarma-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbkarma-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbkarma-new-features
-  "Help..."
-)
-
-(defun erbkarma-new-features ()
-  "Provides electric help from variable `erbkarma-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbkarma-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbkarma-todo
-  "Help..."
-)
-
-(defun erbkarma-todo ()
-  "Provides electric help from variable `erbkarma-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbkarma-todo) nil) "*doc*"))
 
 (defconst erbkarma-version "0.0-DUMMY")
 (defun erbkarma-version (&optional arg)

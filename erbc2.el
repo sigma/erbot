@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-05-23 08:43:56 deego>
+;; Time-stamp: <2003-05-29 09:03:36 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -7,8 +7,8 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-;; Author's homepage: http://gnufans.net/~deego
-;; For latest version:
+;; URL:  http://gnufans.net/~deego
+
 
 
  
@@ -35,15 +35,7 @@
 ;; here shall tend to be "specially defined" ones.
 
 
-(defconst erbc2-version "0.0-DUMMY")
-(defun erbc2-version (&optional arg)
-   "Display erbc2's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbc2 version %s" erbc2-version))
-    (message "erbc2 version %s" erbc2-version)))
-
+(defconst erbc2-version "NA")
 ;;==========================================
 ;;; Requires:
 (eval-when-compile (require 'cl))

@@ -1,16 +1,16 @@
 ;;; erbdata.el --- 
-;; Time-stamp: <2003-05-23 08:43:58 deego>
+;; Time-stamp: <2003-05-29 09:03:36 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbdata.el
 ;; Package: erbdata
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erbdata-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -46,56 +46,6 @@
   (with-electric-help
    '(lambda () (insert erbdata-quick-start) nil) "*doc*"))
 
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbdata-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbdata-introduction ()
-  "Provides electric help regarding variable `erbdata-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbdata-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erbdata-commentary
-  "Help..."
-)
-
-(defun erbdata-commentary ()
-  "Provides electric help regarding variable `erbdata-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbdata-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erbdata-new-features
-  "Help..."
-)
-
-(defun erbdata-new-features ()
-  "Provides electric help regarding variable `erbdata-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbdata-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erbdata-todo
-  "Help..."
-)
-
-(defun erbdata-todo ()
-  "Provides electric help regarding variable `erbdata-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbdata-todo) nil) "*doc*"))
 
 (defvar erbdata-version "99.99")
 

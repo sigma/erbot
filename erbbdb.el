@@ -1,16 +1,16 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2003-05-23 08:43:59 deego>
+;; Time-stamp: <2003-05-29 09:03:38 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
 ;; Package: erbbdb
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erbbdb-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -45,57 +45,6 @@
   (interactive)
   (with-electric-help
    '(lambda () (insert erbbdb-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbbdb-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbbdb-introduction ()
-  "Provides electric help regarding variable `erbbdb-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbbdb-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erbbdb-commentary
-  "Help..."
-)
-
-(defun erbbdb-commentary ()
-  "Provides electric help regarding variable `erbbdb-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbbdb-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erbbdb-new-features
-  "Help..."
-)
-
-(defun erbbdb-new-features ()
-  "Provides electric help regarding variable `erbbdb-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbbdb-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erbbdb-todo
-  "Help..."
-)
-
-(defun erbbdb-todo ()
-  "Provides electric help regarding variable `erbbdb-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbbdb-todo) nil) "*doc*"))
 
 (defvar erbbdb-version "99.99")
 

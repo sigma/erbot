@@ -1,16 +1,16 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <03/05/24 21:08:04 freundt>
+;; Time-stamp: <2003-05-29 09:03:35 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
 ;; Package: erbeng
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erbeng-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -46,56 +46,6 @@
   (with-electric-help
    '(lambda () (insert erbeng-quick-start) nil) "*doc*"))
 
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbeng-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbeng-introduction ()
-  "Provides electric help regarding variable `erbeng-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbeng-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erbeng-commentary
-  "Help..."
-)
-
-(defun erbeng-commentary ()
-  "Provides electric help regarding variable `erbeng-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbeng-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erbeng-new-features
-  "Help..."
-)
-
-(defun erbeng-new-features ()
-  "Provides electric help regarding variable `erbeng-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbeng-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erbeng-todo
-  "Help..."
-)
-
-(defun erbeng-todo ()
-  "Provides electric help regarding variable `erbeng-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbeng-todo) nil) "*doc*"))
 
 (defvar erbeng-version "99.99")
 

@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2003-05-23 08:43:58 deego>
+;; Time-stamp: <2003-05-29 09:03:35 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -7,11 +7,11 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 (defconst erbforget-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -46,57 +46,6 @@
   (interactive)
   (with-electric-help
    '(lambda () (insert erbforget-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbforget-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbforget-introduction ()
-  "Provides electric help from variable `erbforget-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbforget-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbforget-commentary
-  "Help..."
-)
-
-(defun erbforget-commentary ()
-  "Provides electric help from variable `erbforget-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbforget-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbforget-new-features
-  "Help..."
-)
-
-(defun erbforget-new-features ()
-  "Provides electric help from variable `erbforget-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbforget-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbforget-todo
-  "Help..."
-)
-
-(defun erbforget-todo ()
-  "Provides electric help from variable `erbforget-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbforget-todo) nil) "*doc*"))
 
 (defconst erbforget-version "0.0-DUMMY")
 (defun erbforget-version (&optional arg)

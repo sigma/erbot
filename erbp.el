@@ -1,4 +1,5 @@
 ;;; erbp.el --- personal erbot-interface, stolen from dunnet.el
+;; we should perhaps remove this file, is not in use -- DG.
 
 ;; Copyright (C) 1992, 1993, 2001 Free Software Foundation, Inc.
 

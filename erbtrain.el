@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-05-23 08:43:56 deego>
+;; Time-stamp: <2003-05-29 09:03:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -7,11 +7,11 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 (defconst erbtrain-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -96,17 +96,6 @@ to the bot in that channel slowly.
   (interactive)
   (with-electric-help
    '(lambda () (insert erbtrain-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbtrain-todo
-  "Help..."
-)
-
-(defun erbtrain-todo ()
-  "Provides electric help from variable `erbtrain-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbtrain-todo) nil) "*doc*"))
 
 (defconst erbtrain-version "0.0-DUMMY")
 (defun erbtrain-version (&optional arg)

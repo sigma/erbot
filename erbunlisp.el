@@ -1,5 +1,5 @@
 ;;; erbunlisp.el --- Help Simplify functions for nonlisp channels. 
-;; Time-stamp: <2003-05-23 08:43:56 deego>
+;; Time-stamp: <2003-05-29 09:03:33 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbunlisp.el
@@ -7,11 +7,11 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 (defconst erbunlisp-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -86,17 +86,6 @@
   (interactive)
   (with-electric-help
    '(lambda () (insert erbunlisp-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbunlisp-todo
-  "Help..."
-)
-
-(defun erbunlisp-todo ()
-  "Provides electric help from variable `erbunlisp-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbunlisp-todo) nil) "*doc*"))
 
 (defconst erbunlisp-version "0.0-DUMMY")
 (defun erbunlisp-version (&optional arg)

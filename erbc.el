@@ -1,16 +1,16 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-28 09:43:09 deego>
+;; Time-stamp: <2003-05-29 09:03:37 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 0.1dev
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+;; Version: NA
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 (defvar erbc-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -41,40 +41,7 @@
 )
 
 
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbc-introduction
-  "Help..."
-)
-
-;; namespaces: erbc and erbnocmd
-;; the latter stands for commands and variables that naturally belong
-;; to this file. but NOT ;; available to useer. 
-
-;;; Commentary:
-(defvar erbc-commentary
-  "Help..."
-)
-
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erbc-new-features
-  "Help..."
-)
-
-;;; TO DO:
-;(defvar erbc-todo
-;  "Help..."
-;)
-
-
-(defvar erbc-version "0.1dev")
+(defvar erbc-version "NA")
 
 ;;==========================================
 ;;; Code:

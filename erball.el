@@ -1,13 +1,14 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2003-05-23 08:43:45 deego>
+;; Time-stamp: <2003-05-29 08:53:43 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version:
+
+
+
 ;; Usually maintenance
 ;; not all of these may be required depending on how you use erbot..
 (require 'doctor)

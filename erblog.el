@@ -1,16 +1,16 @@
 ;;; erblog.el --- 
-;; Time-stamp: <2003-05-23 08:43:59 deego>
+;; Time-stamp: <2003-05-29 09:03:34 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblog.el
 ;; Package: erblog
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: 99.99
-;; Author's homepage: http://deego.gnufans.org/~deego
-;; For latest version: 
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+ 
 
 (defvar erblog-home-page
-  "http://deego.gnufans.org/~deego")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -45,57 +45,6 @@
   (interactive)
   (with-electric-help
    '(lambda () (insert erblog-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erblog-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erblog-introduction ()
-  "Provides electric help regarding variable `erblog-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblog-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erblog-commentary
-  "Help..."
-)
-
-(defun erblog-commentary ()
-  "Provides electric help regarding variable `erblog-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblog-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defvar erblog-new-features
-  "Help..."
-)
-
-(defun erblog-new-features ()
-  "Provides electric help regarding variable `erblog-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblog-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defvar erblog-todo
-  "Help..."
-)
-
-(defun erblog-todo ()
-  "Provides electric help regarding variable `erblog-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblog-todo) nil) "*doc*"))
 
 (defvar erblog-version "99.99")
 
