@@ -36,11 +36,21 @@
       (and (string-match "xemacs" emacs-version) t))
 
 
+;;; local-variable-p stuff
 (or (and erbot-on-xemacs-p
 	 (defun erbcompat-local-variable-p (variable &optional buffer)
 	   "Just in compatibilty to GNU Emacs"
 	   (local-variable-p variable (or buffer (current-buffer)))))
     (defalias 'erbcompat-local-variable-p 'local-variable-p))
+
+
+;;; describe-variable stuff (currently b0rked on xemacs)
+(and erbot-on-xemacs-p
+   (defadvice erbutils-describe-variable (around erbot-on-xemacs activate)
+		 "Like describe-variable, but doesn't print the actual value."
+		 (format "This is %s run on XEmacs, atm describe-variable is n/a."
+						 erbot-nick)))
+     ;;; will later get on it
 
 (provide 'erbcompat)
 

@@ -243,7 +243,7 @@ as many times as it returns a...
     ;;      (goto-char from)
     ;;      (delete-char -1)))))))
     (terpri)
-    (if (local-variable-p variable)
+    (if (erbcompat-local-variable-p variable)
         (progn
     (princ (format "Local in buffer %s; " (buffer-name)))
     ;; (if (not (default-boundp variable))
