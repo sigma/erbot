@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-23 23:19:33 deego>
+;; Time-stamp: <2005-01-24 08:00:32 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1276,12 +1276,19 @@ anything useful. ")))
 
 
 (defun fsi-eval-or-say (str &optional fs-victim)
-  (unless fs-victim (setq fs-victim fs-nick))
   (let ((aa (when (stringp str)
 	      (ignore-errors (read str)))))
     (cond
-     ((consp aa) (fsi-eval aa))
-     (t (format "%s: %s" fs-victim str)))))
+     ((consp aa) 
+      (unless fs-victim (setq fs-victim fs-nick))
+      (fsi-eval aa))
+     (fs-victim
+      (format "%s: %s" fs-victim str))
+     (t
+      (format "%s" str)))))
+
+
+
 
     
 
@@ -1291,14 +1298,21 @@ anything useful. ")))
 	 (if (first args)
 	     (format "%s" (first args))
 	   erbot-end-user-nick))
+	(num (second args))
 	(flames (ignore-errors (fs-notes "flames"))))
     (if (string= (format "%s" fs-flame-target) "me")
 	(setq fs-flame-target erbot-end-user-nick))
     ;; Check for flame.el support
     (cond
      ((and (consp flames) (> (length flames) 0))
-      (fsi-eval-or-say (fs-random-choose flames) fs-flame-target))
+      (fsi-eval-or-say 
+       (if (numberp num)
+	   (nth num flames)
+	 (fs-random-choose flames))
+       fs-flame-target))
      (t (fs-flame-mild fs-flame-target)))))
+
+
 
 
 
