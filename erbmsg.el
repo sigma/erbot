@@ -195,7 +195,7 @@ see erbmsg-question part below :)."
 
 (defun erbmsg-get-msgs (msg-cookie)
 	"Gets messages by `msg-cookie'."
-	(gethash-msg-cookie erbmsg-msg-cookie-hash-table))
+	(gethash msg-cookie erbmsg-msg-cookie-hash-table))
 
 
 ;; reply functions
