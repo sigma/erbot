@@ -9,5 +9,5 @@ also the versions known to work with erbot, but you might want to
 fetch their latest versions from their respective authors' websites.
 
 
-Namespaces used by these files: fs-, erb.*-
+Namespaces used by these files: fs-, fs.*-, erb.*-
 
