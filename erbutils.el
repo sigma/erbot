@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-17 09:24:19 deego>
+;; Time-stamp: <2003-06-17 09:46:25 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -396,7 +396,7 @@ as many times as it returns a...
 (defun erbutils-add-nick (msg)
   (if
       (and (not erbc-found-query-p)
-     (not erbc-directed)
+     (not erbc-internal-directed)
      (> (random 100) 30)
      (stringp msg))
       (eval 

@@ -73,7 +73,7 @@
   (interactive)
   (mapcar 
    (lambda (a)
-     (find-file a)
+     (find-file (locate-library a))
      (auto-revert-mode 1))
    erball-files))
 

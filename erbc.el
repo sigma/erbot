@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-17 09:27:14 deego>
+;; Time-stamp: <2003-06-17 09:47:24 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2230,12 +2230,12 @@ Syntax: , no foo is bar."
 
 ;; (defalias 'erbc-cons 'cons)
 
-(defvar erbc-limit-line-length 125
+(defvar erbc-internal-limit-line-length 125
   "This should be a multiple of 80 .. -35 .. suggest: 210.")
 
-(defvar erbc-limit-length
+(defvar erbc-internal-limit-length
   300
- "A multiple of erbc-fill-column.. we suggest: double of it..  note
+ "A multiple of erbc-internal-fill-column.. we suggest: double of it..  note
 that the actual limited-length will be more than this number---it may
 be upto double of this number depending on how the formatting is done.
 viz: we shall go to the line containing this point, and include the
@@ -2249,10 +2249,10 @@ entire line.
 
 (make-variable-buffer-local 'erbc-dunnet-mode)
  
-(defvar erbc-fill-column 350
+(defvar erbc-internal-fill-column 350
   "Default is to disable filling.  The receipient should be able to
 fill the way they like. 
-should be <= erbc-limit-length, else we might set it to be during the
+should be <= erbc-internal-limit-length, else we might set it to be during the
 code. 
 also, a good idea to keep it < erc's builtin flood protection length,
 else your lines will get broken during middle of words by ERC.
@@ -2272,7 +2272,7 @@ Thus, keep it below, say 350."
 (defun erbc-fill-string (str)
   (with-temp-buffer
     (insert str)
-    (let ((fill-column erbc-fill-column))
+    (let ((fill-column erbc-internal-fill-column))
       (text-mode)
       (fill-region (point-min) (point-max))
       (buffer-substring-no-properties (point-min) (point-max)))))
@@ -2287,13 +2287,13 @@ Thus, keep it below, say 350."
 	  (mapconcat 'identity 
 		     (split-string str "\n")
 		     "  "))
-    (when (> (length str) erbc-limit-length)
-      (setq str (concat (substring str 0 (- erbc-limit-length 7))
+    (when (> (length str) erbc-internal-limit-length)
+      (setq str (concat (substring str 0 (- erbc-internal-limit-length 7))
 			"..<more>")))
     (with-temp-buffer
       (insert str)
       (goto-char (point-min))
-      (let ((fill-column erbc-fill-column))
+      (let ((fill-column erbc-internal-fill-column))
 	(fill-paragraph nil))
       (buffer-string)))
    (t "\n")))
@@ -2320,20 +2320,20 @@ Thus, keep it below, say 350."
 is not compliant with fsbot paginator. 
 
 Limit string to reasonable length..
-Not more than erbc-limit-line-length characters per line, and
-not more than erbc-limit-length characters in all.. and not more
+Not more than erbc-internal-limit-line-length characters per line, and
+not more than erbc-internal-limit-length characters in all.. and not more
 than erbc-limit-lines in all.."
   (if str
       (let ((erbc-limit-lines
 	     (or limit-lines erbc-limit-lines))
-	    (erbc-limit-length
+	    (erbc-internal-limit-length
 	     (or limit-length
-		 erbc-limit-length))
+		 erbc-internal-limit-length))
 	    (erbc-limit-line-length
 	     (or limit-line-length
-		 erbc-limit-line-length)))
+		 erbc-internal-limit-line-length)))
 	(erbc-limit-lines
-	 (erbc-limit-length
+	 (erbc-internal-limit-length
 	  (erbc-limit-line-length
 	   str t))))
     "\n"))
@@ -2367,10 +2367,10 @@ here."
       (insert str)
       (setq ptmx (point-max))
       (setq this-point ptmx new-point ptmx)
-      (if (> erbc-limit-length ptmx)
+      (if (> erbc-internal-limit-length ptmx)
 	  (goto-char ptmx)
 	(setq limitedp t)
-	(goto-char erbc-limit-length))
+	(goto-char erbc-internal-limit-length))
       ;;(goto-char (point-max))
       ;;(remove-text-properties (point-min) (point-max))
       (setq this-line (count-lines (point-min) (point)))
@@ -2454,8 +2454,8 @@ here."
 
 (defun erbc-limit-length (str &rest ignored)
   "Don't use this, use erbc-limit-lines"
-  (if (> (length str) erbc-limit-length)
-      (concat (substring str 0 (- erbc-limit-length 1)) "...<more>")
+  (if (> (length str) erbc-internal-limit-length)
+      (concat (substring str 0 (- erbc-internal-limit-length 1)) "...<more>")
     str))
 
 (defun erbc-limit-line-length (&optional str &rest args)
@@ -2470,12 +2470,12 @@ here."
 		   (thisstr givenstr)
 		   )
 	       (while (> (length thisstr)
-			 erbc-limit-line-length)
+			 erbc-internal-limit-line-length)
 		 (push
-		  (concat (substring thisstr 0 erbc-limit-line-length
+		  (concat (substring thisstr 0 erbc-internal-limit-line-length
 						  ) " <break>")
 		  ls)
-		 (setq thisstr (substring thisstr erbc-limit-line-length
+		 (setq thisstr (substring thisstr erbc-internal-limit-line-length
 					  (length thisstr))))
 	       (push thisstr ls)
 	       (reverse ls)))
@@ -2485,11 +2485,11 @@ here."
    (mapconcat 'identity newbrokenstr "\n")))
 
 
-(defvar erbc-directed nil)
+(defvar erbc-internal-directed nil)
 
 (defun erbc-tell-to (string nick &rest ignored)
   (setq erbc-nick (format "%s" nick))
-  (let* ((erbc-directed t)
+  (let* ((erbc-internal-directed t)
 	 (ni (if (string= (format "%s" nick) "me")
 		erbot-end-user-nick
 	      (format "%s" nick)))
@@ -2802,7 +2802,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	       (cdr results))))
 	(cons fir (reverse realresults))))))
     
-(defvar erbc-google-redirect-p nil)
+(defvar erbc-internal-google-redirect-p nil)
 
 
 (defun erbc-googlen (n &rest args)
@@ -2813,7 +2813,7 @@ number N, and ending at M-1. The first record is numbered 0.
     (when (> (length matches) n)
       (setq matches (subseq matches 0 n)))
     (cond
-     ((or (not (null matches)) (not erbc-google-redirect-p))
+     ((or (not (null matches)) (not erbc-internal-google-redirect-p))
       (format "[google]    %s"
 	      ;;terms
 	      (if matches 
@@ -2839,7 +2839,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 
 (defun erbc-google-from-english (&rest args)
-  (let ((erbc-google-redirect-p t))
+  (let ((erbc-internal-google-redirect-p t))
     (apply 'erbc-google args)))
 
 (defun erbc-google (&rest args)
