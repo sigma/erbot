@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2003-06-17 09:17:05 deego>
+;; Time-stamp: <2003-06-18 10:05:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -75,6 +75,8 @@
 (defvar erbeng-localp)
 (defvar erbeng-userinfo)
 
+
+
 ;;;###autoload
 (defun erbeng-main (msg proc nick tgt localp userinfo)
   " The main function: Takes a line of message and generates a reply to it. 
@@ -129,11 +131,16 @@ nil nil\ nil nil nil nil nil nil nil nil]
           ;;"(error \"Please supply a completed lisp form\")"
           ;; Note that this could be bad: 
           ;; someone may not even be referring to the bot here:
-          (format "(erbc-english-only %S)" msg)
-         ))
-       (and (featurep 'erbmsg)
-            (erbmsg-parse msg proc nick tgt localp userinfo))))
-
+	   (if 
+	       erbc-internal-parse-error-p
+	       (format "(error %S )" 
+		       (error-message-string tmpvar))
+	       (format "(erbc-english-only %S)" msg))
+	  
+	   ))
+	(and (featurep 'erbmsg)
+	     (erbmsg-parse msg proc nick tgt localp userinfo))))
+    
     ;;(if (and (first parsed-msg) erbot-nick
     ;;        (string= (first parsed-msg)
     ;;           erbot-nick))
@@ -146,7 +153,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
      (erbeng-reply-timeout
       "overall timeout")
          (erbutils-ignore-errors
-    (erbeng-get-reply parsed-msg proc nick tgt )))
+	  (erbeng-get-reply parsed-msg proc nick tgt )))
        )
       
       (when rep

@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-18 09:15:32 deego>
+;; Time-stamp: <2003-06-18 10:01:58 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -62,6 +62,8 @@
 (defcustom erbc-before-load-hooks nil "" :group 'erbc)
 (defcustom erbc-after-load-hooks nil "" :group 'erbc)
 
+
+
 (defcustom erbnoc-char ","
   "The character which calls the bot.
 
@@ -79,6 +81,7 @@ this string shoul dhave a length 2
 
 ")
 
+
 (run-hooks 'erbc-before-load-hooks)
 
 
@@ -87,8 +90,19 @@ this string shoul dhave a length 2
   "Mode to turn on more english-like bunny-behavior"
   :group 'erbc)
 
+
+
 (defvar erbc-tgt "")
 (defvar erbc-nick "")
+
+(defcustom erbc-internal-parse-error-p 
+  nil
+  "Whether to show lispy errors in term descriptions.
+
+When nil, an error in a  lispy description of a term makes to bot
+go to an english mode for the term. 
+When non-nil, we will just display the error.  On a channel full of
+lisp hackers, we will want to make this t for users' convenience.")
 
 (defvar erbnoc-tgt "")
 (defvar erbnoc-nick "")

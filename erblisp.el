@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-06-18 09:14:25 deego>
+;; Time-stamp: <2003-06-18 09:25:35 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -90,7 +90,10 @@ tries to make sure that we sandbox that whole quoted thing.. "
 	 (equal (first expr) 'quote))
     (cons 'quote
 	  (mapcar 'erblisp-sandbox (cdr expr))))
-   (t (list 'erbc-sandbox-quoted (erblisp-sandbox expr)))))
+   ((listp expr)
+    (list 'erbc-sandbox-quoted (erblisp-sandbox expr)))
+   ;; just an atom 
+   (t (erblisp-sandbox expr))))
 
 
 (defvar erblisp-allowed-words
