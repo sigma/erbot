@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-12-31 23:24:56 deego>
+;; Time-stamp: <2005-01-02 17:03:11 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2199,8 +2199,10 @@ Numbering of positions starts from 0. "
 	  (append (subseq remlist 0 to)
 		  (list thisnote)
 		  (subseq remlist to)))
-    (fs-forget term "all")
-    (fs-set-term realterm newnotes)
+    (erbot-working 
+     (fs-forget term "all")
+     (fs-set-term realterm newnotes))
+    (erbbdb-save)
     (format "Moved entry %S to %S in %S" from to realterm)
     ))
 
@@ -3457,11 +3459,13 @@ author know.."
       (error "No such field %S.  Use mv" dest))
     (setq name (fs-correct-entry name))
     (setq dest (fs-correct-entry dest))
-    (mapcar
-     '(lambda (arg)
-	(fs-set-also dest arg))
-     notes)
-    (fs-forget name "all")
+    (erbot-working
+     (mapcar
+      '(lambda (arg)
+	 (fs-set-also dest arg))
+      notes)
+     (fs-forget name "all"))
+    (erbbdb-save)
     (format "Merged %S into %S" name dest)))
 
 
@@ -3479,8 +3483,9 @@ order of entries within a given term. "
     (fs-mv-change-case name dest))
    (t
     (setq name (fs-correct-entry name))
-    (fs-cp name dest)
-    (fs-forget name "all")
+    (erbot-working (fs-cp name dest))
+    (erbot-working (fs-forget name "all"))
+    (erbbdb-save)
     (format "Renamed the term %S to %S" name dest))))
 
 (defalias 'fsi-rename 'fs-mv)
@@ -3491,9 +3496,11 @@ order of entries within a given term. "
 	(erbbdb-get-exact-name dest))
     (error "Destinatino %S already seems to exist" dest))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
-    (ignore-errors (fs-forget tmp))
-    (fs-mv name tmp)
-    (fs-mv tmp dest)
+    (erbbdb-working 
+     (ignore-errors (fs-forget tmp))
+     (fs-mv name tmp)
+     (fs-mv tmp dest))
+    (erbbdb-save)
     (format "Readjusted case from %S to %S" name dest)))
 
 
@@ -3659,11 +3666,14 @@ MSG here is a list which needs to be combined.  "
 
 (defun fsi-replace-string (&optional from to term number)
   (unless (and from to term)
-    (error (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbnoc-char)))
-  (erbnocmd-iterate-internal 
-   (or (erbbdb-get-exact-name term ) term)
-   number 'erbutils-replace-string-in-string 
-   from to nil)
+    (error 
+     (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbnoc-char)))
+  (erbot-working
+   (erbnocmd-iterate-internal 
+    (or (erbbdb-get-exact-name term ) term)
+    number 'erbutils-replace-string-in-string 
+    from to nil))
+  (erbbdb-save)
   (format "Replaced string %S with %S." from to))
 
 (defun erbnocmd-iterate-internal (term number function

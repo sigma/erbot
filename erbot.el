@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-01-02 16:46:09 deego>
+;; Time-stamp: <2005-01-02 17:02:54 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -818,6 +818,12 @@ not, try to reconnect. "
   ;;(defalias 'dun-mprinc
   ;;'fs-dun-mprinc))
   )
+
+
+(defmacro erbot-working (&rest args)
+  `(let ((erbbdb-save-p nil)
+	 (erbot-notify-p nil))
+     ,@args))
 
 
 

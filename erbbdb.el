@@ -1,5 +1,5 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2005-01-02 16:43:59 deego>
+;; Time-stamp: <2005-01-02 16:59:42 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
@@ -162,7 +162,7 @@ If no record exists, then a nil is returned.
     (let* ((record (erbbdb-get-record name)))
       (bbdb-record-set-notes record notes)
       (bbdb-change-record record t)
-      (bbdb-save-db))))
+      (erbbdb-save))))
 
 (defun erbbdb-save ()
   (when 
@@ -194,7 +194,7 @@ If no record exists, then a nil is returned.
 	       (erbbdb-add name arg))
 	    newnotes)
     )
-  (bbdb-save-db))
+  (erbbdb-save))
 
 (defun erbbdb-add (name note)
   (bbdb-records)
@@ -227,7 +227,7 @@ If no record exists, then a nil is returned.
 	(bbdb-delete-current-record record t)
 	;;(bbdb-record-set-notes record notes)
 	;;(bbdb-change-record record t)
-	(bbdb-save-db)))))
+	(erbbdb-save)))))
 
 (provide 'erbbdb)
 (run-hooks 'erbbdb-after-load-hooks)
