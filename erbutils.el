@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-05-29 09:03:33 deego>
+;; Time-stamp: <2003-06-16 15:24:07 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -579,7 +579,42 @@ prefix-rmENTRY. "
   (if foo (aref foo 0) i)))
     str)))
 
+(defun erbutils-file-contents (file)
+  (cond
+   ((not (file-exists-p file))
+    "")
+   (t 
+    (with-temp-buffer 
+      (insert-file-contents file)
+      (buffer-substring-no-properties (point-min) (point-max))))))
 
 
+(defun erbutils-file-sexps (file)
+  (let ((str (erbutils-file-contents file))
+	expr)
+    (and 
+     (stringp str)
+     (not (string= str ""))
+     (setq expr (read (concat " ( " str " )"))))))
+
+
+(defun erbutils-functions-in-file (file)
+  "Returns the list of functions in the file.  File should be a valid
+lisp file, else error. "
+  (let ((str (erbutils-file-contents file))
+	expr)
+    (and 
+     (stringp str)
+     (not (string= str ""))
+     (setq expr (read (concat " ( " str " )")))
+     (ignore-errors (mapcar 'second expr)))))
+
+
+    
+(defun erbutils-mkback-maybe (file)
+  (ignore-errors (require 'mkback))
+  (ignore-errors 
+    (let ((mkback-interactivity -100))
+      (mkback file))))
 
 ;;; erbutils.el ends here

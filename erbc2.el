@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-16 14:18:12 deego>
+;; Time-stamp: <2003-06-16 14:55:53 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -269,19 +269,18 @@ bash-specific-quotes, like random, should work."
 
 
 (defun erbc-makunbound (&optional sym)
-  (unless sym (erorr "Syntax: , (makunbound 'symbol)"))
+  (unless sym (errior "Syntax: , (makunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox-quoted sym))
   (makunbound sym))
 
 
 (defun erbc-fmakunbound (&optional sym)
-  (unless sym (erorr "Syntax: , (fmakunbound 'symbol)"))
+  (unless sym (error "Syntax: , (fmakunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox-quoted sym))
   (fmakunbound sym))
 
-(defalias 'erbc-defun 'defun)
 (defalias 'erbc-lexical-let 'lexical-let)
 (provide 'erbc2)
 (run-hooks 'erbc2-after-load-hooks)

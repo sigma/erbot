@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-16 13:33:57 deego>
+;; Time-stamp: <2003-06-16 14:40:27 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3985,19 +3985,24 @@ setq erbc-t to nil :-) ")
 
 
 (defun erbc-revive (&optional name)
-  (unless name (seta name nick))
-  (concat
-   "/me sprinkles some "
-   (erbutils-random
-    '("clear" "murky" "boiling" "dark" "holy" "smelly"))
-   " potion on "
-   (format "%s" name)
-   " and utters some prayers.  "
-   (erbutils-random
-    (list
-     (format "%s wakes up" name)
-     "Nothing happens."
-     (format "%s wakes up, all refreshed. " name)))))
+  (unless name (error "no one to revive"))
+  (setq name (format "%s" name))
+
+  (cond
+   ((string= name nick) 
+    (concat "Thou idiot, " nick ", thou canst not revive thyself!"))
+   (t (concat
+       "/me sprinkles some "
+       (erbutils-random
+	'("clear" "murky" "boiling" "dark" "holy" "smelly"))
+       " potion on "
+       (format "%s" name)
+       " and utters some prayers.  "
+       (erbutils-random
+	(list
+	 (format "%s wakes up" name)
+	 "Nothing happens."
+	 (format "%s wakes up, all refreshed. " name)))))))
     
 
 
