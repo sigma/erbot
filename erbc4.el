@@ -186,39 +186,49 @@ to query using PROMPT, or just return t."
 
 (defun fs-bet (&rest args)
   (let ((nick (intern nick)))
-    (if (null args)
-        (let ((empty-bet (gethash nick erbn-RR-empty-bets))
-              (bullet-bet (gethash nick erbn-RR-bullet-bets)))
-          (cond (empty-bet
-                 (format "%s has bet %d on there being no bullet."
-                         nick empty-bet))
-                (bullet-bet
-                 (format "%s has bet %d on there being a bullet."
-                         nick bullet-bet))
-                (t (format "%s has not bet anything."
-                           nick))))
-      (let* ((on-what (if (symbolp arg1) arg1 arg2))
-             (how-much (if (numberp arg2) arg2 arg1))
-             (_ (if (< how-much 0)
-                    (error "You can't bet negative amounts, moron.")))
-             (table (case on-what
-                      ((empty no-bullet click) erbn-RR-empty-bets)
-                      ((bullet bang blam) erbn-RR-bullet-bets)
-                      (t (error "invalid bet type" on-what))))
-             (not-table (if (eq table erbn-RR-bullet-bets)
-                            erbn-RR-empty-bets
-                          erbn-RR-bullet-bets)))
-        (cond ((gethash nick not-table)
-               (format "%s: Idiot, you can can only bet on one outcome."
-                       nick on-what))
-              ((< (or (gethash nick erbn-money) 0) how-much)
-               (format "%s: Fool, you can't bet more than you've got (%d)."
-                       nick (or (gethash nick erbn-money) 0)))
-              (t (erbn-move-money nick erbn-money table how-much)
-                 (format "%s has bet %d GEMs so far on a %s."
-                         nick
-                         (gethash nick table)
-                         on-what)))))))
+    (cond ((null args)
+           (let ((empty-bet (gethash nick erbn-RR-empty-bets))
+                 (bullet-bet (gethash nick erbn-RR-bullet-bets)))
+             (cond (empty-bet
+                    (format "%s has bet %d on there being no bullet."
+                            nick empty-bet))
+                   (bullet-bet
+                    (format "%s has bet %d on there being a bullet."
+                            nick bullet-bet))
+                   (t (format "%s has not bet anything."
+                              nick)))))
+          ((and (consp args)
+                (consp (cdr args))
+                (null (cddr args))
+                (cond ((symbolp (car args))
+                       (numberp (cadr args)))
+                      ((numberp (car args))
+                       (symbolp (cadr args)))
+                      (t nil)))
+           (let* ((on-what (if (symbolp (car args)) (car args) (cadr args)))
+                  (how-much (if (numberp (car args)) (car args) (cadr args)))
+                  (_ (if (< how-much 0)
+                         (error "You can't bet negative amounts, moron.")))
+                  (table (case on-what
+                           ((empty no-bullet click) erbn-RR-empty-bets)
+                           ((bullet bang blam) erbn-RR-bullet-bets)
+                           (t (error "Invalid bet type" on-what))))
+                  (not-table (if (eq table erbn-RR-bullet-bets)
+                                 erbn-RR-empty-bets
+                                 erbn-RR-bullet-bets)))
+             (cond ((gethash nick not-table)
+                    (format "%s: Idiot, you can can only bet on one outcome."
+                            nick on-what))
+                   ((< (or (gethash nick erbn-money) 0) how-much)
+                    (format
+                     "%s: Fool, you can't bet more than you've got (%d)."
+                     nick (or (gethash nick erbn-money) 0)))
+                   (t (erbn-move-money nick erbn-money table how-much)
+                      (format "%s has bet %d GEMs so far on a %s."
+                              nick
+                              (gethash nick table)
+                              on-what)))))
+          (t (error "Invalid arguments to bet" args)))))
 
 (defun fs-lend (arg1 arg2 &rest ignored)
   (let* ((to-whom (if (symbolp arg1) arg1 arg2))
@@ -402,7 +412,7 @@ to query using PROMPT, or just return t."
   (add-to-list 'erbn-auth-bankers nick))
 
 (defun fs-auth-bankerp ()
-  (member (intern nick) erbn-auth-bankers))
+  (and (member (intern nick) erbn-auth-bankers) t))
 
 (defun fs-reset-money (&rest ignored)
   (if (not (fs-auth-bankerp))
