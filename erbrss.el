@@ -1,98 +1,194 @@
-(setq erbot-rss-file-name "~/pub//tmp/erbot.rss"
-      erbot-rss-rc-file-name "~/pub/tmp/erbot-rc.txt"
-      erbot-rss-max-age 604800 ; 7 days
-      erbot-rss-item-resource-prefix "prefix://"
-      erbot-rss-rdf:about "rss about"
-      erbot-rss-title "title"
-      erbot-rss-link "link"
-      erbot-rss-description "description"
-      erbot-rss-dc:rights "rights"
-      erbot-rss-dc:publisher "publisher"
-      erbot-rss-dc:contributor "contributor"
-      erbot-rss-image "image"
-      erbot-rss-image-title "image title"
-      erbot-rss-image-link "image link")
+;;; erbrss.el --- Provide an RSS feed from your erbot.
+;; Time-stamp: <2004-12-14 18:46:04 forcer>
+;; Copyright (C) 2004 Jorgen Schaefer
+;; Emacs Lisp Archive entry
+;; Filename: erbrss.el
+;; Package: erbrss
+;; Author: Jorgen Schaefer <forcer@forcix.cx>
+;; URL: http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
+;;; Commentary:
+
+;; This extension to erbot will provide an RSS feed for your database
+;; changes. Customize the erbrss group and run (erbrss-install) to
+;; use.
+
+;;; Code:
+
+(defgroup erbrss nil
+  "RSS feeds for the erbot."
+  :group 'erbot)
+
+(defcustom erbrss-file-name "/tmp/erbot.rss"
+  "The file name for the RSS feed. This should be in your web
+directory."
+  :type 'file
+  :group 'erbrss)
+
+(defcustom erbrss-rc-file-name "/tmp/erbot-rc.txt"
+  "The file name to store recent changes info in."
+  :type 'file
+  :group 'erbrss)
+
+(defcustom erbrss-max-age 604800        ; 7 days
+  "The number of seconds an entry in the recent changes should
+stay."
+  :type 'integer
+  :group 'erbrss)
+
+(defcustom erbrss-item-resource-prefix "prefix://"
+  "The prefix for your item resources. This should be somewhere
+on your webserver."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-rdf:about "rss about"
+  "The contents of the rdf:about attribute in your RSS feed."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-title "title"
+  "The title of your RSS feed."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-link "link"
+  "The link to your bots homepage, or the RSS feed, or wherever."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-description "description"
+  "The description of your RSS feed."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-dc:rights "rights"
+  "The copyright notice for your RSS feed."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-dc:publisher "publisher"
+  "The publisher of your RSS feed, i.e. you."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-dc:contributor "contributor"
+  "The contributors to your RSS feed. The users of the bot."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-image "image"
+  "A link to an image for your RSS feed."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-image-title "image title"
+  "A title for your RSS feed image."
+  :type 'string
+  :group 'erbrss)
+
+(defcustom erbrss-image-link "image link"
+  "A link for your image. This should point to your bots home page or so."
+  :type 'string
+  :group 'erbrss)
 
 
+
+;;; The erbot interface
 
-(defun erbot-rss-add (nick channel term entry-num entry)
-  "erbot-notify-add-functions"
-  (erbot-rss-rc-add term
-                    (format "Added entry %i of %s: %s" entry-num term entry)
-                    (format "%s in %s" nick channel)))
+(defun erbrss-install ()
+  "Initializer the RSS module of erbot."
+  (add-hook 'erbot-notify-add-functions 'erbrss-add)
+  (add-hook 'erbot-notify-forget-functions 'erbrss-forget)
+  (add-hook 'erbot-notify-move-functions 'erbrss-move)
+  (add-hook 'erbot-notify-rearrange-functions 'erbrss-rearrange)
+  (add-hook 'erbot-notify-substitute-functions 'erbrss-substitute)
+  (add-hook 'erbot-notify-merge-functions 'erbrss-merge))
 
-(defun erbot-rss-forget (nick channel term entry-num entry)
-  "erbot-notify-forget-functions"
-  (erbot-rss-rc-add term
-                    (if (not (eq entry-num 'all))
-                        (format "Forgot entry %i of %s: %s" entry-num term entry)
-                      (format "Forgot %s:\n\n%s"
-                              term
-                              (mapconcat #'identity entry "\n")))
-                    (format "%s in %s" nick channel)))
+(defun erbrss-add (nick channel term entry-num entry)
+  "Note an addition to the erbot database.
+This is suitable for `erbot-notify-add-functions'."
+  (erbrss-rc-add term
+                 (format "Added entry %i of %s: %s" entry-num term entry)
+                 (format "%s in %s" nick channel)))
 
-(defun erbot-rss-move (nick channel old-term new-term)
-  "erbot-notify-move-functions"
-  (erbot-rss-rc-add old-term
-                    (format "Moved %s to %s" old-term new-term)
-                    (format "%s in %s" nick channel)))
+(defun erbrss-forget (nick channel term entry-num entry)
+  "Note a removal from the erbot database.
+This is suitable for `erbot-notify-forget-functions'."
+  (erbrss-rc-add term
+                 (if (not (eq entry-num 'all))
+                     (format "Forgot entry %i of %s: %s" entry-num term entry)
+                   (format "Forgot %s:\n\n%s"
+                           term
+                           (mapconcat #'identity entry "\n")))
+                 (format "%s in %s" nick channel)))
 
-(defun erbot-rss-rearrange (nick channel term
-                                 from-num from-entry
-                                 to-num to-entry)
-  "erbot-notify-rearrange-functions"
-  (erbot-rss-rc-add term
-                    (format "Swapped entries %i and %i in term %s. Now:\n%i: %s\n%i: %s"
-                            from-num to-num term
-                            to-num from-entry
-                            from-num to-entry)
-                    (format "%s in %s" nick channel)))
+(defun erbrss-move (nick channel old-term new-term)
+  "Note a move within the erbot database.
+This is suitable for `erbot-notify-move-functions'."
+  (erbrss-rc-add old-term
+                 (format "Moved %s to %s" old-term new-term)
+                 (format "%s in %s" nick channel)))
 
-(defun erbot-rss-substitute (nick channel term entry-num old-entry new-entry)
-  "erbot-notify-substitue-functions"
-  (erbot-rss-rc-add term
-                    (format "Changed entry %i of %s:\nOld: %s\nNew: %s"
-                            entry-num term old-entry new-entry)
-                    (format "%s in %s" nick channel)))
+(defun erbrss-rearrange (nick channel term
+                              from-num from-entry
+                              to-num to-entry)
+  "Note a rearrangement in the erbot database.
+This is suitable for `erbot-notify-rearrange-functions'."
+  (erbrss-rc-add term
+                 (format "Swapped entries %i and %i in term %s. Now:\n%i: %s\n%i: %s"
+                         from-num to-num term
+                         to-num from-entry
+                         from-num to-entry)
+                 (format "%s in %s" nick channel)))
 
-(defun erbot-rss-merge (nick channel old-term new-term new-entries)
-  "erbot-notify-merge-functions"
-  (erbot-rss-rc-add term
-                    (format "Merged %s into %s. New contents:\n%s"
-                            old-term new-term
-                            (mapconcat #'identity new-entries "\n"))
-                    (format "%s in %s" nick channel)))
+(defun erbrss-substitute (nick channel term entry-num old-entry new-entry)
+  "Note a substitution in the erbot database.
+This is suitable for `erbot-notify-substitue-functions'."
+  (erbrss-rc-add term
+                 (format "Changed entry %i of %s:\nOld: %s\nNew: %s"
+                         entry-num term old-entry new-entry)
+                 (format "%s in %s" nick channel)))
+
+(defun erbrss-merge (nick channel old-term new-term new-entries)
+  "Note a merge in the erbot database.
+This is suitable for `erbot-notify-merge-functions'."
+  (erbrss-rc-add term
+                 (format "Merged %s into %s. New contents:\n%s"
+                         old-term new-term
+                         (mapconcat #'identity new-entries "\n"))
+                 (format "%s in %s" nick channel)))
 
 
 ;;; Recent Changes
-(defun erbot-rss-rc-add (term description contributor)
+(defun erbrss-rc-add (term description contributor)
   "Add this item to the recent changes list.
-The list is managed in `erbot-rss-rc-file-name'."
-  (with-current-buffer (find-file-noselect erbot-rss-rc-file-name)
+The list is managed in `erbrss-rc-file-name'."
+  (with-current-buffer (find-file-noselect erbrss-rc-file-name t)
     (goto-char (point-min))
     (when (= (point-min) (point-max))
       (insert "()"))
     (let* ((olddata (read (current-buffer)))
-           (newdata (erbot-rss-rc-remove-old
+           (newdata (erbrss-rc-remove-old
                      (append olddata
                              (list
-                              (make-erbot-rss-item term
-                                                   description
-                                                   (current-time)
-                                                   contributor))))))
+                              (erbrss-make-item term
+                                                description
+                                                (current-time)
+                                                contributor))))))
       (delete-region (point-min) (point-max))
       (prin1 newdata (current-buffer))
       (let ((require-final-newline t))
         (save-buffer))
-      (erbot-rss-regenerate-rss newdata))))
+      (erbrss-regenerate-rss newdata))))
 
-(defun erbot-rss-rc-remove-old (items)
-  "Remove any items from ITEMS that are older then `erbot-rss-max-age'."
+(defun erbrss-rc-remove-old (items)
+  "Remove any items from ITEMS that are older then `erbrss-max-age'."
   (let ((new '()))
     (while items
       (when (< (- (float-time)
-                  (float-time (erbot-rss-item-time (car items))))
-               erbot-rss-max-age)
+                  (float-time (erbrss-item-time (car items))))
+               erbrss-max-age)
         (setq new (cons (car items)
                         new)))
       (setq items (cdr items)))
@@ -100,16 +196,16 @@ The list is managed in `erbot-rss-rc-file-name'."
 
 
 ;;; RSS
-(defun erbot-rss-regenerate-rss (items)
+(defun erbrss-regenerate-rss (items)
   "Regenerate the RSS feed from ITEMS.
-The feed is put into `erbot-rss-file-name'."
-  (with-current-buffer (find-file-noselect erbot-rss-file-name)
+The feed is put into `erbrss-file-name'."
+  (with-current-buffer (find-file-noselect erbrss-file-name t)
     (delete-region (point-min) (point-max))
-    (erbot-rss-insert-rss items)
+    (erbrss-insert-rss items)
     (let ((require-final-newline t))
       (save-buffer))))
 
-(defun erbot-rss-insert-rss (items)
+(defun erbrss-insert-rss (items)
   "Insert an RSS feed with ITEMS in it.
 ITEMS should be a list of vectors, each vector having four elements:
 
@@ -117,70 +213,70 @@ ITEMS should be a list of vectors, each vector having four elements:
 - Description
 - Contributor
 - Timestamp in seconds since the epoch"
-  (sxml-insert
+  (erbrss-sxml-insert
    `((rdf:RDF (@ (xmlns:rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
                  (xmlns "http://purl.org/rss/1.0/")
                  (xmlns:dc "http://purl.org/dc/elements/1.1/"))
-      (channel (@ (rdf:about ,erbot-rss-rdf:about))
-       (title ,erbot-rss-title)
-       (link ,erbot-rss-link)
-       (description ,erbot-rss-description)
-       (dc:rights ,erbot-rss-dc:rights)
-       (dc:date ,(erbot-rss-date))
-       (dc:publisher ,erbot-rss-dc:publisher)
-       (dc:contributor ,erbot-rss-dc:contributor)
-       (items
-        (rdf:Seq
-         ,@(mapcar (lambda (item)
-                     `(rdf:li (@ (rdf:resource
-                                  ,(erbot-rss-item-resource item)))))
-                   items)))
-       (image (@ (rdf:resource ,erbot-rss-image))))
+              (channel (@ (rdf:about ,erbrss-rdf:about))
+                       (title ,erbrss-title)
+                       (link ,erbrss-link)
+                       (description ,erbrss-description)
+                       (dc:rights ,erbrss-dc:rights)
+                       (dc:date ,(erbrss-date))
+                       (dc:publisher ,erbrss-dc:publisher)
+                       (dc:contributor ,erbrss-dc:contributor)
+                       (items
+                        (rdf:Seq
+                         ,@(mapcar (lambda (item)
+                                     `(rdf:li (@ (rdf:resource
+                                                  ,(erbrss-item-resource item)))))
+                                   items)))
+                       (image (@ (rdf:resource ,erbrss-image))))
 
-      (image (@ (rdf:resource ,erbot-rss-image))
-       (title ,erbot-rss-image-title)
-       (url ,erbot-rss-image)
-       (link ,erbot-rss-image-link))
+              (image (@ (rdf:resource ,erbrss-image))
+                     (title ,erbrss-image-title)
+                     (url ,erbrss-image)
+                     (link ,erbrss-image-link))
 
-      ,@(mapcar #'erbot-rss-item items)))))
+              ,@(mapcar #'erbrss-item items)))))
 
-(defun erbot-rss-item (item)
+(defun erbrss-item (item)
   "Insert the RSS description of ITEM."
-  `(item (@ (rdf:about ,(erbot-rss-item-resource item)))
-    (title ,(erbot-rss-item-title item))
-    ;(link ,(erbot-rss-item-resource item))
-    (description ,(erbot-rss-item-description item))
-    (dc:date ,(erbot-rss-date (erbot-rss-item-time item)))
-    (dc:contributor ,(erbot-rss-item-contributor item))))
+  `(item (@ (rdf:about ,(erbrss-item-resource item)))
+         (title ,(erbrss-item-title item))
+                                        ;(link ,(erbrss-item-resource item))
+         (description ,(erbrss-item-description item))
+         (dc:date ,(erbrss-date (erbrss-item-time item)))
+         (dc:contributor ,(erbrss-item-contributor item))))
 
-(defun make-erbot-rss-item (title description time contributor)
+(defun erbrss-make-item (title description time contributor)
   "Create a new rss item entry."
   (vector title description time contributor))
 
-(defun erbot-rss-item-title (item)
+(defun erbrss-item-title (item)
   "Return the title of ITEM."
   (aref item 0))
 
-(defun erbot-rss-item-description (item)
+(defun erbrss-item-description (item)
   "Return the description of ITEM."
   (aref item 1))
 
-(defun erbot-rss-item-time (item)
+(defun erbrss-item-time (item)
   "Return the modification time of ITEM."
   (aref item 2))
 
-(defun erbot-rss-item-contributor (item)
+(defun erbrss-item-contributor (item)
   "Return the contributor of ITEM."
   (aref item 3))
 
-(defun erbot-rss-item-resource (item)
+(defun erbrss-item-resource (item)
   "Return the resource of ITEM.
-This uses `erbot-rss-item-resource-prefix'."
-  (concat erbot-rss-item-resource-prefix
-          (erbot-rss-item-title item)
-          "?" (erbot-rss-date (erbot-rss-item-time item))))
+This uses `erbrss-item-resource-prefix'."
+  (concat erbrss-item-resource-prefix
+          (erbrss-item-title item)
+          "?" (erbrss-date (erbrss-item-time item))))
 
-(defun erbot-rss-date (&optional time)
+(defun erbrss-date (&optional time)
   "Return a string describing TIME, or the current time if nil."
   (format-time-string "%Y-%m-%dT%H:%M:%S+00:00"
                       (or time
@@ -190,23 +286,23 @@ This uses `erbot-rss-item-resource-prefix'."
 
 ;;; SXML
 
-(defun sxml-insert (data)
+(defun erbrss-sxml-insert (data)
   "Insert an SXML data structure DATA."
   (set-buffer-file-coding-system 'utf-8)
   (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-  (sxml-insert-data data))
+  (erbrss-sxml-insert-data data))
 
-(defun sxml-insert-data (data)
+(defun erbrss-sxml-insert-data (data)
   "Insert a list of tags DATA as SXML."
   (cond
    ((stringp data)
-    (insert (sxml-quote data)))
+    (insert (erbrss-sxml-quote data)))
    ((symbolp (car data))
-    (sxml-insert-tag data))
+    (erbrss-sxml-insert-tag data))
    (t
-    (mapcar #'sxml-insert-data data))))
+    (mapcar #'erbrss-sxml-insert-data data))))
 
-(defun sxml-insert-tag (tag)
+(defun erbrss-sxml-insert-tag (tag)
   (let ((name (symbol-name (car tag)))
         (attributes (if (and (consp (cdr tag))
                              (consp (cadr tag))
@@ -221,20 +317,20 @@ This uses `erbot-rss-item-resource-prefix'."
     (insert "<" name)
     (mapcar (lambda (entry)
               (insert " "
-                      (sxml-quote (symbol-name (car entry)))
+                      (erbrss-sxml-quote (symbol-name (car entry)))
                       "=\""
-                      (sxml-quote (cadr entry))
+                      (erbrss-sxml-quote (cadr entry))
                       "\""))
             attributes)
     (if (null body)
         (insert "/>")
       (insert ">")
-      (mapcar #'sxml-insert-data body)
+      (mapcar #'erbrss-sxml-insert-data body)
       (insert "</"
-              (sxml-quote name)
+              (erbrss-sxml-quote name)
               "\n>"))))
 
-(defun sxml-quote (string)
+(defun erbrss-sxml-quote (string)
   "Quote <, > and & in STRING."
   (with-temp-buffer
     (mapcar (lambda (char)
@@ -245,3 +341,6 @@ This uses `erbot-rss-item-resource-prefix'."
                (t (insert char))))
             string)
     (buffer-substring (point-min) (point-max))))
+
+(provide 'erbrss)
+;;; erbrss.el ends here
