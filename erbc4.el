@@ -363,17 +363,16 @@ to query using PROMPT, or just return t."
         (concat clicks erbnoc-rr-clicks)))
 
 (defun fs-russian-roulette (&rest ignored)
-  (if (= erbnoc-chamber 5)
-      (progn
-        (setq erbnoc-chamber (random 6))
-        ;; Don't let them do that, because it confuses the distribution
-        ;; process.
-        (if (gethash (intern nick) erbnoc-RR-bullet-bets)
-            (error (concat nick ": Idiot, don't bet on your own death.")))
-        (erbnoc-distribute (intern nick)
-                           erbnoc-RR-bullet-bets
-                           erbnoc-RR-empty-bets)
-        (erbnoc-rr-bang))
+  ;; Don't let them do that, because it confuses the money distribution.
+  (if (gethash (intern nick) erbnoc-RR-bullet-bets)
+      (error (concat nick ": Idiot, don't bet on your own death."))
+    (if (= erbnoc-chamber 5)
+        (progn
+          (setq erbnoc-chamber (random 6))
+          (erbnoc-distribute (intern nick)
+                             erbnoc-RR-bullet-bets
+                             erbnoc-RR-empty-bets)
+          (erbnoc-rr-bang)))
     (incf erbnoc-chamber)
     (erbnoc-distribute nil
                        erbnoc-RR-empty-bets
