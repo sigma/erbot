@@ -1,5 +1,5 @@
-;;; erbwiki.el ---
-;; Time-stamp: <2004-04-01 10:28:19 deego>
+;;; erbwiki.el --- SECURITY RISK, READ BELOW.
+;; Time-stamp: <2004-05-07 15:48:04 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -9,6 +9,13 @@
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; Thanks: Alex Schroeder
+
+;; USING ERBWIKI.EL TO TRAIN YOUR BOTS ON WIKIS WITH LINES VERSION <
+;; 0.3 IS A SECURITY RISK!!  EARLIER LINES.EL CAN BE MADE TO EVAL AN
+;; ARBITRARY LISP EXPRESSION, INCLUDING (SHELL-COMMAND "RM -RF"), WE
+;; THINK, THOUGH WE HAVEN'T FIGURED OUT HOW.  ANYHOW, USE LINES.EL >
+;; 0.3 ONLY. 
+
 
 (defconst erbwiki-home-page
   "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
@@ -165,14 +172,14 @@ to query using PROMPT, or just return t."
 
     ("si"
      "http://www.gnufans.net/cgi-bin/singularity.pl?"
-     "http://www.gnufans.net/cgi-bin/singularity.pl?action=index"
+     "\"http://www.gnufans.net/cgi-bin/singularity.pl?action=index\""
      nil
      "singbot: "
      )
 
     ("ai2"
      "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?"
-     "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?action=index"
+     "\"http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?action=index\""
      nil
      "singbot: "
      )
@@ -181,16 +188,28 @@ to query using PROMPT, or just return t."
 
     ("sl"
      "http://www.sl4.org/bin/wiki.pl?"
-     "http://www.sl4.org/bin/wiki.pl?action=index"
+     "\"http://www.sl4.org/bin/wiki.pl?action=index\""
      nil
      "singbot: "
      )
 
 
 
+
+    ("fu"
+     "http://futures.wiki.taoriver.net/moin.cgi/"
+     "\"http://futures.wiki.taoriver.net/moin.cgi/TitleIndex?action=titleindex&mimetype=text/xml\""
+     erbwiki-get-fields-spaced
+     "singbot: "
+     erbwiki-fetch-wiki-remove-tags
+     
+     )
+
+
+
     ("cw"
      "http://www.emacswiki.org/cgi-bin/community/"
-     "http://www.emacswiki.org/cgi-bin/community?action=index;raw=1"
+     "\"http://www.emacswiki.org/cgi-bin/community?action=index;raw=1\""
      nil
      "fsbot: "
      )
@@ -199,26 +218,21 @@ to query using PROMPT, or just return t."
 
     ("ew"
      "http://www.emacswiki.org/cgi-bin/wiki.pl?"
-     "http://www.emacswiki.org/cgi-bin/wiki.pl?action=index"
+     "\"http://www.emacswiki.org/cgi-bin/wiki.pl?action=index\""
      nil
      "fsbot: "
      )
 
-
-
-
-
-
     ("fw"
      "http://www.etrumeus.com/ferment/"
-     "http://www.etrumeus.com/ferment/TitleIndex?action=titleindex"
+     "\"http://www.etrumeus.com/ferment/TitleIndex?action=titleindex\""
      nil
      "wikibot: ")
 
     
     ("fskdfhukdfhjkdfjk"
      "http://www.gnufans.net/fsedu.pl?"
-     "http://www.gnufans.net/cgi-bin/fsedu.pl?action=index"
+     "\"http://www.gnufans.net/cgi-bin/fsedu.pl?action=index\""
      nil
      "nobot: "
      )
@@ -227,7 +241,7 @@ to query using PROMPT, or just return t."
     ("ipfoobar"
 
      "http://imminst.org/pedia/PageIndex"
-     "http://new.imminst.org/pedia/"
+     "\"http://new.imminst.org/pedia/\""
      nil
      "singbot: "
      )
@@ -236,14 +250,14 @@ to query using PROMPT, or just return t."
 
     ("mb"
      "http://www.usemod.com/cgi-bin/mb.pl?"
-     "http://www.usemod.com/cgi-bin/mb.pl?action=index"
+     "\"http://www.usemod.com/cgi-bin/mb.pl?action=index\""
      nil
      "wikibot: "
     )
 
     ("hwh"
      "http://hurd.gnufans.org/bin/view/Hurd/"
-     "http://hurd.gnufans.org/bin/view/Hurd/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/Hurd/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -251,7 +265,7 @@ to query using PROMPT, or just return t."
     
     ("hwd"
      "http://hurd.gnufans.org/bin/view/Distrib/"
-     "http://hurd.gnufans.org/bin/view/Distrib/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/Distrib/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -259,14 +273,14 @@ to query using PROMPT, or just return t."
 
     ("hwmain"
      "http://hurd.gnufans.org/bin/view/Main/"
-     "http://hurd.gnufans.org/bin/view/Main/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/Main/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
 
     ("hwmach"
      "http://hurd.gnufans.org/bin/view/Mach/"
-     "http://hurd.gnufans.org/bin/view/Mach/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/Mach/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -274,7 +288,7 @@ to query using PROMPT, or just return t."
 
     ("hwmig"
      "http://hurd.gnufans.org/bin/view/Mig/"
-     "http://hurd.gnufans.org/bin/view/Mig/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/Mig/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -283,7 +297,7 @@ to query using PROMPT, or just return t."
     
     ("hwg"
      "http://hurd.gnufans.org/bin/view/GNU/"
-     "http://hurd.gnufans.org/bin/view/GNU/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/GNU/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -291,7 +305,7 @@ to query using PROMPT, or just return t."
 
     ("hwt"
      "http://hurd.gnufans.org/bin/view/TWiki/"
-     "http://hurd.gnufans.org/bin/view/TWiki/WebTopicList?skin=plain"
+     "\"http://hurd.gnufans.org/bin/view/TWiki/WebTopicList?skin=plain\""
      erbwiki-get-fields-spaced
      "hbot: "
      )
@@ -307,7 +321,7 @@ to query using PROMPT, or just return t."
 
     ("so"
      "http://wiki.octave.org/wiki.pl?"
-     "http://wiki.octave.org/wiki.pl?action=index"
+     "\"http://wiki.octave.org/wiki.pl?action=index\""
      nil
      "ScBot: "
      )
@@ -323,7 +337,7 @@ to query using PROMPT, or just return t."
     ;; towniebot
     ("tbm"
      "http://www.nevadamissouri.net/bin/view/Main/"
-     "http://www.nevadamissouri.net/bin/view/Main/WebTopicList?skin=plain"
+     "\"http://www.nevadamissouri.net/bin/view/Main/WebTopicList?skin=plain\""
      nil
      "towniebot: ")
 
@@ -333,7 +347,7 @@ to query using PROMPT, or just return t."
 
     ("twt"
      "http://twiki.org/cgi-bin/view/TWiki/"
-     "http://twiki.org/cgi-bin/view/TWiki/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/TWiki/WebTopicList?skin=plain\""
      nil
      "TWikiBot: "
      )
@@ -341,7 +355,7 @@ to query using PROMPT, or just return t."
 
     ("twp"
      "http://twiki.org/cgi-bin/view/Plugins/"
-     "http://twiki.org/cgi-bin/view/Plugins/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/Plugins/WebTopicList?skin=plain\""
      nil
      "TWikiBot: "
      )
@@ -349,35 +363,59 @@ to query using PROMPT, or just return t."
 
     ("twm"
      "http://twiki.org/cgi-bin/view/Main/"
-     "http://twiki.org/cgi-bin/view/Main/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/Main/WebTopicList?skin=plain\""
      nil
      "TwikiBot: "
      )
 
     ("twc"
      "http://twiki.org/cgi-bin/view/Codev/"
-     "http://twiki.org/cgi-bin/view/Codev/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/Codev/WebTopicList?skin=plain\""
      nil
      "TWikiBot: "
      )
 
     ("twsupport"
      "http://twiki.org/cgi-bin/view/Support/"
-     "http://twiki.org/cgi-bin/view/Support/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/Support/WebTopicList?skin=plain\""
      nil
      "TWikiBot: "
      )
 
     ("twsandbox"
      "http://twiki.org/cgi-bin/view/Sandbox/"
-     "http://twiki.org/cgi-bin/view/Sandbox/WebTopicList?skin=plain"
+     "\"http://twiki.org/cgi-bin/view/Sandbox/WebTopicList?skin=plain\""
      nil
      "TWikiBot: "
      )
 
     
     )
-  "Page storing names of all pages."
+  
+"Page storing names of all pages.
+As an example, consider this entry:
+
+    (\"ew\"
+     \"http://www.emacswiki.org/cgi-bin/wiki.pl?\"
+     \"http://www.emacswiki.org/cgi-bin/wiki.pl?action=index\"
+     nil
+     \"fsbot: \"
+     nil
+     )
+
+Most entries are obvious.  ew refers to the nick name of the wiki used
+when you run the function M-x erbwiki-do-it-all-one-wiki. 
+
+Let's explain the 2 nils above.  The first nil corresponds to the
+default function erbwiki-get-fields.  You replace it by another
+function, example, erbwiki-get-fields-spaced if you want to use that
+instead.  
+The second nil corresponds to the function used to dump the wiki,
+which by default is erbwiki-fetch-wiki --- that function uses w3m.
+
+
+"
+
   :group 'erbwiki)
 
 (defcustom erbwiki-this-wiki "NONE"
@@ -412,8 +450,7 @@ train the bot.  "
   :group 'erbwiki)
 
 (defcustom erbwiki-fetch-wiki-function 'erbwiki-fetch-wiki 
-  "
-This function should take a file as argument, and write into the file,
+  "This function should take a file as argument, and write into the file,
 a single lisp object.  The lisp object is a list of new pages in the
 wiki. "
   :group 'erbwiki)
@@ -519,11 +556,13 @@ connected."
 	 (cadr (assoc erbwiki-this-wiki erbwiki-index-pages)))
 	(botname
 	 (fifth (assoc erbwiki-this-wiki erbwiki-index-pages)))
+	(fetchfunction
+	 (sixth (assoc erbwiki-this-wiki erbwiki-index-pages)))
 	)
      (unless botname (setq botname ", "))
      (when (file-exists-p lastfile) (mkback lastfile))
      (when (file-exists-p newfile) (copy-file newfile lastfile t))
-     (funcall erbwiki-fetch-wiki-function newfile)
+     (funcall (or fetchfunction erbwiki-fetch-wiki-function) newfile)
      (ignore-errors
        (find-file lastfile)
        (goto-char (point-min))
@@ -575,6 +614,20 @@ connected."
   (revert-buffer))
 
 
+
+(defcustom erbwiki-dump-program "w3m -dump"
+  "Also try lynx -dump, curl. ")
+
+(defun erbwiki-fetch-wiki-lynx (filename)
+  (let ((erbwiki-dump-program "lynx -dump"))
+    (erbwiki-fetch-wiki filename)))
+			
+(defcustom erbwiki-fetch-wiki-remove-tags-p nil "")
+
+(defun erbwiki-fetch-wiki-remove-tags (f)
+  (let ((erbwiki-fetch-wiki-remove-tags-p t))
+    (erbwiki-fetch-wiki f)))
+
 (defun erbwiki-fetch-wiki (filename)
   (require 'lines)
   (let* 
@@ -598,11 +651,18 @@ connected."
       (error "index page is not a stringp??"))
 
     ;;(setq index-page (concat wiki-page "action=index"))
-    (shell-command (concat "w3m -dump \"" 
+    ;; We will NOT add " " around the URL before calling ther
+    ;; shell-comnd, since the behavior of w3m -dump and lynx -dump
+    ;; differs in that case.  Wehn the user wants a quote, she can
+    ;; supply it in the name of te url herself..
+
+    (shell-command (concat erbwiki-dump-program  " " 
 			   index-page
 			   ;;erbwiki-index-page 
-			   "\""
+			   ""
 			   " > " wiki-dump-name))
+    (when erbwiki-fetch-wiki-remove-tags-p
+      (erbwiki-remove-tags-from-file wiki-dump-name))
     (setq fields (lines-get-fields-file wiki-dump-name))
     (kill-buffer (get-file-buffer wiki-dump-name))
     (setq fieldslist
@@ -610,6 +670,8 @@ connected."
 		   fields))
     (with-temp-file filename
       (insert (format "%S" fieldslist)))))
+
+
 
 (defun erbwiki-get-fields (fields)
   "Given the fields as parsed by lines-get-fields, return a list of
@@ -646,7 +708,18 @@ the actual wiki fields."
 	   fields)))
 	       
   
-    
+
+(defun erbwiki-remove-tags-from-file (file)
+  (interactive "fFile: ")
+  (find-file file)
+  (goto-char (point-min))
+  (while 
+      ;; accept any regexp greedily containing only tags with no
+      ;; spaces, or one starting with ?xml, in which case, allow
+      ;; spaces. but still be greedy. 
+      (search-forward-regexp "<\\(?:\\?xml.*?\\|[^ \t\n]*?\\)>" nil t)
+    (replace-match "\n" nil t))
+  (save-buffer))
 
 (provide 'erbwiki)
 (run-hooks 'erbwiki-after-load-hooks)
