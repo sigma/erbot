@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Functions contributed by #emacsers. 
-;; Time-stamp: <2003-06-20 11:02:19 deego>
+;; Time-stamp: <2003-06-20 11:11:39 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -293,7 +293,7 @@ to query using PROMPT, or just return t."
                        erbnoc-RR-empty-bets
                        erbnoc-RR-bullet-bets)))
 
-(defun fs-init-money (init &rest nicks)
+(defun erbnoc-init-money (init &rest nicks)
   (clrhash erbnoc-money)
   (clrhash erbnoc-RR-empty-bets)
   (clrhash erbnoc-RR-bullet-bets)
