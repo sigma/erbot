@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-15 16:25:01 deego>
+;; Time-stamp: <2003-05-16 15:25:10 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -90,8 +90,28 @@
 (defgroup erbc nil
   "The group erbc"
    :group 'applications)
+
+
 (defcustom erbc-before-load-hooks nil "" :group 'erbc)
 (defcustom erbc-after-load-hooks nil "" :group 'erbc)
+
+(defcustom erbnoc-char ","
+  "The character which calls the bot.
+
+in addition to directly addressing it.
+
+may be different for
+different bots. 
+
+Is really a string, but the length of the string should be 1,. 
+")
+(defcustom erbnoc-char-double ",,"
+  "The string which calls the bot from midsentence
+
+this string shoul dhave a length 2
+
+")
+
 (run-hooks 'erbc-before-load-hooks)
 
 
@@ -481,7 +501,8 @@ Optional argument FOO ."
        )
     (unless (stringp origmsg)
       (setq origmsg (format "%s" origmsg)))
-    (unless msg (error "Format: , (parse \"your-english-message\")"))
+    (unless msg 
+      (error "Format: %s (parse \"your-english-message\")" erbnoc-char))
     (unless (stringp msg)
       (setq msg (format "%s" msg)))
     ;; remove leading spaces..
@@ -534,21 +555,21 @@ Optional argument FOO ."
     (let (pos)
       (when 
 	  (and (not (equal 0
-			   (string-match "," msg)))
+			   (string-match erbnoc-char msg)))
 	       (not 
 		(let ((nickpos (string-match erbot-nick msg)))
 		  (and nickpos
 		       (< nickpos 3))))
 	       ;; part of and
 	       (setq pos 
-		     (string-match ",," msg)))
+		     (string-match erbnoc-char-double msg)))
 	(setq msg (substring msg (+ pos 1)))
-	(when (setq pos (string-match ",," msg))
+	(when (setq pos (string-match erbnoc-char-double msg))
 	  (setq msg (substring msg 0 pos)))))
 
     ; deal with the leading , or ,,
     (when (equal 0
-		 (string-match "," msg))
+		 (string-match erbnoc-char msg))
       (let ((restmsg (substring msg 1)))
 	(when (equal 0 (string-match "," restmsg))
 	  (setq restmsg (substring restmsg 1)))
@@ -995,8 +1016,8 @@ Else, of course, do the usual thing: viz. call describe...
     (eval 
      (erbutils-random    
       '(
-	(concat aa ", " erbc-nick)
-	(concat erbc-nick ", " aa))))))
+	(concat aa erbnoc-char " " erbc-nick)
+	(concat erbc-nick erbnoc-char " " aa))))))
 
 (defun erbc-hi (&optional nick &rest args)
   ".
