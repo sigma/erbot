@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-05-05 21:22:08 deego>
+;; Time-stamp: <2004-06-11 16:09:44 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1871,7 +1871,7 @@ number N, and ending at M-1. The first record is numbered 0.
     (setq M 1))
   (unless prestring (setq prestring ""))
   (unless mainterm 
-    (error 
+     (error 
      "Format , (describe TERM &optional number1 number2)"))
   (let* ((bar (cons mainterm (cons N rest)))
 	 (foo (format "%s" mainterm))
@@ -1976,7 +1976,10 @@ number N, and ending at M-1. The first record is numbered 0.
 	     (cons
 	      (format "%s" 
 		      (mapconcat 'identity ee " "))
-	      (cdr result1))))
+	      (cdr result))
+	     N
+	     shortenedp
+	     ))
 	   ((and expandp (member cc '("lisp")))
 	    (erbeng-main 
 	     (concat erbnoc-char " (progn "
