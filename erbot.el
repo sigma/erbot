@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-03-29 14:24:11 deego>
+;; Time-stamp: <2005-03-29 14:31:26 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -658,7 +658,19 @@ those things..
   "If you want your bot to allow setf, set this symbol to non-nil at
 the beginning of your .emacs")
 
-  
+
+(defcustom erbot-setf-symbols
+  '(caar cadr car cdar cddr cdr eighth elt 
+	 first fourth
+	 ninth nth
+	 nthcdr
+	 second
+	 seventh sixth
+	 subseq substring
+	 tenth third)
+"Safe symbols for setf...")
+
+
 ;;;###autoload
 (defun erbot-install ()
   "Run this function AFTER loading all the files..."
@@ -690,8 +702,11 @@ the beginning of your .emacs")
   (defalias 'fs-setf 'setf)
   (require 'cl)
   (let*
-      ((syms 
-	(apropos-internal "" (lambda (a) (get a 'setf-method))))
+      (
+       ;; all possible symbols
+       ;;(syms 
+       ;;(apropos-internal "" (lambda (a) (get a 'setf-method))))
+       (syms erbot-setf-symbols)
        (fssyms 
 	(mapcar
 	 (lambda (a) (intern (format "fs-%s" a)))

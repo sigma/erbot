@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-29 14:11:13 deego>
+;; Time-stamp: <2005-03-29 14:39:34 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4929,7 +4929,24 @@ Note: Used by fs-describe"
 
 
 
-
+(erbutils-defalias-i 
+ '(substring subr-arity subrp subseq
+	     subst-char-in-string 
+	     subtract-time
+	     time-subtract 
+	     time-add 
+	     date-to-time 
+	     time-to-seconds 
+	     time-less-p
+	     seconds-to-time
+	     days-to-time 
+	     time-since 
+	     subtract-time
+	     date-to-day 
+	     days-between 
+	     date-leap-year-p
+	     time-to-day-in-year time-to-days time-to-number-of-days
+	     safe-date-to-time))
 
 
 (erbutils-defalias-i '(ignore))
