@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-04-22 21:53:06 deego>
+;; Time-stamp: <2004-04-22 22:56:14 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4539,10 +4539,11 @@ setq fs-t to nil :-) ")
 	 (format "%s wakes up, all refreshed. " name)
 	 (format "%s wakes up, all confused. " name)
 	 ))))))
-    
-(defalias 'fs-sandbox-quoted 'erblisp-sandbox-quoted)
-(defalias 'fs-sandbox-quoted-maybe 'erblisp-sandbox-quoted-maybe)
-(defalias 'fs-sandbox 'erblisp-sandbox)
+
+;; this may be unsafe, remove it:     
+;; (defalias 'fs-sandbox-quoted 'erblisp-sandbox-quoted)
+;; (defalias 'fs-sandbox-quoted-maybe 'erblisp-sandbox-quoted-maybe)
+;; (defalias 'fs-sandbox 'erblisp-sandbox)
 
 (erbutils-defalias '(macroexpand))
 (defun fs-kick (&optional reason &rest ignore)

@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-06-20 17:56:04 deego>
+;; Time-stamp: <2004-04-22 23:08:17 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -91,7 +91,7 @@ tries to make sure that we sandbox that whole quoted thing.. "
     (cons 'quote
 	  (mapcar 'erblisp-sandbox (cdr expr))))
    ((listp expr)
-    (list 'fs-sandbox-quoted (erblisp-sandbox expr)))
+    (list 'erblisp-sandbox-quoted (erblisp-sandbox expr)))
    ;; just an atom 
    (t (erblisp-sandbox expr))))
 
@@ -151,8 +151,7 @@ We WON'T do this by default since this could lead to exploits if you
        ;;, (funcall #[nil "\300\207" [1] 1])    
        ((not (or (symbolp expr) (numberp expr) (stringp expr)))
 	(error "%s %s" "Should not reach here.  Quantum Tunnelling! "
-	       "What are you trying to feed me? Byte-compiled code??"
-	       ))
+	       "What are you trying to feed me? Byte-compiled code? Vectors?"  ))
        (t expr)))
    ))
 	 

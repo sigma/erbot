@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-04-22 22:40:39 deego>
+;; Time-stamp: <2004-04-22 23:03:31 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -53,7 +53,19 @@ With prefix ARG, insert version string into current buffer at point."
 ;;; Requires:
 (eval-when-compile (require 'cl))
 
+
 ;;; Code:
+
+(defun erbnoc-special-quote-function (fcn)
+  (cond
+   ((symbolp fcn)
+    (erblisp-sandbox-quoted fcn))
+   ((and (listp fcn)
+	 (equal (first fcn) 'lambda)
+	 fcn))
+   ;; notice the recursion below:
+   ((listp fcn) (erbnoc-special-quote-function (fs-eval fcn)))
+   (t (error "Cannot apply this as a function!"))))
 
 
 ;; (defun fs-mapcar-old (sym seq)
@@ -66,7 +78,7 @@ With prefix ARG, insert version string into current buffer at point."
 
 (defun fs-mapcar (fcn ls)
   (apply 'mapcar 
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls nil))
 
 
@@ -76,21 +88,26 @@ With prefix ARG, insert version string into current buffer at point."
 ;;   "only symbols allowed at this time. "
 ;;   (unless (symbolp sym)
 ;;     (error "Function argument to mapcar for this bot can only be a symbol."))
-;;   (setq sym (erblisp-sandbox-quoted sym))
+;;   (setq sym (erblisp-sandbox-quoted-ensure-symbol sym))
 ;;   ;; everything should already be boxquoted.. cool
 ;;   (mapc sym seq))
 
+
+
+
 (defun fs-mapc (fcn ls)
   (apply 'mapc
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls nil))
 
 
 
 (defun fs-mapconcat (fcn ls sep)
   (apply 'mapconcat
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls sep nil))
+
+
 
 
 
@@ -99,7 +116,7 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fs-maplist (fcn ls &rest args)
   (require 'cl)
   (apply 'maplist
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls args))
 
 
@@ -107,13 +124,13 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fs-mapl (fcn ls &rest args)
   (require 'cl)
   (apply 'mapl
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls args))
 
 (defun fs-mapcar* (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcar*
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls args))
 
 
@@ -121,7 +138,7 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fs-mapcon (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcon
-	 (erblisp-sandbox-quoted fcn)
+	 (erbnoc-special-quote-function fcn)
 	 ls args))
 
 
