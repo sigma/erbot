@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <03/05/20 13:16:35 freundt>
+;; Time-stamp: <2003-05-23 08:27:39 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1005,8 +1005,8 @@ Else, of course, do the usual thing: viz. call describe...
 	 firstterm (first remainder) (second remainder)
 	 (third remainder) origmsg))))))
   
-(defalias 'erbc-hello 'erbc-hi)
-(defalias 'erbc-hey 'erbc-hi)
+;; (defalias 'erbc-hello 'erbc-hi)
+;; (defalias 'erbc-hey 'erbc-hi)
 
 (defalias 'erbc-thanks 'erbc-thank)
 (defun erbc-thank (&rest args)
@@ -1019,17 +1019,17 @@ Else, of course, do the usual thing: viz. call describe...
 	(concat aa erbnoc-char " " erbc-nick)
 	(concat erbc-nick erbnoc-char " " aa))))))
 
-(defun erbc-hi (&optional nick &rest args)
-  ".
-Optional argument NICK .
-Optional argument ARGS ."
-  (if (and nick (not (string-match erbot-nick (format "%s" nick))))
-      (format "hi %s !!" 
-	      (let ((foo (split-string (format "%s" nick )
-				       "[^a-bA-Z0-0]")))
-		(or (first foo) nick))
-	      )
-    (erbc-describe "hi")))
+;; (defun erbc-hi (&optional nick &rest args)
+;;   ".
+;; Optional argument NICK .
+;; Optional argument ARGS ."
+;;   (if (and nick (not (string-match erbot-nick (format "%s" nick))))
+;;       (format "hi %s !!" 
+;; 	      (let ((foo (split-string (format "%s" nick )
+;; 				       "[^a-bA-Z0-0]")))
+;; 		(or (first foo) nick))
+;; 	      )
+;;     (erbc-describe "hi")))
 
 ;;; (defun erbc-ni (&optional nick &rest args)
 ;;;   ".
@@ -1043,10 +1043,10 @@ Optional argument ARGS ."
 ;;; 	      )
 ;;;     (erbc-describe "hi")))
 
-(defun erbc-greet (&optional nick &rest foo)
-  "Nada..just a call to `erbc-hi'.
-Optional argument NICK ."
-  (erbc-hi nick))
+;;; (defun erbc-greet (&optional nick &rest foo)
+;;;   "Nada..just a call to `erbc-hi'.
+;;; Optional argument NICK ."
+;;;   (erbc-hi nick))
 
 (defun erbc-kiss (&optional nick &rest foo)
   "Nada.
@@ -3654,7 +3654,7 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'erbc-wigs  'erbc-where-is-gnus-summary)
 (defalias 'erbc-wim  'erbc-where-is-message)
 (defalias 'erbc-dw  'erbc-where-is)
-(defalias 'erbc-yo 'erbc-hi)
+;;(defalias 'erbc-yo 'erbc-hi)
 
 ;; basic functions
 (defalias 'erbc-lambda 'lambda)
