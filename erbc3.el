@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-03-22 11:04:55 deego>
+;; Time-stamp: <2005-03-28 10:05:16 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -302,11 +302,9 @@ to query using PROMPT, or just return t."
 	  (cons 'defun 
 		(cons fcn 
 		      (cons args 
-			    (cons (first body)
-				  (cons 
-				   '(sit-for 0)
-				   body)))))
-	  )
+			    (cons 
+			     '(sit-for 0)
+			     body)))))
       
       fcn))
     (fsi-pf-load)
