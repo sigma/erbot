@@ -10,9 +10,10 @@
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
 
-(defconst erbauth-home-page
+(defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
-
+(defconst erbmsg-version
+  "Version 0.1 $Revision: 1.12 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -41,17 +42,20 @@
 
 ;;; TODOs that have been done:
 
+;; 2004/04/09:
+;; - added support for multiple recipients (see fs-memo for syntax)
+;; - abstracted fs-memo stuff to two defuns (erbmsg-memo-parse-msg and erbmsg-memorize-msg)
+;; 2004/04/01:
+;; - added hooks
 ;; 2004/03/31:
 ;; - store which channel the memo came from
 ;; - added garbage collection function (erbmsg-garbage-cleanse-cookies) to
 ;;   clean up erbmsg-msg-cookie-hash-table from unreferenced cookies
-;; 2004/04/01:
-;; - added hooks
 
 ;;; TODO:
 ;; - functionality to forget the erbmsg-question-* pile effectively
 ;; - save erbmsg-msg-hash-table across sessions
-;; - find unused cookies in erbmsg-msg-cookie-hash-table
+;; - expire cookies in erbmsg-msg-cookie-hash-table some time (after 3 notifications?)
 
 ;;; Data
 
@@ -68,7 +72,7 @@ messages are saved here")
 
 (defgroup erbmsg nil
   "The erbmsg module for erbot"
-  :group 'applications)
+  :group 'erbot)
 
 (defcustom erbmsg-default-magic-words nil
   "List of default magic words for messages with magic words."
@@ -79,45 +83,74 @@ messages are saved here")
 ;;(set-time-zone-rule "UTC0")
 
 (defvar erbmsg-flush-pre-hook nil
-	"Hook called before erbmsg-flush-pending-msgs is called.")
+  "Hook called before erbmsg-flush-pending-msgs is called.")
 (defvar erbmsg-flush-post-hook nil
-	"Hook called before erbmsg-flush-pending-msgs is called.")
+  "Hook called before erbmsg-flush-pending-msgs is called.")
 
 
 ;;; this is too useful to not add it here
 (add-hook 'erbmsg-flush-post-hook 'erbmsg-garbage-cleanse-cookies)
 
 
-(defun fs-memo (nick &rest msg)
+;; interface functions
+(defun fs-memo (&rest msg)
   "Specify your message and the nick to dedicate to here, as in:
 
 #somechan> ,memo somenick hello somenick, don't forget
 
+Allowed syntaxes:
+,memo [to|for] <nick> msg
+,memo [to|for] <nick> <nick> <nick>: msg
+
 Note: magic words are not currently implemented."
   (and erbot-erbmsg-p
-       (let* ((nick (erbutils-stringize `(,nick)))
-              (nicks-ht (or (gethash nick erbmsg-msg-hash-table)
-                            (puthash nick
-                                     (make-hash-table :test 'equal)
-                                     erbmsg-msg-hash-table)))
-              (msg (erbutils-stringize msg))
-              (cnick fs-nick)
-							(cchan fs-tgt)
-              (ctime (current-time))
-              (magic-words)
-              ;; composition of the new memo
-              (newmsg (vector cnick cchan msg ctime magic-words))
-              (newcookie (erbmsg-generate-msg-cookie newmsg))
-              ;; now memos from that user already in the system
-              (cmsgs (gethash cnick nicks-ht)))
-         (add-to-list 'cmsgs newcookie)
-         (puthash nick cmsgs nicks-ht))
-       "msg memorized for delivery"))
+       (let* ((msg-raw (erbutils-stringize msg))
+              (nicks+msg (erbmsg-memo-parse-msg msg-raw)))
+         (mapc (lambda (nick+msg)
+                 (let* ((nick (car nick+msg))
+                        (msg (nth 1 nick+msg)))
+                   (erbmsg-memorize-msg nick msg)))
+               nicks+msg)
+         "msg memorized for delivery")))
 (defalias 'fs-msg-wmw 'fs-memo) ;; just for compatibility
 (defalias 'fs-msg-with-magic-words 'fs-memo)
 
 
-(defun fs-msg-mymsgs (&rest line)
+(defun erbmsg-memo-parse-msg (raw-msg)
+  "Parses MSG for any of the allowed memo syntaxes and returns a list
+\(\(nick msg) (nick msg) ...)"
+  (let* ((nick-msg (cond ((string-match "^\\(?:to\\|for\\)?\\b\\(.+\\)\\b:\\(.*\\)" raw-msg)
+                          (cons (match-string 1 raw-msg) (match-string 2 raw-msg)))
+                         ((string-match "^\\(?:to\\|for\\)?\\(?:\\s-\\|\\b\\)\\(\\S-+\\)\\s-\\(.*\\)" raw-msg)
+                          (cons (match-string 1 raw-msg) (match-string 2 raw-msg)))
+                         (t nil)))
+         (nicks (split-string (replace-regexp-in-string ",\\|\\band\\b" "" (car nick-msg))))
+         (msg (replace-regexp-in-string "^\\s-+" "" (cdr nick-msg))))
+    (mapcar (lambda (nick)
+              (list nick msg))
+            nicks)))
+;;(erbmsg-memo-parse-msg "hroptatyr and deego: huhu! :)")
+
+(defun erbmsg-memorize-msg (nick msg &optional magic-words)
+  "Memorizes NICKs MSG."
+  (let* ((nicks-ht (or (gethash nick erbmsg-msg-hash-table)
+                       (puthash nick
+                                (make-hash-table :test 'equal)
+                                erbmsg-msg-hash-table)))
+         (cnick fs-nick)
+         (cchan fs-tgt)
+         (ctime (current-time))
+         ;; composition of the new memo
+         (newmsg (vector cnick cchan msg ctime magic-words))
+         (newcookie (erbmsg-generate-msg-cookie newmsg))
+         ;; now memos from that user already in the system
+         (cmsgs (gethash cnick nicks-ht)))
+    (add-to-list 'cmsgs newcookie)
+    (puthash nick cmsgs nicks-ht)))
+
+
+
+(defun fs-memos (&rest line)
   "This is redundant but more clean than in `erbmsg-parse'."
   (and erbot-erbmsg-p
        (let* ((linecar (car line))
@@ -153,10 +186,16 @@ Note: magic words are not currently implemented."
                                              nick))))
              (and (null internalp)
                   (format ":( no msgs for you, %s" nick))))))
-(defalias 'fs-memos 'fs-msg-mymsgs)
-(defalias 'fs-mymemos 'fs-msg-mymsgs)
+(defalias 'fs-msg-mymsgs 'fs-memos)
+(defalias 'fs-mymemos 'fs-memos)
 (defalias 'fs-msgs 'fs-msg-mymsgs)
 (defalias 'fs-mymsgs 'fs-msg-mymsgs)
+
+(defun fs-erbmsg-version (&rest ignore)
+  "Spits out `erbmsg-version'."
+  erbmsg-version)
+(defalias 'fs-msg-version 'fs-erbmsg-version)
+
 
 
 (defun erbmsg-notify-msg-on-JOIN (process parsed)
@@ -194,19 +233,6 @@ see erbmsg-question part below :)."
          ;; now the stuff for question handling
          (nicks-q-ht (gethash nick erbmsg-question-hash-table))
          (pending-actions))
-    (and nicks-ht nil
-         (maphash (lambda (fromnick msg-data)
-                    (let ((magic-words (aref msg-data 3)))
-                      (add-to-list 'magic-words (format "me?ss?a?ge?s? ?\\(?:from\\)? %s" fromnick))
-                      (nconc magic-words erbmsg-default-magic-words)
-                      (and (string-match
-                            (concat "^\\(?:"
-                                    (mapconcat 'identity magic-words "\\|")
-                                    "\\)")
-                            msg)
-                           (add-to-list 'pending-msgs (vconcat (vector fromnick) msg-data))
-                           )))
-                  nicks-ht))
 
     ;; erbmsg-question handling
     (and nicks-q-ht
@@ -216,21 +242,7 @@ see erbmsg-question part below :)."
                          (let ((func (intern (format "fs-%s" keyword))))
                            (and (fboundp func)
                                 (funcall func)))))
-                  nicks-q-ht))
-
-    ;; again the erbmsg stuff 
-    (and pending-msgs nil
-         (let ((msg-cookie (erbmsg-generate-msg-cookie pending-msgs)))
-           (format "'%S"
-                   (format "erm, %s msgs pending, see them? %s"
-                           (length pending-msgs)
-                           (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ',msg-cookie))
-                                              (query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
-                                              (post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
-                                              (flush (erbmsg-flush-pending-msgs ,nick ',msg-cookie))
-                                              (no (ignore))
-                                              (memo-help (erbmsg-help)))
-                                            nick)))))))
+                  nicks-q-ht))))
 
 
 (defun erbmsg-generate-msg-cookie (message)
@@ -269,14 +281,14 @@ instead of PRIVMSG you may specify another sending method."
          (mapc (lambda (msg)
                  (or (and msg
                           (let ((msgfrom (aref msg 0))
-																(msgchan (aref msg 1))
+                                (msgchan (aref msg 1))
                                 (msgtext (aref msg 2))
                                 (msgtime (aref msg 3)))
                             (erc-message method
                                          (format "%s %s@%s %s: %s"
                                                  target
                                                  msgfrom
-																								 msgchan
+                                                 msgchan
                                                  (format-time-string "%D %T (%Z)" msgtime)
                                                  msgtext))))
                      (erc-message method (format "%s invalid message cookie" target))))
@@ -284,12 +296,12 @@ instead of PRIVMSG you may specify another sending method."
 
 (defun erbmsg-flush-pending-msgs (nick msg-cookies)
   "Flushes all pending messages for user `nick'."
-	(run-hook-with-args 'erbmsg-flush-pre-hook nick msg-cookies)
+  (run-hook-with-args 'erbmsg-flush-pre-hook nick msg-cookies)
   (erbmsg-flush-msg-cookies msg-cookies)
   (remhash nick erbmsg-msg-hash-table)
   (remhash nick erbmsg-question-hash-table)
   (erc-send-message "flushed")
-	(run-hook-with-args 'erbmsg-flush-post-hook nick msg-cookies))
+  (run-hook-with-args 'erbmsg-flush-post-hook nick msg-cookies))
 
 (defun erbmsg-flush-msg-cookie (msg-cookie)
   "Flushes `msg-cookie'."
@@ -306,25 +318,26 @@ instead of PRIVMSG you may specify another sending method."
 
 
 
+
 ;; garbage collection
 
 (defun erbmsg-garbage-cleanse-cookies (&rest ignore)
-	"Collects garbage from `erbmsg-msg-cookie-hash-table' when
+  "Collects garbage from `erbmsg-msg-cookie-hash-table' when
 there's no referring entry in `erbmsg-msg-hash-table'."
-	(maphash (lambda (cookie-k cookie-v)
-						 (let ((cookie cookie-k)
-									 (referred))
-							 (catch 'ref-exists-p
-								 (maphash (lambda (memo-k memo-v)
-														(maphash (lambda (from cookie-list)
-																			 (and (member cookie cookie-list)
-																						(setq referred t)
-																						(throw 'ref-exists-p t)))
-																		 memo-v))
-													erbmsg-msg-hash-table))
-							 (unless referred
-								 (remhash cookie erbmsg-msg-cookie-hash-table))))
-					 erbmsg-msg-cookie-hash-table))
+  (maphash (lambda (cookie-k cookie-v)
+             (let ((cookie cookie-k)
+                   (referred))
+               (catch 'ref-exists-p
+                 (maphash (lambda (memo-k memo-v)
+                            (maphash (lambda (from cookie-list)
+                                       (and (member cookie cookie-list)
+                                            (setq referred t)
+                                            (throw 'ref-exists-p t)))
+                                     memo-v))
+                          erbmsg-msg-hash-table))
+               (unless referred
+                 (remhash cookie erbmsg-msg-cookie-hash-table))))
+           erbmsg-msg-cookie-hash-table))
 ;; erbmsg-msg-cookie-hash-table
 ;; (erbmsg-garbage-cleanse-cookies)
 
