@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; Time-stamp: <03/05/28 23:19:49 freundt>
+;; $Id: erbmsg.el,v 1.13 2004/04/11 21:06:52 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -13,7 +13,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.1 $Revision: 1.12 $")
+  "Version 0.1 $Revision: 1.13 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -211,7 +211,8 @@ when joining the channel"
                 (erc-message "PRIVMSG"
                              (format "%s %s"
                                      channel
-                                     msgs)))))))
+                                     msgs)))
+					 'noreply))))
 (add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN)
 
 
