@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-01-02 17:02:54 deego>
+;; Time-stamp: <2005-01-05 11:15:08 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -674,13 +674,13 @@ those things..
 	 (add-hook 'erc-server-376-hook
 		   'erbot-autojoin-channels))
 	)
-  (erbot-initiate-symbols))
+  (erbot-install-symbols))
 
 
 
 
 
-(defun erbot-initiate-symbols ()
+(defun erbot-install-symbols ()
   "By now, you should have loaded all pertinent erbot files... If you
 add any new functions, don't forget to run (erbot-install) AFTER
 that.."

@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-03 14:34:15 deego>
+;; Time-stamp: <2005-01-05 11:39:13 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4087,8 +4087,18 @@ last time i checked , equalp seemed to work as well.. "
 
 (erbutils-defalias-i '(faith-correct-string))
 
-(defun fsi-shell-test (string substrings)
-  "internal"
+(defun erbnoc-shell-test (string substrings)
+  "Return t if any of the substrings matches string..  Used to weed
+out harmful shell code..
+
+See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
+
+
+"
+  (unless substrings
+    (setq substrings (list " " "<" ">" "-" "`" "$" "=" ";" "&" "'"
+			   "\\" "\"" "|" "*" "?" "~" "^" "(" ")" "["
+			   "]" "{" "}" "\n" "\r" )))
   (let ((found nil))
     (mapcar (lambda (arg)
 	      (when (string-match (regexp-quote arg) string)
@@ -4096,11 +4106,13 @@ last time i checked , equalp seemed to work as well.. "
 	    substrings)
     found))
 
+(defalias 'fsishell-test 'erbnoc-shell-test)
+
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun fsi-wserver (&optional site &rest args)
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (if (fs-shell-test site '(" " "<" "-"))
+  (if (fs-shell-test site nil)
       (error "No attacks please. "))
   (erbnoc-shell-command-to-string
    (format "w3m -dump_head %s" site)))
@@ -4111,7 +4123,7 @@ last time i checked , equalp seemed to work as well.. "
   "displays a website"
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (if (fs-shell-test site '(" " "<" "-"))
+  (if (fs-shell-test site nil)
       (error "No attacks please. "))
   (erbnoc-shell-command-to-string
    (format "w3m -dump %s" site)))
