@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-04-22 22:56:14 deego>
+;; Time-stamp: <2004-05-05 21:22:08 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3811,7 +3811,13 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun fs-length-channel-members (&rest args)
-  (length (fs-channel-members-all)))
+  (cond
+   ;; for new erc versions
+   ((boundp erc-channel-users)
+    (hash-table-count erc-channel-users))
+   (t (length (fs-channel-members-all)))))
+
+
 (defalias 'fs-number-channel-members 'fs-length-channel-members)
 
 (defun fs-cto (&rest args)
