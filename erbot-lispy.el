@@ -1,11 +1,9 @@
 ;;; erbot-lispy.el --- ErBot integration in Lispy
-;; Time-stamp: <2004-06-17 15:54:43 deego>
+;; Time-stamp: <2004-07-21 15:59:53 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot-lispy.el
 ;; Package: erbot
-;; Authors:  David Edmunston (dme@dme.org)
-;; Modified by: D. Goel <deego@gnufans.org>
-;; Modified by: Yann Hodique <hodique@lifl.fr>
+;; Authors:  Yann Hodique <hodique@lifl.fr>
 ;; Version: 0.0
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 
