@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-12-17 11:27:15 deego>
+;; Time-stamp: <2004-12-29 17:29:41 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -286,6 +286,73 @@ may have unspecified and unpleasant results..."
 
 (defcustom erbot-erbmsg-p nil
   "When true, erball.el loads the erbmsg module by default ")
+
+;; This part suggested by forcer, See
+;; http://www.kollektiv-hamburg.de/~forcer/erbot-notify.txt, which is
+;; also copied here: 
+
+;; erbot should include the following function lists, which are
+;; called on these events with the specified arguments:
+
+;;  erbot-notify-add-functions
+;;    arguments: nick channel term entry-num entry
+
+(defvar erbot-notify-add-functions nil
+  "Functions  to call when an erbot add takes place.  Each of these is
+called with the arguments arguments: nick channel term entry-num
+entry")
+
+;;  erbot-notify-forget-functions
+;;    arguments: nick channel term entry-num entry
+;;    If entry-num is 'all, entry is a list of entries
+;; SPECS CHANGED!
+
+(defvar erbot-notify-forget-functions nil
+  "Functions to call when an erbot forget takes place.  Each of these
+is called with the arguments arguments: nick channel term entry-num
+entry remaining-entries.  If entry-num is 'all, entry is a list of
+entries")
+
+;;  erbot-notify-move-functions
+;;    arguments: nick channel old-term new-term
+
+(defvar erbot-notify-move-functions nil
+  "Functions to call when an erbot move operation takes place.  Each
+of these is called with the arguments arguments: nick channel old-term
+new-term ")
+
+;;  erbot-notify-rearrange-functions
+;;    arguments: nick channel term from-num from-entry to-num
+;;    entries
+
+(defvar  erbot-notify-rearrange-functions nil
+  "Functions to call when an erbot rearrange operation takes place.  Each
+of these is called with the arguments arguments: nick channel term
+from-num from-entry to-num entries.  Entries refers to the rearranged
+entries. ")
+
+
+;;  erbot-notify-substitute-functions
+;;    arguments: nick channel term entry-num old-entry new-entry
+;; NOW CHANGED SPEC. 
+(defvar erbot-notify-substitute-functions nil 
+  "Functions to call when an erbot substitute operation takes place.
+Each of these is called with the arguments arguments: nick channel
+term entry-num old-entry new-entry")
+
+
+
+
+
+;;  erbot-notify-merge-functions
+;;    arguments: nick channel old-term new-term new-entries
+;; NOW CHANGED SPEC!
+(defvar erbot-notify-merge-functions nil
+ "Functions to call when an erbot merge operation takes place.
+Each of these is called with the arguments arguments: nick channel
+from-term to-term from-entries to-entries merge-entries")
+
+
 
 ; This function is used by the example above.
 (defun erbot-doctor (args)
