@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-08-08 07:18:46 deego>
+;; Time-stamp: <2003-08-28 15:17:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3668,6 +3668,7 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-sqrt 'sqrt)
 
 (defalias 'fs-= '=)
+(defalias 'fs-/= '/=)
 (defalias 'fs-< '<)
 (defalias 'fs-> '>)
 (defalias 'fs-<= '<=)
