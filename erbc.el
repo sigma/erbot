@@ -4120,25 +4120,35 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (defalias 'fsi-shell-test 'erbnoc-shell-test)
 
-;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun fsi-wserver (&optional site &rest args)
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (if (fs-shell-test site nil)
-      (error "No attacks please. "))
-  (erbnoc-shell-command-to-string
-   (format "w3m -dump_head %s" site)))
+  (let ((buffer (url-retrieve-synchronously site)))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-min))
+      (prog1
+          (buffer-substring (point-min) 
+                            (or (search-forward "\n\n" nil t)
+                                (point-max)))
+        (kill-buffer buffer)))))
+
 (defalias 'fs-webserver 'fs-wserver)
 
-;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun fsi-web (&optional site &rest args)
-  "displays a website"
-  (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
+  (unless site (error (format "Syntax: %s web SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (if (fs-shell-test site nil)
-      (error "No attacks please. "))
-  (erbnoc-shell-command-to-string
-   (format "w3m -dump %s" site)))
+  (let ((buffer (url-retrieve-synchronously site)))
+    (save-excursion
+      (set-buffer buffer)
+      (goto-char (point-min))
+      (shell-command-on-region (or (search-forward "\n\n" nil t)
+                                   (point-min))
+                               (point-max)
+                               "w3m -dump -T text/html" t t)
+      (prog1
+          (buffer-substring (point) (mark))
+        (kill-buffer buffer)))))
 
 ;;;###autoload
 (defun fsi-length-load-history ()
