@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Functions contributed by #emacsers. 
-;; Time-stamp: <2003-06-19 08:34:17 deego>
+;; Time-stamp: <2003-06-19 12:25:57 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -172,15 +172,15 @@ to query using PROMPT, or just return t."
 
 (defvar erbnoc-rr-bullet (random 6))
 
-(defun erbc-russian-roulette (&rest ignore)
+(defun fs-russian-roulette (&rest ignore)
   (if (>= erbnoc-rr-bullet 5)
       (progn 
 	(setq erbnoc-rr-bullet (random 6)) 
-	(erbc-describe "rr-bang-kick")) 
-    (incf erbnoc-rr-bullet) (erbc-describe "rr-click")))
+	(fs-describe "rr-bang-kick")) 
+    (incf erbnoc-rr-bullet) (fs-describe "rr-click")))
 
-(defalias 'erbc-RR 'erbc-russian-roulette)
-(defalias 'erbc-rr 'erbc-russian-roulette)
+(defalias 'fs-RR 'fs-russian-roulette)
+(defalias 'fs-rr 'fs-russian-roulette)
 
 (provide 'erbc4)
 (run-hooks 'erbc4-after-load-hook)

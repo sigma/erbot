@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-05-29 15:14:42 deego>
+;; Time-stamp: <2003-06-19 12:25:56 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -209,9 +209,9 @@ to query using PROMPT, or just return t."
      (cons 
       ;; so that we prevent duplicate entries. 
       ;; this should already be the default, but just to ensure..
-      ", (erbc-set-add-all-disable)"
+      ", (fs-set-add-all-disable)"
       ls
-      ;;(list ", (erbc-set-add-all-disable)")
+      ;;(list ", (fs-set-add-all-disable)")
       ))
     (message "Added %S idledo's" (length ls))))
 

@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-06-18 09:25:35 deego>
+;; Time-stamp: <2003-06-19 12:25:56 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -91,7 +91,7 @@ tries to make sure that we sandbox that whole quoted thing.. "
     (cons 'quote
 	  (mapcar 'erblisp-sandbox (cdr expr))))
    ((listp expr)
-    (list 'erbc-sandbox-quoted (erblisp-sandbox expr)))
+    (list 'fs-sandbox-quoted (erblisp-sandbox expr)))
    ;; just an atom 
    (t (erblisp-sandbox expr))))
 
@@ -124,24 +124,24 @@ We WON'T do this by default since this could lead to exploits if you
 	;; if quoted, it is fine...
 	expr)
        (t (cons 
-	   (if (or (equal 0 (string-match "erbc-" (format "%S" fir)))
+	   (if (or (equal 0 (string-match "fs-" (format "%S" fir)))
 		   (member fir erblisp-allowed-words))
 	       fir
-	     (intern (concat "erbc-" (format "%S" fir))))
+	     (intern (concat "fs-" (format "%S" fir))))
 	   (mapcar 'erblisp-sandbox (cdr expr)))))))
    
 
    ;; final condition.. --> when the expr is an atom..  It should be a
-   ;; a constant..  or an allowed atom.. allowed == prefixed with erbc-
+   ;; a constant..  or an allowed atom.. allowed == prefixed with fs-
    (t (cond
        ((and (symbolp expr) 
-	     (equal 0 (string-match "erbc-" (format "%s" expr))))
+	     (equal 0 (string-match "fs-" (format "%s" expr))))
 	expr)
        ((equal expr t) expr)
        ((member expr erblisp-allowed-words) expr)
        ((symbolp expr)
-	;;(boundp (intern (concat "erbc-" (format "%S" expr)))))
-	(intern (concat "erbc-" (format "%s" expr))))
+	;;(boundp (intern (concat "fs-" (format "%S" expr)))))
+	(intern (concat "fs-" (format "%s" expr))))
        ;; other symbol
        ;;((symbolp expr) (list 'quote expr))
        ;; a number or string now..
@@ -157,9 +157,9 @@ We WON'T do this by default since this could lead to exploits if you
 	 
 
 (defun erblisp-sandbox-fuzzy (expr)
-  "Sandboxes a message.. Ensures that the functions are all erbc-
+  "Sandboxes a message.. Ensures that the functions are all fs-
 and the arguments are NOT variable-names... This one sandboxes
-preferably by quoting unless erbc-symbol is bound.."
+preferably by quoting unless fs-symbol is bound.."
   (cond 
 
    ;; first condition
@@ -176,24 +176,24 @@ preferably by quoting unless erbc-symbol is bound.."
 	;; if quoted, it is fine...
 	expr)
        (t (cons 
-	   (if (equal 0 (string-match "erbc-" (format "%S" fir)))
+	   (if (equal 0 (string-match "fs-" (format "%S" fir)))
 	       fir
-	     (intern (concat "erbc-" (format "%S" fir))))
+	     (intern (concat "fs-" (format "%S" fir))))
 	   (mapcar 'erblisp-sandbox-fuzzy (cdr expr)))))))
    
 
    ;; final condition.. --> when the expr is an atom..  It should be a
-   ;; a constant..  or an allowed atom.. allowed == prefixed with erbc-
+   ;; a constant..  or an allowed atom.. allowed == prefixed with fs-
    (t (cond
        ((and (symbolp expr) 
-	     (equal 0 (string-match "erbc-" (format "%s" expr))))
+	     (equal 0 (string-match "fs-" (format "%s" expr))))
 	expr)
        ((and (symbolp expr)
 	     (or
-	      (boundp (intern (concat "erbc-" (format "%S" expr))))
-	      (fboundp (intern (concat "erbc-" (format "%S" expr))))
+	      (boundp (intern (concat "fs-" (format "%S" expr))))
+	      (fboundp (intern (concat "fs-" (format "%S" expr))))
 	     ))
-	(intern (concat "erbc-" (format "%s" expr))))
+	(intern (concat "fs-" (format "%s" expr))))
        ;; other symbol
        ((symbolp expr) (list 'quote expr))
        ;; a number or string now..
@@ -209,7 +209,7 @@ preferably by quoting unless erbc-symbol is bound.."
 (defun erblisp-sandbox-full(expr &optional midstream)
   "
 This will ensure that anything rigt after parens is sandboxed by a
-erbc- prefix.  And anything else is either a symbol , or a string,
+fs- prefix.  And anything else is either a symbol , or a string,
 but not a variable...  viz: quoted ...else converted into one. 
 
 midstream is in internal variable..."
@@ -232,8 +232,8 @@ midstream is in internal variable..."
 
    ;; midstream is untrue... expr is thus an atom at the beginning..
    (t
-    (if (equal 0 (string-match "erbc-" (format "%s" expr)))
-	expr (intern (concat "erbc-" (format "%s" expr)))))))
+    (if (equal 0 (string-match "fs-" (format "%s" expr)))
+	expr (intern (concat "fs-" (format "%s" expr)))))))
 
 (provide 'erblisp)
 (run-hooks 'erblisp-after-load-hooks)

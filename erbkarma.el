@@ -1,5 +1,5 @@
 ;;; erbkarma.el ---
-;; Time-stamp: <2003-05-29 09:03:35 deego>
+;; Time-stamp: <2003-06-19 12:25:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbkarma.el
@@ -148,7 +148,7 @@ to query using PROMPT, or just return t."
 
 (defun erbkarma (&optional entity)
   (cond
-   ((not entity) (erbc-karma-best))
+   ((not entity) (fs-karma-best))
    (t
     (unless (stringp entity) 
       (setq entity (format "%s" entity)))
@@ -207,7 +207,7 @@ to query using PROMPT, or just return t."
     (if (> n (length result))
 	result
       (subseq result 0 n))))
-(defalias 'erbc-best-karma 'erbc-karma-best)
+(defalias 'fs-best-karma 'fs-karma-best)
 
 (defcustom erbkarma-tgt-check-string 
   "^\\(#emacs\\|#gnu\\|#fsf\\|#hurd-bunny\\|deego\\|#wiki\\)$"
@@ -215,7 +215,7 @@ to query using PROMPT, or just return t."
   )
 
 (defun erbkarma-tgt-check ()
-  (unless (string-match erbkarma-tgt-check-string erbc-tgt)
+  (unless (string-match erbkarma-tgt-check-string fs-tgt)
     (error 
      "Do it publicly. ")))
 

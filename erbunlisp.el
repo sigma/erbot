@@ -1,5 +1,5 @@
 ;;; erbunlisp.el --- Help Simplify functions for nonlisp channels. 
-;; Time-stamp: <2003-05-29 09:03:33 deego>
+;; Time-stamp: <2003-06-19 12:25:56 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbunlisp.el
@@ -160,7 +160,7 @@ to query using PROMPT, or just return t."
 ;;; Real Code:
 
 (defcustom erbunlisp-list
-  '((erbc-remove erbc-forget remove))
+  '((fs-remove fs-forget remove))
   "When you type erbunlisp-install, the first entries will get aliased
 to second one. 
 When you type erbunlisp-uninstall, the first entries will get aliased

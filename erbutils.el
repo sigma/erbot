@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-17 09:46:25 deego>
+;; Time-stamp: <2003-06-19 12:26:00 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -102,16 +102,16 @@
     (ding t)
     (unless erbutils-ignore-errors-p
       (error (error-message-string ,err)))
-    (unless erbc-found-query-p 
+    (unless fs-found-query-p 
       (erbutils-error 
        "%s"
-       (erbc-limit-lines
+       (fs-limit-lines
         (error-message-string ,err)))))))))
 
 
 (defun erbutils-error (&rest args)
   (unless args (error 
-    (format "Syntax: , (erbc-error msg &rest format-args)")))
+    (format "Syntax: , (fs-error msg &rest format-args)")))
   (let* ((main
     (erbutils-random 
      '("oops, error.  %s"
@@ -132,8 +132,8 @@
       (apply 'format args))))
     (or
      (ignore-errors
-       (erbc-h4x0r-maybe
-  (erbc-studlify-maybe
+       (fs-h4x0r-maybe
+  (fs-studlify-maybe
    result)))
      result)))
 
@@ -395,16 +395,16 @@ as many times as it returns a...
 
 (defun erbutils-add-nick (msg)
   (if
-      (and (not erbc-found-query-p)
-     (not erbc-internal-directed)
+      (and (not fs-found-query-p)
+     (not fs-internal-directed)
      (> (random 100) 30)
      (stringp msg))
       (eval 
        (erbutils-random
   '(
-    ;;(concat msg ", " erbc-nick)
-    (concat erbc-nick ": " msg)
-    (concat erbc-nick ", " msg)
+    ;;(concat msg ", " fs-nick)
+    (concat fs-nick ": " msg)
+    (concat fs-nick ", " msg)
     )
   '(1 1 )))
     msg))
@@ -415,7 +415,7 @@ as many times as it returns a...
    (erbutils-random
     '((erbutils-add-nick msg)
       msg)
-    erbc-internal-add-nick-weights
+    fs-internal-add-nick-weights
     )))
 
 
@@ -503,14 +503,14 @@ should start at the beginning of b."
     (buffer-substring-no-properties (point-min) (point-max))))
 
 (defun erbutils-defalias (ls &optional prefix prefix-rm)
-  "Define new erbc- aliases from ls. 
+  "Define new fs- aliases from ls. 
 
 If the entry in the ls is a function, it is defaliased.  If it is a
 variable, we define a new function, that will return the value of the
 variable.
 
 When prefix and prefix-rm is provided, we assume that the entry is of
-the form prefix-rmENTRY. And we then (defalias erbc-prefixENTRY
+the form prefix-rmENTRY. And we then (defalias fs-prefixENTRY
 prefix-rmENTRY. "
 
   (let* ((pref (if prefix (format "%s" prefix) ""))
@@ -523,7 +523,7 @@ prefix-rmENTRY. "
         (argst (format "%s" arg))
         (gop (string-match reg argst))
         (arg2 (and gop (substring argst lenrm)))
-        (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
+        (foo (and gop (intern (format "fs-%s%s" pref arg2)))))
 
    (when gop
      (if (functionp arg)
@@ -547,7 +547,7 @@ prefix-rmENTRY. "
         (argst (format "%s" arg))
         (gop (string-match reg argst))
         (arg2 (and gop (substring argst lenrm)))
-        (foo (and gop (intern (format "erbc-%s%s" pref arg2)))))
+        (foo (and gop (intern (format "fs-%s%s" pref arg2)))))
 
    (when gop
      (eval 

@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-17 08:52:18 deego>
+;; Time-stamp: <2003-06-19 12:25:57 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -176,21 +176,21 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-pf-file "~/public_html/data/userfunctions.el")
 (defvar erbnoc-pv-file "~/public_html/data/uservariables.el")
 
-(defun erbc-pfpv-load ()
-  (erbc-pf-load)
-  (erbc-pv-load))
+(defun fs-pfpv-load ()
+  (fs-pf-load)
+  (fs-pv-load))
 
-(defun erbc-pf-load ()
+(defun fs-pf-load ()
   (when (file-exists-p erbnoc-pf-file)
 	 (ignore-errors (load erbnoc-pf-file))))
 
-(defun erbc-pv-load ()
+(defun fs-pv-load ()
   (when (file-exists-p erbnoc-pv-file)
     (ignore-errors (load erbnoc-pv-file))))
 
 	 
 
-(defun erbc-user-function-p (fcn)
+(defun fs-user-function-p (fcn)
   (member 
    fcn 
    (erbutils-functions-in-file erbnoc-pf-file)))
@@ -223,13 +223,13 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-tmp-sexps)
 (defvar erbnoc-tmp-newbody)
 
-(defmacro erbc-defun (fcn &rest body)
+(defmacro fs-defun (fcn &rest body)
   (erbnoc-write-sexps-to-file
    erbnoc-pf-file
    (erbnoc-create-defun-overwrite
     (erbutils-file-sexps erbnoc-pf-file)
     (cons 'defun (cons fcn body)) fcn))
-  (erbc-pf-load)
+  (fs-pf-load)
   `(quote ,fcn))
 
 
@@ -238,10 +238,10 @@ to query using PROMPT, or just return t."
 	  
 
 
-(defun erbc-pv-get-variables-values ()
+(defun fs-pv-get-variables-values ()
   (let 
       ((vars 
-	(apropos-internal "^erbc-" 'boundp)))
+	(apropos-internal "^fs-" 'boundp)))
     (mapcar
      (lambda (v)
        (list 'defvar v 
@@ -251,11 +251,11 @@ to query using PROMPT, or just return t."
 
 
 ;;;###autoload
-(defun erbc-pv-save ()
+(defun fs-pv-save ()
   (interactive)
   (erbnoc-write-sexps-to-file 
    erbnoc-pv-file 
-   (erbc-pv-get-variables-values)))
+   (fs-pv-get-variables-values)))
 
 
 

@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2003-05-29 09:03:35 deego>
+;; Time-stamp: <2003-06-19 12:25:57 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -132,7 +132,7 @@ when using this command.
   (interactive "sRegex to forget: ")
   (let* 
       ((lenterms
-	(erbc-search-basic reg nil nil 'describe))
+	(fs-search-basic reg nil nil 'describe))
        (len (first lenterms))
        (terms (second lenterms)))
     (cond
@@ -157,7 +157,7 @@ when using this command.
 	    (and prevent-reg
 		 (progn
 		   (setq notes (mapconcat 'identity 
-					  (erbc-notes thisterm)
+					  (fs-notes thisterm)
 					  " "))
 		   (string-match prevent-reg notes))))
       (cond
@@ -169,7 +169,7 @@ when using this command.
        (t
 	(message "Forgetting term %S of %S: %S" ctr len thisterm)
 	(sleep-for 0.1)
-	(erbc-forget thisterm "all")
+	(fs-forget thisterm "all")
 	(message "Forgetting term %S of %S: %S.. done" ctr len thisterm)
 	(sleep-for 0.1)
 	)

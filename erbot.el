@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-06-17 15:19:59 deego>
+;; Time-stamp: <2003-06-19 12:25:56 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -321,7 +321,7 @@ may have unspecified and unpleasant results..."
 	(setq pre "Will save to ~/pub/dunnet/dunnet.game"))
       (cond 
        ((string-match "^.?more" arg)
-	(setq ans (erbc-more)))
+	(setq ans (fs-more)))
        (t
 	(unless freshp (insert arg))
 	(goto-char (point-max))
@@ -377,10 +377,10 @@ args	- arguments to the command (optional)."
     ;;(setq erbot-end-user-nick nick)
     
     (setq erbot-end-user-nick-latest erbot-end-user-nick)
-    (setq erbc-tgt tgt)
+    (setq fs-tgt tgt)
     (setq erbnoc-tgt tgt)
 
-    (setq erbc-nick nick)
+    (setq fs-nick nick)
     (setq erbnoc-nick nick)
 
     (let ((msgg
@@ -410,7 +410,7 @@ args	- arguments to the command (optional)."
 (defvar erbot-init-string ""
   "The basic init string.. should be concated to ALL lines of
 replies... right at last.. the values it will hold will look like /msg
-foo, and will be set by erbc-parse-english, when that function
+foo, and will be set by fs-parse-english, when that function
 determines it appropriate..
 Currently: we do not use it, since we have found a better way to do
 those things..
@@ -484,7 +484,7 @@ those things..
 	 (equal main-reply "noreply"))
       ;; now we are actually gonna reply. 
       (save-excursion
-	(setq reply (erbc-limit-lines reply))
+	(setq reply (fs-limit-lines reply))
 	(if rep-buffer (set-buffer rep-buffer)
 	;;; this alternative reply somehow never gets sent out..
 	  ;;(setq reply (concat "msg " from " " 
@@ -610,9 +610,9 @@ those things..
   "Defines some dunnet specific aliases. "
   (interactive)
   (require 'dunnet)
-  (defalias 'dun-read-line 'erbc-botread)
+  (defalias 'dun-read-line 'fs-botread)
   ;;(defalias 'dun-mprinc
-  ;;'erbc-dun-mprinc))
+  ;;'fs-dun-mprinc))
   )
 
 

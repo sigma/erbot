@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-18 09:33:23 deego>
+;; Time-stamp: <2003-06-19 12:25:58 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -31,7 +31,7 @@
  
 
 
-;; this gile contains yet more functions for erbc-.  The functions
+;; this gile contains yet more functions for fs-.  The functions
 ;; here shall tend to be "specially defined" ones.
 
 
@@ -55,7 +55,7 @@
 
 (defvar erbnoc-while-max 10000)
 (defvar erbnoc-while-ctr 0)
-(defmacro erbc-while (cond &rest body)
+(defmacro fs-while (cond &rest body)
   `(let
        ((erbnoc-while-ctr 0))
      (while
@@ -71,7 +71,7 @@
        
 
 
-(defmacro erbc-dotimes (spec &rest body)
+(defmacro fs-dotimes (spec &rest body)
   `(dotimes 
        ,spec
      (sleep-for 0.01)
@@ -81,15 +81,15 @@
 
 
 
-(defun erbc-set-difference (a b)
+(defun fs-set-difference (a b)
   (set-difference a b))
 
 
-(defun erbc-pp (&optional foo &rest bar)
+(defun fs-pp (&optional foo &rest bar)
   (pp foo))
 
 
-(defun erbc-mapcar (sym seq)
+(defun fs-mapcar (sym seq)
   "only symbols allowed at this time. "
   (unless (symbolp sym)
     (error "Function argument to mapcar for this bot can only be a symbol."))
@@ -97,7 +97,7 @@
   ;; everything should already be boxquoted.. cool
   (mapcar sym seq))
 
-(defun erbc-mapc (sym seq)
+(defun fs-mapc (sym seq)
   "only symbols allowed at this time. "
   (unless (symbolp sym)
     (error "Function argument to mapcar for this bot can only be a symbol."))
@@ -121,7 +121,7 @@
 
 
 
-(defmacro erbc-apply (symbol &rest args)
+(defmacro fs-apply (symbol &rest args)
   (let (
 	(erbnoc-tmp-newargs (erbnoc-apply-sandbox-args args)))
     (cond
@@ -138,22 +138,22 @@
 	(t "nada"))
        (apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs))))
 
-(defmacro erbc-funcall (symbol &rest args)
-  `(erbc-apply ,symbol ,@args nil))
+(defmacro fs-funcall (symbol &rest args)
+  `(fs-apply ,symbol ,@args nil))
 
 
-(defalias 'erbc-function 'identity)
+(defalias 'fs-function 'identity)
 
 (defvar erbnoc-read-mode nil)
 (defvar erbnoc-read-input nil)
 
-(defvar erbc-internal-botread-prompt "Enter: ")
+(defvar fs-internal-botread-prompt "Enter: ")
 
-(defun erbc-botread (&optional prompt)
-  (unless prompt (setq prompt erbc-internal-botread-prompt))
+(defun fs-botread (&optional prompt)
+  (unless prompt (setq prompt fs-internal-botread-prompt))
   (ignore-errors
     (erbot-reply (concat prompt "") proc nick tgt msg nil))
-  (setq erbc-internal-botread-prompt "Enter: ")
+  (setq fs-internal-botread-prompt "Enter: ")
   (setq erbnoc-read-mode t)
   (while 
       (not erbnoc-read-input)
@@ -164,12 +164,12 @@
     (setq erbnoc-read-mode nil)
     input))
 
-(defun erbc-dun-mprinc (str)
+(defun fs-dun-mprinc (str)
   (ignore-errors
     (erbot-reply str proc nick tgt msg nil))
-  (setq erbc-internal-botread-prompt str))  
+  (setq fs-internal-botread-prompt str))  
     
-(defun erbc-botread-feed-internal (str)
+(defun fs-botread-feed-internal (str)
   (setq erbnoc-read-input str)
   (format 
    "Thanks for feeding the read-line.  Msg obtained: %s"
@@ -186,7 +186,7 @@
 ;;; (defvar erbnoc-calsmart-tmp-exprc nil)
 ;;; (defvar erbnoc-calsmart-tmp-error nil)
 
-;;; (defmacro erbc-calsmart (&rest exprs)
+;;; (defmacro fs-calsmart (&rest exprs)
 ;; "This will insert parenthesis appropriately, so you can type stuff
 ;; like , c + 2 3 4 - 3 4 * 3 4 5 (- 2 3) 
 ;; and fsbot will try parenthesis at appropriate places until the
@@ -221,7 +221,7 @@
   
 	   
 
-(defun erbc-bash-specific-quote (&optional number &rest ignored)
+(defun fs-bash-specific-quote (&optional number &rest ignored)
   "NUMBER need not be jsut NUMBER.  Any argument to
 bash-specific-quotes, like random, should work."
   (require 'bash-quotes)
@@ -262,26 +262,26 @@ bash-specific-quotes, like random, should work."
 	  (buffer-substring-no-properties aa bb)
 	"No result"))))
 
-(defalias 'erbc-bsc 'erbc-bash-specific-quote)
-(defalias 'erbc-bash-quote 'erbc-bash-specific-quote)
-(defalias 'erbc-bash.org 'erbc-bash-specific-quote)
-;;(defalias 'erbc-bash 'erbc-bash-specific-quote)
+(defalias 'fs-bsc 'fs-bash-specific-quote)
+(defalias 'fs-bash-quote 'fs-bash-specific-quote)
+(defalias 'fs-bash.org 'fs-bash-specific-quote)
+;;(defalias 'fs-bash 'fs-bash-specific-quote)
 
 
-(defun erbc-makunbound (&optional sym)
+(defun fs-makunbound (&optional sym)
   (unless sym (error "Syntax: , (makunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox sym))
   (makunbound sym))
 
 
-(defun erbc-fmakunbound (&optional sym)
+(defun fs-fmakunbound (&optional sym)
   (unless sym (error "Syntax: , (fmakunbound 'symbol)"))
   (setq sym
 	(erblisp-sandbox sym))
   (fmakunbound sym))
 
-(defalias 'erbc-lexical-let 'lexical-let)
+(defalias 'fs-lexical-let 'lexical-let)
 (provide 'erbc2)
 (run-hooks 'erbc2-after-load-hooks)
 

@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2003-06-18 10:05:04 deego>
+;; Time-stamp: <2003-06-19 12:25:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -113,29 +113,29 @@ nil nil\ nil nil nil nil nil nil nil nil]
    (erbeng-tgt tgt)
    (erbeng-localp localp)
    (erbeng-userinfo userinfo)
-   (erbc-found-query-p nil)
-   (erbc-internal-addressedatlast nil)
-   (erbc-internal-message-sans-bot-name erbc-internal-message-sans-bot-name)
-   (erbc-prestring erbc-prestring)
+   (fs-found-query-p nil)
+   (fs-internal-addressedatlast nil)
+   (fs-internal-message-sans-bot-name fs-internal-message-sans-bot-name)
+   (fs-prestring fs-prestring)
    tmpvar
    parsed-msg rep
    )
     ;;(concat nick ": " "/leave Test.. one big big test...")
     ;;(erbutils-ignore-errors
      
-     ;; this can also modify erbc-found-query
+     ;; this can also modify fs-found-query
     (setq parsed-msg 
     (or (condition-case tmpvar
-            (erbc-parse msg proc nick tgt localp userinfo)
+            (fs-parse msg proc nick tgt localp userinfo)
           (error 
           ;;"(error \"Please supply a completed lisp form\")"
           ;; Note that this could be bad: 
           ;; someone may not even be referring to the bot here:
 	   (if 
-	       erbc-internal-parse-error-p
+	       fs-internal-parse-error-p
 	       (format "(error %S )" 
 		       (error-message-string tmpvar))
-	       (format "(erbc-english-only %S)" msg))
+	       (format "(fs-english-only %S)" msg))
 	  
 	   ))
 	(and (featurep 'erbmsg)
@@ -164,11 +164,11 @@ nil nil\ nil nil nil nil nil nil nil nil]
          (format 
           (if (stringp rep) "%s%s" 
       "%s%S")
-          erbc-prestring rep))
+          fs-prestring rep))
 
          (if (null (split-string rep))
        (if 
-           erbc-found-query-p ""
+           fs-found-query-p ""
          "EMPTY STRING RETURNED.." )
      
      rep))))
@@ -182,8 +182,8 @@ nil nil\ nil nil nil nil nil nil nil nil]
    (or
     (string-match "concat" fir)
     (string-match "regexp-quote" fir)
-   ;; want to allow erbc-rq to show the regexp without quoting..
-   ;;(string-match "erbc-rq" fir)
+   ;; want to allow fs-rq to show the regexp without quoting..
+   ;;(string-match "fs-rq" fir)
     ))))
 
 
@@ -253,7 +253,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 ;    (if (and lispmsg (listp lispmsg))
 ; (erblisp-process-msg proc nick tgt 
 ;          lispmsg)
-;      (let ((englispmsg (erbc-parse-english msg proc nick)))
+;      (let ((englispmsg (fs-parse-english msg proc nick)))
 ; (erblisp-process-msg proc nick tgt englispmsg)))))
 
 
