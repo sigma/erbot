@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-07-10 17:35:33 deego>
+;; Time-stamp: <2004-03-29 18:03:16 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -209,6 +209,7 @@ properly.
 (defcustom erbot-after-load-hooks nil "" :group 'erbot)
 
 
+
 (defcustom erbot-ignore-nicks '("^apt[0-9]?$" "bot" "google" "serv")
   "A list of REGEXPS. 
 Nicks matching these regexps will be ignored by the bot, viz. not
@@ -269,6 +270,11 @@ may have unspecified and unpleasant results..."
   :group 'erc
   :type '(repeat (list string (choice (const nil) (const t) string) function))
   )
+
+
+
+(defcustom erbot-erbmsg-p nil 
+  "When true, erball.el loads the erbmsg module by default ")
 
 ; This function is used by the example above.
 (defun erbot-doctor (args)
