@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-23 23:07:24 deego>
+;; Time-stamp: <2005-01-23 23:16:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1275,13 +1275,13 @@ anything useful. ")))
 
 
 
-(defun fsi-eval-maybe (str &optional nick)
-  (unless nick (setq nick fs-nick))
+(defun fsi-eval-maybe (str &optional fs-victim)
+  (unless fs-victim (setq fs-victim fs-nick))
   (let ((aa (when (stringp str)
 	      (ignore-errors (read str)))))
     (cond
      ((consp aa) (fsi-eval aa))
-     (t (format "%s: %s" nick str)))))
+     (t (format "%s: %s" fs-victim str)))))
 
     
 
