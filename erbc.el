@@ -1246,14 +1246,17 @@ Optional argument ARGS ."
 	   erbot-end-user-nick)))
     (if (string= (format "%s" target) "me")
 	(setq target erbot-end-user-nick))
-    (eval 
-     (erbutils-random
-      '(
-	
-	(format (erbutils-random erbdata-flames)
-		target target target)
-	(concat target ": " (flame-string)))
-      '(1 30)))))
+    ;; Check for flame.el support
+    (if (featurep 'flame)
+        (eval
+         (erbutils-random
+          '(
+            (format (erbutils-random erbdata-flames)
+                    target target target)
+            (concat target ": " (flame-string)))
+          '(1 30)))
+      (format (erbutils-random erbdata-flames)
+              target target target))))
 
 ;; remove kill
 ;(defun fs-kill (&optional nick &rest nicks)
