@@ -1,3 +1,14 @@
+2004-06-13 S Freundt <hroptatyr@gna.org>
+	* erbot.el: added new var erbot-on-new-erc-p 
+	and handlers for new erc-backend facilities.
+
+	erc versions >1.660 use erc-backend.el to handle server
+	events. erbot is now aware of these new handlers by
+	determining the value `erbot-on-new-erc-p' when calling
+	`erbot-install'.
+	The new backend handlers' values are evaluated within
+	`erbot-remote' fun.
+
 2004-05-07  D Goel  <deego@gnufans.org>
 
 	* erbwiki.el: Security, add new functions. 
