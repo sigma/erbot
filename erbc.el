@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-08-28 15:17:33 deego>
+;; Time-stamp: <2003-11-14 16:01:09 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -490,6 +490,7 @@ Optional argument FOO ."
        (origmsg msg)
        ;;(fs-internal-message-sans-bot-name fs-internal-message-sans-bot-name)
        (foundquery nil)
+       (foundquerydouble nil)
        (foundkarma nil)
        ;; if t, means either our name was at last, or eevn if at
        ;; first, they weren't really addressing us..
@@ -525,6 +526,19 @@ Optional argument FOO ."
 	     (string-match "\\(++\\|--\\)$" msg)
 	     (<= (length (split-string msg)) 2))
       (setq foundkarma t))
+    ;; 2003-11-14 T15:36:38-0500 (Friday)    D. Goel
+    ;; requested by elf: 
+    ;; if double ??, then make it a call to m8b
+    (let (len)
+      (when (and (stringp msg)
+		 (progn
+		   (setq len (length msg)) t)
+		 (> len  1)
+		 (string= "??"
+			  (substring msg (- len 2) len)))
+	(setq founddoublequery t)
+	(setq msg ", (m8b)")))
+
     (when (and (stringp msg)
 	       (> (length msg) 0)
 	       ;; ignore trailing ?
