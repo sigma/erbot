@@ -1,4 +1,4 @@
-;;; erbutils.el --- ;; Time-stamp: <2003-05-03 13:00:25 deego>
+;;; erbutils.el --- ;; Time-stamp: <2003-05-13 09:01:46 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -100,6 +100,7 @@
 
 ;;==========================================
 ;;; Code:
+(require 'rot13)
 
 (defgroup erbutils nil 
   "The group erbutils"
@@ -606,6 +607,17 @@ prefix-rmENTRY. "
     (goto-char (point-min))
     (funcall fcn (point-min) (point-max))
     (buffer-substring-no-properties (point-min) (point-max))))
+
+
+(defun erbutils-rot13 (str)
+  (require 'rot13)
+  (apply
+   'string
+   (mapcar
+    (lambda (i)
+      (let ((foo (aref rot13-display-table i)))
+	(if foo (aref foo 0) i)))
+    str)))
 
 
 

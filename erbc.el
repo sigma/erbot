@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-09 06:50:41 deego>
+;; Time-stamp: <2003-05-13 09:07:15 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3429,6 +3429,15 @@ last time i checked , equalp seemed to work as well.. "
 (defun erbc-unmorse (&rest str)
   (apply 'erbutils-region-to-string 'unmorse-region str))
 
+(defun erbc-rot13 (&rest str)
+  (let (st)
+    (cond
+     ((= (length str) 1)
+      (setq st (format "%s" (first str))))
+     (t (setq st (mapconcat 
+		  (lambda (a) (format "%s" a)) str " "))))
+    (erbutils-rot13 st)))
+
 (defun erbc-studlify (&rest s)
   (apply 'erbutils-region-to-string 
    (lambda (&rest args)
@@ -3447,6 +3456,10 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defalias 'erbc-h4 'erbc-h4x0r)
+(defalias 'erbc-h4 'erbc-h4xor)
+(defalias 'erbc-h4 'erbc-haxor)
+(defalias 'erbc-h4 'erbc-hax0r)
+
 (defalias 'erbc-l33t 'erbc-h4x0r)
 (defalias 'erbc-leet 'erbc-h4x0r)
 
