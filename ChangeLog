@@ -1,3 +1,15 @@
+2004-05-07  D Goel  <deego@gnufans.org>
+
+	* erbwiki.el: Security, add new functions. 
+
+	USING LINES < 0.3 FOR WIKI TRAINING WAS A SECURITY RISK, WE
+	THINK.. THOUGH WE HAVEN'T FIGURED OUT HOW TO EXPLOIT IT.
+	lines 0.3 and later fix that risk.
+
+	Also add new functions to erbwiki.el suitable for parsing more
+	wikis.
+	
+
 2004-04-06  D Goel  <deego@gnufans.org>
 
 	* erbc.el (fs-kick): Kicking syntax different?  remove nil?
