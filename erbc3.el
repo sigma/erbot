@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-02-09 13:09:38 deego>
+;; Time-stamp: <2005-02-28 16:10:57 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -267,14 +267,14 @@ to query using PROMPT, or just return t."
 
 
 
-(defmacro fsi-defun (fcn &rest body)
+(defmacro fsi-defun (fcn args &rest body)
   
   ;; the given fcn icould be a number or string, in which
    ;; case sandboxing won't touch it, so we need to override that case.
   (unless 
       (and (listp body)
-	   (> (length body) 1))
-    (error "Function body should have a length of 2 or more"))
+	   (> (length body) 0))
+    (error "Function body should have a length of 1 or more"))
   (unless (symbolp fcn)
     (error "Defun symbols only! :P"))
   
@@ -284,7 +284,12 @@ to query using PROMPT, or just return t."
    erbn-pf-file
    (erbn-create-defun-overwrite
     (erbutils-file-sexps erbn-pf-file)
-    (cons 'defun (cons fcn body)) fcn))
+    (cons 'defun 
+	  (cons fcn 
+		(cons args 
+		      (cons 
+		       '(sit-for 0)
+		       body)))) fcn))
   (fsi-pf-load)
   `(quote ,fcn))
 
