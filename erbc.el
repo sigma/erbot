@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-06-11 16:09:44 deego>
+;; Time-stamp: <2004-06-11 16:46:06 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -708,7 +708,12 @@ Optional argument FOO ."
 	 (when (> (length msg) 1)
 	   (setq msg (cdr msg)))
 	 (setq leave-alone-p nil)))
-     ((and (first (last msg)) (string-match erbot-nick (first (last msg))))
+
+     
+     ;; if it is a short sentence ending in fsbot..
+     ((and (first (last msg)) (string-match erbot-nick (first (last
+							       msg)))
+	   (< (length msg) 5))
       ;; don't want this any more.. since no sense in removing the
       ;; last term.  Example: Want: what is erbot?  to stay that way.
       ;;(progn
