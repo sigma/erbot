@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.21 2005/01/08 17:53:08 deego Exp $
+;; $Id: erbmsg.el,v 1.22 2005/02/21 15:43:37 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.21 $")
+  "Version 0.2 $Revision: 1.22 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -252,6 +252,12 @@ Note: magic words are not currently implemented."
 (defvar erbmsg-last-nicks-join nil
   "List of nicks with last join time.")
 
+(defun erbmsg-set-alist (symbol item value)
+  "Modify a alist indicated by SYMBOL to set VALUE to ITEM."
+  (or (boundp symbol)
+      (set symbol nil))
+  (set symbol (put-alist item value (symbol-value symbol))))
+
 (defun erbmsg-notify-msg-on-JOIN (process parsed)
   "Notifies users about left messages
 when joining the channel"
@@ -264,7 +270,7 @@ when joining the channel"
                          (aref parsed 2)))
               (nick (car (erc-parse-user usernickhost)))
               (last-access (cdr-safe (assoc nick erbmsg-last-nicks-join))))
-         (set-alist 'erbmsg-last-nicks-join nick (current-time))
+         (erbmsg-set-alist 'erbmsg-last-nicks-join nick (current-time))
          (setq erbmsg-internal-msg-cookie (random))
          (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie nick)))
            (and msgs
@@ -276,7 +282,7 @@ when joining the channel"
                                      channel
                                      msgs)))
            'noreply))))
-(if erbot-on-new-erc-p
+(if (and (boundp 'erbot-on-new-erc-p) erbot-on-new-erc-p)
     (add-hook 'erc-server-JOIN-functions 'erbmsg-notify-msg-on-JOIN)
   (add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN))
 

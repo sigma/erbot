@@ -1,3 +1,8 @@
+2005-02-21  S Freundt  <hroptatyr@gna.org>
+
+	* erbmsg.el: (erbmsg-notify-msg-on-JOIN) [fix] add function set-alist for
+	compatibility to FSF emacsen
+
 2004-07-26  S Freundt  <hroptatyr@gna.org>
 
 	* erbmsg.el: (erbmsg-notify-msg-on-JOIN)
