@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-17 15:19:02 deego>
+;; Time-stamp: <2003-06-17 17:27:06 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3893,9 +3893,10 @@ last time i checked , equalp seemed to work as well.. "
 (erbutils-defalias '(assoc))
 (erbutils-defalias '(eq))
 (erbutils-defalias '(message))
+(erbutils-defalias '(decf))
 (erbutils-defalias '(incf))
 (erbutils-defalias '(faith-quote))
-
+(erbutils-defalias '(zerop))
 (erbutils-defalias '(buffer-substring))
 (erbutils-defalias '(buffer-substring-no-properties))
 (erbutils-defalias '(buffer-string))
@@ -4013,6 +4014,8 @@ setq erbc-t to nil :-) ")
 	 ))))))
     
 
+(defun erbc-kick (&optional reason &rest ignore)
+  (erc-cmd-KICK erbnoc-nick nil (when reason (format "%s" reason))))
 
 (provide 'erbc)
 (run-hooks 'erbc-after-load-hooks)
