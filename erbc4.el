@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Functions contributed by #emacsers. 
-;; Time-stamp: <2003-06-19 12:25:57 deego>
+;; Time-stamp: <2003-06-20 11:02:19 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -222,12 +222,12 @@ to query using PROMPT, or just return t."
             to-whom
             (gethash to-whom erbnoc-money))))
 
-(defun keyshash (hash-table)
+(defun erbnoc-keyshash (hash-table)
   (let ((keys '()))
     (maphash (lambda (key val) (push key keys)) hash-table)
     keys))
 
-(defun valueshash (hash-table)
+(defun erbnoc-valueshash (hash-table)
   (let ((values '()))
     (maphash (lambda (key val) (push val values)) hash-table)
     values))
@@ -253,7 +253,7 @@ to query using PROMPT, or just return t."
           nick))
 
 (defun erbnoc-distribute (maybe-dead-nick winning-table losing-table)
-  (let* ((vals (valueshash losing-table))
+  (let* ((vals (erbnoc-valueshash losing-table))
          (total-losing-money
           (apply #'+
                  (if maybe-dead-nick
