@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2003-12-13 02:37:06 deego>
+;; Time-stamp: <2004-04-06 13:51:13 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -349,7 +349,9 @@ to query using PROMPT, or just return t."
                   " trembles as the *CLICK* sounds."))))
 
 (defun erbnoc-rr-bang ()
+  (fs-kick erbnoc-nick "No dead people allowed in this channel!")
   (funcall (fs-random-choose erbnoc-rr-bangs)))
+
 (defun erbnoc-rr-click ()
   (funcall (fs-random-choose erbnoc-rr-clicks)))
 
