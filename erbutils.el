@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-20 07:01:46 deego>
+;; Time-stamp: <2004-07-01 11:53:28 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -108,34 +108,39 @@
        (fs-limit-lines
         (error-message-string ,err)))))))))
 
-
+(defvar erbutils-error-debug-p nil
+  "Turn on for debugging.."
+  )
 (defun erbutils-error (&rest args)
-  (unless args (error 
-    (format "Syntax: , (fs-error msg &rest format-args)")))
-  (let* ((main
-    (erbutils-random 
-     '("oops, error.  %s"
-       ;;"Blue Screen: %s"
-       "BEEEP: %s"
-       "ERROR: %s"
-       "err..%s"
-       ":(   %s"
-       "Doh!  %s"
-       "Oh sh**!  %s"
-       "Nooo!  %s"
-       "oops,  %s"
-       "Uh oh,  %s"
-       "whoops,  %s"
-       )))
-   (result
-    (format main
-      (apply 'format args))))
-    (or
-     (ignore-errors
-       (fs-h4x0r-maybe
-  (fs-studlify-maybe
-   result)))
-     result)))
+  (cond
+   (erbutils-error-debug-p (apply 'error args))
+   (t 
+    (unless args (error 
+		  (format "Syntax: , (fs-error msg &rest format-args)")))
+    (let* ((main
+	    (erbutils-random 
+	     '("oops, error.  %s"
+	       ;;"Blue Screen: %s"
+	       "BEEEP: %s"
+	       "ERROR: %s"
+	       "err..%s"
+	       ":(   %s"
+	       "Doh!  %s"
+	       "Oh sh**!  %s"
+	       "Nooo!  %s"
+	       "oops,  %s"
+	       "Uh oh,  %s"
+	       "whoops,  %s"
+	       )))
+	   (result
+	    (format main
+		    (apply 'format args))))
+      (or
+       (ignore-errors
+	 (fs-h4x0r-maybe
+	  (fs-studlify-maybe
+	   result)))
+       result)))))
 
 
 

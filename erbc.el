@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-06-17 16:03:36 deego>
+;; Time-stamp: <2004-07-01 11:46:53 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -532,7 +532,9 @@ reply please be abbreviated. ")
 
 (defcustom fs-m8b-p nil
   "Change it to t for the magic 8-ball... define m8b then of
-course...")
+course...
+When string, will be matched against target. "
+)
 
 (defun fs-parse-preprocess-message (msg)
   (let ((len (length msg)))
@@ -616,7 +618,11 @@ Optional argument FOO ."
     ;; 2003-11-14 T15:36:38-0500 (Friday)    D. Goel
     ;; requested by elf: 
     ;; if double ??, then make it a call to m8b
-    (when fs-m8b-p
+    (when (and
+	   fs-m8b-p
+	   (if (stringp fs-m8b-p)
+	       (string-match fs-m8b-p tgt)
+	     t))
       (let (len)
 	(when (and (stringp msg)
 		   (progn
@@ -2500,8 +2506,6 @@ risky.. ")
 
 
 
-(defun fs-f-cookies (&rest args)
-  (erbnoc-fortune "cookies"))
 
 (defalias 'fs-f-cookie 'fs-f-cookies)
 (defalias 'fs-cookie 'fs-f-cookies)
@@ -2640,9 +2644,7 @@ risky.. ")
 
 
 
-(defun fs-f-startrek (&rest args)
-  (erbnoc-fortune "startrek"))
-(defalias 'fs-startrek 'fs-f-startrek)
+
 
 (defun fs-f-translate-me (&rest args)
   (erbnoc-fortune "translate-me"))
@@ -2659,8 +2661,6 @@ risky.. ")
   (erbnoc-fortune "work"))
 
 
-(defun fs-f-work (&rest args)
-  (erbnoc-fortune "work"))
 
 (defun fs-f-linux (&rest args)
   (erbnoc-fortune "linux"))
