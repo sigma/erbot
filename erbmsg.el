@@ -48,6 +48,9 @@
 (defvar erbmsg-msg-hash-table (make-hash-table :test 'equal)
   "This is a hash-table holding all the messages.")
 
+(defvar erbmsg-msg-cookie nil
+	"Message cookie for internal communication.")
+
 (defgroup erbmsg nil
 	"The erbmsg module for erbot"
 	:group 'applications)
@@ -83,7 +86,11 @@ Note: magic words are not currently implemented and just
 
 (defun fs-msg-mymsgs (&rest ignore)
 	"This is redundant but more clean than in `erbmsg-parse'."
-	(let* ((nick fs-nick)
+	(let* ((internalp (and erbmsg-msg-cookie
+												 (eq erbmsg-msg-cookie (cadr ignore))))
+				 (nick (or (and internalp
+												(caar ignore))
+									 fs-nick))
 				 (nicks-ht (gethash nick erbmsg-msg-hash-table))
 				 pending-msgs)
 		(and nicks-ht
@@ -92,7 +99,8 @@ Note: magic words are not currently implemented and just
 									nicks-ht))
 		(or (and pending-msgs 
 						 (let ((msg-cookie (erbmsg-generate-msg-cookie pending-msgs)))
-							 (format "erm, %s msgs pending, see them? %s"
+							 (format "erm, %s, %s msgs pending, see them? %s"
+											 nick
 											 (length pending-msgs)
 											 (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ,msg-cookie))
 																					(query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
@@ -100,9 +108,25 @@ Note: magic words are not currently implemented and just
 																					(flush (erbmsg-flush-pending-msgs ,nick ,msg-cookie))
 																					(no (ignore)))
 																				nick))))
-				(format ":( no msgs for you, %s" nick))))
+				(and (null internalp)
+						 (format ":( no msgs for you, %s" nick)))))
 (defalias 'fs-msgs 'fs-msg-mymsgs)
 (defalias 'fs-mymsgs 'fs-msg-mymsgs)
+
+(defun erbmsg-notify-msg-on-JOIN (process parsed)
+	"Notifies users about left messages
+when joining the channel"
+	(let* ((usernickhost (aref parsed 1))
+				 (channel (aref parsed 2))
+				 (nick (erc-parse-user usernickhost)))
+		(setq erbmsg-msg-cookie (random))
+		(let* ((msgs (fs-msg-mymsgs nick erbmsg-msg-cookie)))
+			(and msgs
+					 (erc-message "PRIVMSG"
+												(format "%s %s"
+																channel
+																msgs))))))
+(add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN)
 
 
 
@@ -154,7 +178,7 @@ see erbmsg-question part below :)."
 																							(query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
 																							(post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
 																							(flush (erbmsg-flush-pending-msgs ,nick ,msg-cookie))
-																							(no (ignore)))
+																							(no (erbmsg-flush-msg-cookie ,msg-cookie)))
 																						nick)))))))
 
 
@@ -197,7 +221,7 @@ instead of PRIVMSG you may specify another sending method."
 																				(format-time-string "%D %T (%Z)" msgtime)
 																				msgtext))))
 							 msgs)
-				 (remhash msg-cookie erbmsg-msg-hash-table))))
+				 (erbmsg-flush-msg-cookie msg-cookie))))
 
 (defun erbmsg-flush-pending-msgs (nick msg-cookie)
 	"Flushes all pending messages for user `nick'."
@@ -205,6 +229,10 @@ instead of PRIVMSG you may specify another sending method."
 	(remhash nick erbmsg-msg-hash-table)
 	(remhash nick erbmsg-question-hash-table)
 	(erc-send-message "flushed"))
+
+(defun erbmsg-flush-msg-cookie (msg-cookie)
+	"Flushes `msg-cookie'."
+	(remhash msg-cookie erbmsg-msg-hash-table))
 
 
 ;;; just some tricks to create gazillions of msgs w/o IRC
@@ -225,6 +253,8 @@ more complex tasks.
 		(mapc (lambda (choice)
 						(let ((magic-word (car choice))
 									(action-forms (cdr choice)))
+;; 							(defalias `,(intern (format "fs-%s" choice))
+;; 								`(lambda nil (mapc 'eval ,action-forms)))
 							(puthash magic-word action-forms nicks-ht)))
 					choices)
 		(format "[type %s]"
