@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-19 14:12:25 deego>
+;; Time-stamp: <2003-06-19 14:16:08 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -209,8 +209,10 @@ to query using PROMPT, or just return t."
 
 			 
 
-(defun erbnoc-write-sexps-to-file (file sexps)
-  (erbutils-mkback-maybe file)
+(defun erbnoc-write-sexps-to-file (file sexps &optional backup-rarity)
+  (unless backup-rarity (setq backup-rarity 1))
+  (when (zerop (random backup-rarity)) (erbutils-mkback-maybe file))
+
   (find-file file)
   (widen)
   (delete-region (point-min) (point-max))
@@ -250,13 +252,17 @@ to query using PROMPT, or just return t."
      vars)))
 
 
+(defcustom fs-pv-save-rarity 1000
+  "if this is 1000, then file is saved one in as thousand times... ")
 
 ;;;###autoload
 (defun fs-pv-save ()
   (interactive)
   (erbnoc-write-sexps-to-file 
    erbnoc-pv-file 
-   (fs-pv-get-variables-values)))
+   (fs-pv-get-variables-values) 1000))
+   ;; this should lead to a few saves every day... not too many one hopes..
+;;1000))
 
 
 

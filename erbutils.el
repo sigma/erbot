@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2003-06-19 12:26:00 deego>
+;; Time-stamp: <2003-06-19 14:42:26 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -350,7 +350,7 @@ as many times as it returns a...
   (setq ctr (+ ctr 1))
   (setq rem (cdr rem))))
     (when shortenedp 
-      (setq sofar (concat sofar " .. + more entries")))
+      (setq sofar (concat sofar " .. + other entries")))
     sofar))
 
 
