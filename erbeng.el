@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2004-12-31 20:33:10 deego>
+;; Time-stamp: <2005-01-08 15:37:23 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -269,6 +269,27 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 
 
+
+
+;; proposed register syntax..
+(defun erbeng-register-syntax (fsbot-command priority check &optional
+					     remap)
+
+"If CHECK is a function, then it is passed the user input as a
+string...  If it claims a match, it should return (t arglist).
+Arglist is a list of arguments to be passed to the FSBOT-COMMAND.
+
+If CHECK is a regexp, it is matched against the user input string.  If
+it is a match, all the submatches 1....n (NOT 0) are passed to the
+function as arguments in that order, except that you can remap using
+the optional REMAP list.  That list is a list of numbers, like, say (0
+1 2 4).<-- this tells us that the arguments to be passed to the
+fsbot-command are the regexp-matches 0,1,2 4 in that order. If REMAP
+is not supplied, you can see that the default value is more-or-less
+equivalent to (1 2 3 4....)
+
+"
+nil)
 
 
 (provide 'erbeng)
