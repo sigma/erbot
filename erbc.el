@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-05 11:39:13 deego>
+;; Time-stamp: <2005-01-05 13:12:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4087,7 +4087,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (erbutils-defalias-i '(faith-correct-string))
 
-(defun erbnoc-shell-test (string substrings)
+(defun erbnoc-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
 out harmful shell code..
 
@@ -4106,7 +4106,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 	    substrings)
     found))
 
-(defalias 'fsishell-test 'erbnoc-shell-test)
+(defalias 'fsi-shell-test 'erbnoc-shell-test)
 
 ;;; 2003-02-17 T18:55:09-0500 (Monday)    D. Goel
 (defun fsi-wserver (&optional site &rest args)
