@@ -4140,35 +4140,37 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (defalias 'fsi-shell-test 'erbnoc-shell-test)
 
+(defmacro erbnoc-with-web-page-buffer (site &rest body)
+  (let ((buffer (make-symbol "web-buffer")))
+    `(let ((,buffer (url-retrieve-synchronously ,site)))
+       (save-excursion
+         (set-buffer ,buffer)
+         (goto-char (point-min))
+         (prog1
+             (progn
+               ,@body)
+           (kill-buffer ,buffer))))))
+
 (defun fsi-wserver (&optional site &rest args)
   (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (let ((buffer (url-retrieve-synchronously site)))
-    (save-excursion
-      (set-buffer buffer)
-      (goto-char (point-min))
-      (prog1
-          (buffer-substring (point-min) 
-                            (or (search-forward "\n\n" nil t)
-                                (point-max)))
-        (kill-buffer buffer)))))
+  (erbnoc-with-web-page-buffer site
+    (buffer-substring (point-min) 
+                      (or (search-forward "\n\n" nil t)
+                          (point-max)))))
 
 (defalias 'fs-webserver 'fs-wserver)
 
 (defun fsi-web (&optional site &rest args)
   (unless site (error (format "Syntax: %s web SITE" erbnoc-char)))
   (setq site (format "%s" site))
-  (let ((buffer (url-retrieve-synchronously site)))
-    (save-excursion
-      (set-buffer buffer)
-      (goto-char (point-min))
-      (shell-command-on-region (or (search-forward "\n\n" nil t)
-                                   (point-min))
-                               (point-max)
-                               "w3m -dump -T text/html" t t)
-      (prog1
-          (buffer-substring (point) (mark))
-        (kill-buffer buffer)))))
+  (erbnoc-with-web-page-buffer site
+    (shell-command-on-region (or (search-forward "\n\n" nil t)
+                                 (point-min))
+                             (point-max)
+                             "w3m -dump -T text/html" t t)
+    (buffer-substring (point) (mark))))
+
 
 ;;;###autoload
 (defun fsi-length-load-history ()
