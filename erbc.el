@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-17 11:26:56 deego>
+;; Time-stamp: <2003-11-22 21:32:54 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -128,20 +128,44 @@ Make this t at your own risk. ")
   "" :group 'erbc)
 
 
-(defun erbnoc-shell-command-to-string (&rest args)
+
+(defun erbnoc-shell-command (&optional command overridep)
+  "Execute shell-commands when erbnoc-shell-command-p is true.
+
+However, if the second argument overridep is non-nil, we use that to
+determine whether to execute the command.  In that case, we execute
+the command only if overridep is a list, whose first entry of that
+list is non-nil"
   (cond
-   (erbnoc-shell-command-p
-    (apply 'shell-command-to-string args))
+   ((or (and overridep
+	     (listp overridep)
+	     (first overridep))
+	erbnoc-shell-command-p)
+    (apply 'shell-command command nil))
    (t
     (error "The bot-operator has shell commands disabled"))))
 
 
-(defun erbnoc-shell-command (&rest args)
+
+
+
+(defun erbnoc-shell-command-to-string (&optional command overridep)
+  "Execute shell-commands when erbnoc-shell-command-p is true.
+
+However, if the second argument overridep is non-nil, we use that to
+determine whether to execute the command.  In that case, we execute
+the command only if overridep is a list, whose first entry of that
+list is non-nil"
   (cond
-   (erbnoc-shell-command-p
-    (apply 'shell-command args))
+   ((or (and overridep
+	     (listp overridep)
+	     (first overridep))
+	erbnoc-shell-command-p)
+    (apply 'shell-command-to-string command nil))
    (t
     (error "The bot-operator has shell commands disabled"))))
+
+
 
 
 
@@ -2310,9 +2334,16 @@ Syntax: , no foo is bar."
       (apply 'fs-set-term args))))
 
 
+(defcustom fs-fortune-p t
+  "This is true by default.. since (shell-command \"fortune\") is not
+risky.. ")
+
+  
 (defun fs-fortune (&rest args)
   (erbutils-eval-until-limited
-   '(erbnoc-shell-command-to-string "fortune")))
+   '(erbnoc-shell-command-to-string "fortune" 
+				    (list fs-fortune-p)
+				    )))
 
 
 
