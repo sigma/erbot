@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-12-31 20:20:01 deego>
+;; Time-stamp: <2004-12-31 20:55:53 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -115,8 +115,13 @@ this string shoul dhave a length 2
 
 
 
-(defvar fs-tgt "")
+(defvar fs-tgt "Tgt visible to the end-user, as well as changeable by them.")
+(defvar erbnoc-tgt "Tgt visible to the end-user, but NOT changeable by them.")
+
 (defvar fs-nick "")
+(defvar erbnoc-nick "")
+
+(defvar erbnoc-buffer "")
 
 (defcustom fs-internal-parse-error-p 
   nil
@@ -127,8 +132,6 @@ go to an english mode for the term.
 When non-nil, we will just display the error.  On a channel full of
 lisp hackers, we will want to make this t for users' convenience.")
 
-(defvar erbnoc-tgt "")
-(defvar erbnoc-nick "")
 
 (defcustom erbnoc-shell-command-p nil 
   "Whether to allow commands that use shell-commands...
@@ -4599,6 +4602,28 @@ setq fs-t to nil :-) ")
 
 (defun fs-pp (object &rest ignore)
   (pp object))
+
+
+(defmacro fs-privmsg (&rest args)
+  "This macro is carefully constructed so that one user cannot force a
+query to another user. "
+  `(cond
+    ((null erbnoc-nick)
+     (progn ,@args))
+    (t
+     (progn 
+       (setq erbnoc-tgt erbnoc-nick)
+       ;; If there isn't already a buffer, create one..
+       (erbnoc-query erbnoc-nick)
+       ,@args))))
+
+(defun erbnoc-query (qnick)
+  (save-excursion (erc-query qnick erbnoc-buffer)))
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2004-07-20 14:40:36 deego>
+;; Time-stamp: <2004-12-31 20:33:10 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -261,6 +261,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 (defun erbeng-read (msg)
   (ignore-errors (read msg)))
+
 
 
 
