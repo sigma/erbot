@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-16 08:34:58 deego>
+;; Time-stamp: <2003-06-16 13:33:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1643,17 +1643,17 @@ it was addressed at last. "
    
 
 
- (defun erbc-search-basic (&optional regexp N M describep &rest rest)
+(defun erbc-search-basic (&optional regexp N M describep &rest rest)
    "Don't call directly.. meant as a building block for other functions. 
  Search for the REGEXP from among all the terms (and their
- descriptions).  See also erbc-search-wide. That function actually
+   descriptions).  See also erbc-search-wide. That function actually
  calls this function with describep set to 'describe.
 
  Returns (len list-of-pruned-results).  Len is the total number of
  results.
 
  When describep is non-nil, search the whole bbdb, not just names.. "
-   (unless regexp
+       (unless regexp
      (error "Syntax: , sw regexp &optional N M"))
    (let* ((bar (cons regexp (cons N rest)))
  	 (foo (if (stringp regexp) regexp 
@@ -3982,6 +3982,24 @@ setq erbc-t to nil :-) ")
 
 (defconst erbc-nil nil
   "See the doc of erbc-t ")
+
+
+(defun erbc-revive (&optional name)
+  (unless name (seta name nick))
+  (concat
+   "/me sprinkles some "
+   (erbutils-random
+    '("clear" "murky" "boiling" "dark" "holy" "smelly"))
+   " potion on "
+   (format "%s" name)
+   " and utters some prayers.  "
+   (erbutils-random
+    (list
+     (format "%s wakes up" name)
+     "Nothing happens."
+     (format "%s wakes up, all refreshed. " name)))))
+    
+
 
 (provide 'erbc)
 (run-hooks 'erbc-after-load-hooks)
