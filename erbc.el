@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-14 17:07:11 deego>
+;; Time-stamp: <2003-11-14 17:18:52 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -105,6 +105,13 @@ lisp hackers, we will want to make this t for users' convenience.")
 (defvar erbnoc-tgt "")
 (defvar erbnoc-nick "")
 
+(defcustom erbnoc-shell-command-p nil 
+  "Whether to allow commands that use shell-commands...
+Some fsbot commands use shell-commands... shell-commands always mean
+possibility of exploits.  andn are disabled by default. 
+
+Make this t at your own risk. ")
+
 
 (defcustom fs-internal-questions
   '("what" "where" "who" 
@@ -119,6 +126,15 @@ lisp hackers, we will want to make this t for users' convenience.")
   '(("#emacs" ("emacs"))
     ("#fsbot" ("fsbot")))
   "" :group 'erbc)
+
+
+(defun erbnoc-shell-command-to-string (&rest args)
+  (cond
+   (erbnoc-shell-command-p
+    (apply 'shell-command-to-string args))
+   (t
+    (error "The bot-operator has shell commands disabled"))))
+
 
 
 (defun fs-get-google-defaults ()
@@ -2283,7 +2299,7 @@ Syntax: , no foo is bar."
 
 (defun fs-fortune (&rest args)
   (erbutils-eval-until-limited
-   '(shell-command-to-string "fortune")))
+   '(erbnoc-shell-command-to-string "fortune")))
 
 
 
@@ -3592,7 +3608,7 @@ last time i checked , equalp seemed to work as well.. "
   (setq site (format "%s" site))
   (if (fs-shell-test site '(" " "<" "-"))
       (error "No attacks please. "))
-  (shell-command-to-string
+  (erbnoc-shell-command-to-string
    (format "w3m -dump_head %s" site)))
 (defalias 'fs-webserver 'fs-wserver)
 
@@ -3603,7 +3619,7 @@ last time i checked , equalp seemed to work as well.. "
   (setq site (format "%s" site))
   (if (fs-shell-test site '(" " "<" "-"))
       (error "No attacks please. "))
-  (shell-command-to-string
+  (erbnoc-shell-command-to-string
    (format "w3m -dump %s" site)))
 
 ;;;###autoload

@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-06-20 10:40:31 deego>
+;; Time-stamp: <2003-11-14 17:12:14 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -551,7 +551,7 @@ connected."
       (error "index page is not a stringp??"))
 
     ;;(setq index-page (concat wiki-page "action=index"))
-    (shell-command (concat "w3m -dump \"" 
+    (erbnoc-shell-command (concat "w3m -dump \"" 
 			   index-page
 			   ;;erbwiki-index-page 
 			   "\""
