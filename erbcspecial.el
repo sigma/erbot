@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-04-22 21:58:38 deego>
+;; Time-stamp: <2004-04-22 22:26:33 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -54,6 +54,74 @@ With prefix ARG, insert version string into current buffer at point."
 (eval-when-compile (require 'cl))
 
 ;;; Code:
+
+
+;; (defun fs-mapcar-old (sym seq)
+;;   "only symbols allowed at this time. "
+;;   (unless (symbolp sym)
+;;     (error "Function argument to mapcar for this bot can only be a symbol."))
+;;   (setq sym (erblisp-sandbox-quoted sym))
+;;   ;; everything should already be boxquoted.. cool
+;;   (mapcar sym seq))
+
+(defun fs-mapcar (fcn ls)
+  (apply 'mapcar 
+	 (erblisp-sandbox-quoted fcn)
+	 ls nil))
+
+
+
+
+;; (defun fs-mapc (sym seq)
+;;   "only symbols allowed at this time. "
+;;   (unless (symbolp sym)
+;;     (error "Function argument to mapcar for this bot can only be a symbol."))
+;;   (setq sym (erblisp-sandbox-quoted sym))
+;;   ;; everything should already be boxquoted.. cool
+;;   (mapc sym seq))
+
+(defun fs-mapc (fcn ls)
+  (apply 'mapc
+	 (erblisp-sandbox-quoted fcn)
+	 ls nil))
+
+
+
+(defun fs-mapconcat (fcn ls)
+  (apply 'mapconcat
+	 (erblisp-sandbox-quoted fcn)
+	 ls nil))
+
+
+
+
+
+(defun fs-maplist (fcn ls &rest args)
+  (apply 'maplist
+	 (erblisp-sandbox-quoted fcn)
+	 ls args))
+
+
+
+(defun fs-mapl (fcn ls &rest args)
+  (apply 'mapl
+	 (erblisp-sandbox-quoted fcn)
+	 ls args))
+
+(defun fs-mapcar* (fcn ls &rest args)
+  (apply 'mapcar*
+	 (erblisp-sandbox-quoted fcn)
+	 ls args))
+
+
+
+(defun fs-mapcon (fcn ls &rest args)
+  (require 'cl)
+  (apply 'mapcon
+	 (erblisp-sandbox-quoted fcn)
+	 ls args))
+
+
 
 
 

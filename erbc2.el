@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-08-04 17:51:52 deego>
+;; Time-stamp: <2004-04-22 22:26:52 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -89,21 +89,8 @@
   (pp foo))
 
 
-(defun fs-mapcar (sym seq)
-  "only symbols allowed at this time. "
-  (unless (symbolp sym)
-    (error "Function argument to mapcar for this bot can only be a symbol."))
-  (setq sym (erblisp-sandbox-quoted sym))
-  ;; everything should already be boxquoted.. cool
-  (mapcar sym seq))
 
-(defun fs-mapc (sym seq)
-  "only symbols allowed at this time. "
-  (unless (symbolp sym)
-    (error "Function argument to mapcar for this bot can only be a symbol."))
-  (setq sym (erblisp-sandbox-quoted sym))
-  ;; everything should already be boxquoted.. cool
-  (mapc sym seq))
+
 
 
 (defvar erbnoc-tmp-avar nil)
