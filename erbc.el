@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-29 14:39:34 deego>
+;; Time-stamp: <2005-03-29 14:54:42 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4950,6 +4950,9 @@ Note: Used by fs-describe"
 
 
 (erbutils-defalias-i '(ignore))
+
+(erbutils-defalias-i '(caar elt))
+
 (provide 'erbc)
 (run-hooks 'fs-after-load-hooks)
 
