@@ -367,7 +367,7 @@ to query using PROMPT, or just return t."
         (setq erbnoc-chamber (random 6))
         ;; Don't let them do that, because it confuses the distribution
         ;; process.
-        (if (gethash nick erbnoc-RR-bullet-bets)
+        (if (gethash (intern nick) erbnoc-RR-bullet-bets)
             (error (concat nick ": Idiot, don't bet on your own death.")))
         (erbnoc-distribute (intern nick)
                            erbnoc-RR-bullet-bets
