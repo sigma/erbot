@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-14 16:01:09 deego>
+;; Time-stamp: <2003-11-14 17:07:11 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -38,6 +38,8 @@
 
 
 (defvar erbc-version "NA")
+(defvar fs-version "20031114")
+
 
 ;;==========================================
 ;;; Code:
@@ -307,8 +309,15 @@ kbds's them first... , so that , df C-x C-c works"
 	       (mapconcat '(lambda (arg) (format "%s" arg))
 			  (cons key args)
 			  " "))))
+  (let ((b (key-binding key)))
+    (cond
+     ((symbolp b)
+      (or 
+       (ignore-errors (fs-describe-function b))
+       (format "Bound to: %s" b)))
+     (t 
+      (format "Bound to: %s" b)))))
 
-  (fs-describe-function (key-binding key)))
 
 
 (defun fs-describe-function (&optional function nolimitp &rest fubar)
@@ -4090,7 +4099,7 @@ setq fs-t to nil :-) ")
 
 (erbutils-defalias '(string-match))
 
-(defun erbc-pp (object &rest ignore)
+(defun fs-pp (object &rest ignore)
   (pp object))
 
 (provide 'erbc)
