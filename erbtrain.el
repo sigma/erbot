@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2003-12-20 17:32:53 deego>
+;; Time-stamp: <2004-05-20 09:41:47 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -318,7 +318,7 @@ to query using PROMPT, or just return t."
 ;;;###autoload
 (defun erbtrain-keep-alive ()
   (interactive)
-  (idledo-nullify)
+  ;;(idledo-nullify)
   (setq erbtrain-keep-alive-timer 
 	(run-with-timer 30
 			10
