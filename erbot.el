@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-01-05 11:15:08 deego>
+;; Time-stamp: <2005-01-08 12:52:18 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -468,7 +468,7 @@ For newer erc, see `erbot-on-new-erc-p' and read the specs of
 the new erc-backend functions."
   (set-buffer (process-buffer proc))
   (let* (
-	 (erbnoc-buffer (erc-server-buffer))
+	 (erbn-buffer (erc-server-buffer))
 	 (sspec (cond (erbot-on-new-erc-p
 		       (erc-response.sender parsed))
 		      (t (aref parsed 1))))
@@ -478,7 +478,7 @@ the new erc-backend functions."
 	 ;; independent and do not affect each other.. when it is
 	 ;; parsing too many messages once..
 	 (fs-nick nick)
-	 (erbnoc-nick nick)
+	 (erbn-nick nick)
 	 (cmdargs (and erbot-on-new-erc-p
 		       (erc-response.command-args parsed)))
 	 (tgta (cond (cmdargs
@@ -487,7 +487,7 @@ the new erc-backend functions."
 	 (tgt (if (equalp tgta (or (erc-current-nick) erbot-nick))
 		  nick
 		tgta))
-	 (erbnoc-tgt tgt)
+	 (erbn-tgt tgt)
 	 (fs-tgt tgt)
 	 (msg (cond (cmdargs
 		     (nth 1 cmdargs))
@@ -503,10 +503,10 @@ the new erc-backend functions."
 
     (setq erbot-end-user-nick-latest erbot-end-user-nick)
     ;;(setq fs-tgt tgt)
-    ;;(setq erbnoc-tgt tgt)
+    ;;(setq erbn-tgt tgt)
 
     ;;(setq fs-nick nick)
-    ;;(setq erbnoc-nick nick)
+    ;;(setq erbn-nick nick)
 
     (let ((msgg
 	   (erbeng-main msg proc nick tgt nil userinfo)))
@@ -520,7 +520,7 @@ the new erc-backend functions."
 	nil)
        (t (erbot-reply
 	   msgg
-	   proc erbnoc-nick erbnoc-tgt msg nil
+	   proc erbn-nick erbn-tgt msg nil
 	   )))
 
       ))

@@ -182,7 +182,7 @@ is used to prevent users from learning a url more than once.")
     (ignore-errors (load erbjavadoc-data-file))))
 
 (defun erbjavadoc-save-data ()
-  (erbnoc-write-sexps-to-file erbjavadoc-data-file
+  (erbn-write-sexps-to-file erbjavadoc-data-file
                               (list `(setq erbjavadoc-scraped-urls
                                            ',erbjavadoc-scraped-urls))))
 
@@ -242,7 +242,7 @@ erbot.el invokes this function."
 			       ;; extra parameters to our callback 
 			       ;; functions. We need these so that
 			       ;; we can invoke erbot-reply.
-			       (list base proc erbnoc-nick tgt))))
+			       (list base proc erbn-nick tgt))))
       (push base erbjavadoc-scraped-urls)
       (erbjavadoc-save-data)
       (format "I'm downloading the javadocs now ..."))))

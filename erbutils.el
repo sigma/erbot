@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-01-07 22:18:32 deego>
+;; Time-stamp: <2005-01-08 12:52:29 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -677,7 +677,7 @@ lisp file, else error. "
 (defun erbutils-concat-symbols (&rest args)
   "Like `concat' but applies to symbols, and returns an interned
 concatted symbol.  Also see fsbot's
-`erbnoc-command-list-from-prefix'.  
+`erbn-command-list-from-prefix'.  
 
 Thanks to edrx on #emacs for suggesting 'symbol-name.."
   (let* ((strings (mapcar 'symbol-name args))

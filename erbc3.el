@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-01-01 17:34:19 deego>
+;; Time-stamp: <2005-01-08 12:52:25 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -172,33 +172,33 @@ to query using PROMPT, or just return t."
 ;; pf stands for persistent functions.
 ;; pv stands for persistent variables.
 
-(defvar erbnoc-pf-file "~/public_html/data/userfunctions.el")
-(defvar erbnoc-pv-file "~/public_html/data/uservariables.el")
+(defvar erbn-pf-file "~/public_html/data/userfunctions.el")
+(defvar erbn-pv-file "~/public_html/data/uservariables.el")
 
 (defun fsi-pfpv-load ()
   (fsi-pf-load)
   (fsi-pv-load))
 
 (defun fsi-pf-load ()
-  (when (file-exists-p erbnoc-pf-file)
-	 (ignore-errors (load erbnoc-pf-file))))
+  (when (file-exists-p erbn-pf-file)
+	 (ignore-errors (load erbn-pf-file))))
 
 (defun fsi-pv-load ()
-  (when (file-exists-p erbnoc-pv-file)
-    (ignore-errors (load erbnoc-pv-file))))
+  (when (file-exists-p erbn-pv-file)
+    (ignore-errors (load erbn-pv-file))))
 
 	 
 
 (defun fsi-user-function-p (fcn)
   (member 
    fcn 
-   (erbutils-functions-in-file erbnoc-pf-file)))
+   (erbutils-functions-in-file erbn-pf-file)))
 
 
-(defun erbnoc-create-defun-new (sexps body)
+(defun erbn-create-defun-new (sexps body)
   (cons body sexps))
 
-(defun erbnoc-create-defun-overwrite (sexps body fcn)
+(defun erbn-create-defun-overwrite (sexps body fcn)
   (cons body
 	(remove
 	 (first (member-if
@@ -208,7 +208,7 @@ to query using PROMPT, or just return t."
 
 			 
 
-(defun erbnoc-write-sexps-to-file (file sexps &optional backup-rarity)
+(defun erbn-write-sexps-to-file (file sexps &optional backup-rarity)
   (unless backup-rarity (setq backup-rarity 1))
   (when (zerop (random backup-rarity)) (erbutils-mkback-maybe file))
 
@@ -222,8 +222,8 @@ to query using PROMPT, or just return t."
   (insert "\n\n\n")
   (save-buffer))
 
-(defvar erbnoc-tmp-sexps)
-(defvar erbnoc-tmp-newbody)
+(defvar erbn-tmp-sexps)
+(defvar erbn-tmp-newbody)
 
 
 
@@ -250,15 +250,15 @@ to query using PROMPT, or just return t."
 ;;;###autoload
 (defun fsi-pv-save ()
   (interactive)
-  (erbnoc-write-sexps-to-file 
-   erbnoc-pv-file 
+  (erbn-write-sexps-to-file 
+   erbn-pv-file 
    (fs-pv-get-variables-values) 1000))
    ;; this should lead to a few saves every day... not too many one hopes..
 ;;1000))
 
 
    
-(defun erbnoc-readonly-check (sym)
+(defun erbn-readonly-check (sym)
   (if (get sym 'readonly)
       (error "The symbol %S can't be redefined! It is read-only!"
 	     sym)))
@@ -273,12 +273,12 @@ to query using PROMPT, or just return t."
   (unless (symbolp fcn)
     (error "Defun symbols only! :P"))
 
-  (erbnoc-readonly-check fcn)
+  (erbn-readonly-check fcn)
 
-  (erbnoc-write-sexps-to-file
-   erbnoc-pf-file
-   (erbnoc-create-defun-overwrite
-    (erbutils-file-sexps erbnoc-pf-file)
+  (erbn-write-sexps-to-file
+   erbn-pf-file
+   (erbn-create-defun-overwrite
+    (erbutils-file-sexps erbn-pf-file)
     (cons 'defun (cons fcn body)) fcn))
   (fsi-pf-load)
   `(quote ,fcn))
@@ -311,18 +311,18 @@ to query using PROMPT, or just return t."
   (setq sym
 	(erblisp-sandbox sym))
 
-  (erbnoc-readonly-check sym)
+  (erbn-readonly-check sym)
 
   (let 
       ;; this is to be returned..
       ((result (fmakunbound sym))
-       (sexps       (erbutils-file-sexps erbnoc-pf-file)))
+       (sexps       (erbutils-file-sexps erbn-pf-file)))
 	
     ;; now we want to remove any definition of sym from the user
     ;; file: 
     
-    (erbnoc-write-sexps-to-file
-     erbnoc-pf-file
+    (erbn-write-sexps-to-file
+     erbn-pf-file
      (remove 
       (first 
        (member-if
@@ -333,13 +333,13 @@ to query using PROMPT, or just return t."
     result))
 
 
-(defvar erbnoc-tmpsetq nil)
+(defvar erbn-tmpsetq nil)
 
 (defmacro fsi-setq (&rest args)
-  `(let ((erbnoc-tmpsetq
+  `(let ((erbn-tmpsetq
 	  (setq ,@args)))
      (fs-pv-save)
-     erbnoc-tmpsetq))
+     erbn-tmpsetq))
 
 
 

@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-12-31 22:40:24 deego>
+;; Time-stamp: <2005-01-08 12:52:24 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -56,7 +56,7 @@ With prefix ARG, insert version string into current buffer at point."
 
 ;;; Code:
 
-(defun erbnoc-special-quote-function (fcn)
+(defun erbn-special-quote-function (fcn)
   (cond
    ((symbolp fcn)
     (erblisp-sandbox-quoted fcn))
@@ -64,7 +64,7 @@ With prefix ARG, insert version string into current buffer at point."
 	 (equal (first fcn) 'lambda)
 	 fcn))
    ;; notice the recursion below:
-   ((listp fcn) (erbnoc-special-quote-function (fs-eval fcn)))
+   ((listp fcn) (erbn-special-quote-function (fs-eval fcn)))
    (t (error "Cannot apply this as a function!"))))
 
 
@@ -78,7 +78,7 @@ With prefix ARG, insert version string into current buffer at point."
 
 (defun fsi-mapcar (fcn ls)
   (apply 'mapcar 
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls nil))
 
 
@@ -97,14 +97,14 @@ With prefix ARG, insert version string into current buffer at point."
 
 (defun fsi-mapc (fcn ls)
   (apply 'mapc
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls nil))
 
 
 
 (defun fsi-mapconcat (fcn ls sep)
   (apply 'mapconcat
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls sep nil))
 
 
@@ -116,7 +116,7 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fsi-maplist (fcn ls &rest args)
   (require 'cl)
   (apply 'maplist
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls args))
 
 
@@ -124,13 +124,13 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fsi-mapl (fcn ls &rest args)
   (require 'cl)
   (apply 'mapl
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls args))
 
 (defun fsi-mapcar* (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcar*
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls args))
 
 
@@ -138,7 +138,7 @@ With prefix ARG, insert version string into current buffer at point."
 (defun fsi-mapcon (fcn ls &rest args)
   (require 'cl)
   (apply 'mapcon
-	 (erbnoc-special-quote-function fcn)
+	 (erbn-special-quote-function fcn)
 	 ls args))
 
 

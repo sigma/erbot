@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2004-12-31 22:45:55 deego>
+;; Time-stamp: <2005-01-08 12:52:25 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -175,8 +175,8 @@ to query using PROMPT, or just return t."
 
 (ignore-errors (require 'calc))
 
-(defvar erbnoc-calc-time 3)
-(defcustom erbnoc-calc-p nil
+(defvar erbn-calc-time 3)
+(defcustom erbn-calc-p nil
   "Enable this variable at your own risk.
 Enabling this means that fsbot will do calc operations, but those have
 no timeout build in... leading to DOS attacks. ")
@@ -191,13 +191,13 @@ waiting for user input..
 which is why turned off by default.
 
 "
-  (unless erbnoc-calc-p 
+  (unless erbn-calc-p 
     (error "Sorry, but i am a bot! not a calc!"))
   (unless str (error "Eval what?"))
   (unless (stringp str)
     (setq str (format "%s" str)))
   (with-timeout 
-      (erbnoc-calc-time "That's WAY too much math for me!")
+      (erbn-calc-time "That's WAY too much math for me!")
     (calc-eval str)))
     
 (defalias 'fs-calc 'fs-calc-eval)
@@ -205,7 +205,7 @@ which is why turned off by default.
 (erbutils-defalias '(process-list))
 (defalias 'fs-list-processes 'fs-process-list)
 
-(defcustom erbnoc-sregex-p nil
+(defcustom erbn-sregex-p nil
   "Nil by default for safety. Enable to permit fs-sregex.
 I think it is safe, but not 100% sure, so disabled by default. --DG"
   )
@@ -218,7 +218,7 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
 
 (defun fsi-sregex (&rest args)
   (cond
-   (erbnoc-sregex-p
+   (erbn-sregex-p
     (apply 'sregex args))
    (t
     (error "sregexp is disabled in this bot. "))))

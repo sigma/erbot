@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-08 00:16:38 deego>
+;; Time-stamp: <2005-01-08 12:52:26 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -87,7 +87,7 @@
 
 
 
-(defcustom erbnoc-char ","
+(defcustom erbn-char ","
   "The character which calls the bot.
 
 in addition to directly addressing it.
@@ -97,7 +97,7 @@ different bots.
 
 Is really a string, but the length of the string should be 1,. 
 ")
-(defcustom erbnoc-char-double (concat erbnoc-char erbnoc-char)
+(defcustom erbn-char-double (concat erbn-char erbn-char)
   "The string which calls the bot from midsentence
 
 this string should have a length of EXACTLY 2.
@@ -116,12 +116,12 @@ this string should have a length of EXACTLY 2.
 
 
 (defvar fs-tgt "Tgt visible to the end-user, as well as changeable by them.")
-(defvar erbnoc-tgt "Tgt visible to the end-user, but NOT changeable by them.")
+(defvar erbn-tgt "Tgt visible to the end-user, but NOT changeable by them.")
 
 (defvar fs-nick "")
-(defvar erbnoc-nick "")
+(defvar erbn-nick "")
 
-(defvar erbnoc-buffer "")
+(defvar erbn-buffer "")
 
 (defcustom fs-internal-parse-error-p 
   nil
@@ -133,7 +133,7 @@ When non-nil, we will just display the error.  On a channel full of
 lisp hackers, we will want to make this t for users' convenience.")
 
 
-(defcustom erbnoc-shell-command-p nil 
+(defcustom erbn-shell-command-p nil 
   "Whether to allow commands that use shell-commands...
 Some fsbot commands use shell-commands... shell-commands always mean
 possibility of exploits.  andn are disabled by default. 
@@ -150,15 +150,15 @@ Make this t at your own risk. ")
   ""
   :group 'erbc)
 		  
-(defcustom erbnoc-google-defaults 
+(defcustom erbn-google-defaults 
   '(("#emacs" ("emacs"))
     ("#fsbot" ("fsbot")))
   "" :group 'erbc)
 
 
 
-(defun erbnoc-shell-command (&optional command overridep)
-  "Execute shell-commands when erbnoc-shell-command-p is true.
+(defun erbn-shell-command (&optional command overridep)
+  "Execute shell-commands when erbn-shell-command-p is true.
 
 However, if the second argument overridep is non-nil, we use that to
 determine whether to execute the command.  In that case, we execute
@@ -168,7 +168,7 @@ list is non-nil"
    ((or (and overridep
 	     (listp overridep)
 	     (first overridep))
-	erbnoc-shell-command-p)
+	erbn-shell-command-p)
     (apply 'shell-command command nil))
    (t
     (error "The bot-operator has shell commands disabled"))))
@@ -177,8 +177,8 @@ list is non-nil"
 
 
 
-(defun erbnoc-shell-command-to-string (&optional command overridep)
-  "Execute shell-commands when erbnoc-shell-command-p is true.
+(defun erbn-shell-command-to-string (&optional command overridep)
+  "Execute shell-commands when erbn-shell-command-p is true.
 
 However, if the second argument overridep is non-nil, we use that to
 determine whether to execute the command.  In that case, we execute
@@ -188,7 +188,7 @@ list is non-nil"
    ((or (and overridep
 	     (listp overridep)
 	     (first overridep))
-	erbnoc-shell-command-p)
+	erbn-shell-command-p)
     (apply 'shell-command-to-string command nil))
    (t
     (error "The bot-operator has shell commands disabled"))))
@@ -198,7 +198,7 @@ list is non-nil"
 
 
 (defun fsi-get-google-defaults ()
-  (cadr (assoc fs-tgt erbnoc-google-defaults)))
+  (cadr (assoc fs-tgt erbn-google-defaults)))
 
 (defvar fs-prestring  "")
 ;; (make-variable-buffer-local 'fs-prestring)
@@ -594,7 +594,7 @@ Optional argument FOO ."
     (unless (stringp origmsg)
       (setq origmsg (format "%s" origmsg)))
     (unless msg 
-      (error "Format: %s (parse \"your-english-message\")" erbnoc-char))
+      (error "Format: %s (parse \"your-english-message\")" erbn-char))
     (unless (stringp msg)
       (setq msg (format "%s" msg)))
     ;; remove leading spaces..
@@ -636,11 +636,11 @@ Optional argument FOO ."
 		   ;;(or
 		   ;;(string-match 
 		   ;;erbot-nick msg)
-		   ;;(string-match (concat "^" erbnoc-char) msg)
-		   ;;(string-match erbnoc-char-double  msg))
+		   ;;(string-match (concat "^" erbn-char) msg)
+		   ;;(string-match erbn-char-double  msg))
 		   )
 	  (setq founddoublequery t)
-	  (setq msg (concat erbnoc-char " (m8b)")))))
+	  (setq msg (concat erbn-char " (m8b)")))))
 
     (when (and (stringp msg)
 	       (> (length msg) 0)
@@ -671,21 +671,21 @@ Optional argument FOO ."
     (let (pos)
       (when 
 	  (and (not (equal 0
-			   (string-match erbnoc-char msg)))
+			   (string-match erbn-char msg)))
 	       (not 
 		(let ((nickpos (string-match erbot-nick msg)))
 		  (and nickpos
 		       (< nickpos 3))))
 	       ;; part of and
 	       (setq pos 
-		     (string-match erbnoc-char-double msg)))
+		     (string-match erbn-char-double msg)))
 	(setq msg (substring msg (+ pos 1)))
-	(when (setq pos (string-match erbnoc-char-double msg))
+	(when (setq pos (string-match erbn-char-double msg))
 	  (setq msg (substring msg 0 pos)))))
 
     ; deal with the leading , or ,,
     (when (equal 0
-		 (string-match erbnoc-char msg))
+		 (string-match erbn-char msg))
       (let ((restmsg (substring msg 1)))
 	(when (equal 0 (string-match "," restmsg))
 	  (setq restmsg (substring restmsg 1)))
@@ -887,7 +887,7 @@ Optional argument FOO ."
 	   (cond
 	    
 	    ;; are in a read mode..
-	    (erbnoc-read-mode
+	    (erbn-read-mode
 	     (fs-botread-feed-internal msgstr))	    
 	    ;; already in lisp form...  just need to sandbox..
 	    ((and lispmsg 
@@ -1152,8 +1152,8 @@ Else, of course, do the usual thing: viz. call describe...
     (eval 
      (erbutils-random    
       '(
-	(concat aa erbnoc-char " " fs-nick)
-	(concat fs-nick erbnoc-char " " aa))))))
+	(concat aa erbn-char " " fs-nick)
+	(concat fs-nick erbn-char " " aa))))))
 
 (defun fs-greet (&optional nick &rest args)
   ".
@@ -1380,15 +1380,15 @@ Optional argument ARGS ."
 
 (defun fsi-command-list (&rest foo)
   "Used by erbc.el and by erbot-install.. "
-  (erbnoc-command-list-from-prefix "fs-"))
+  (erbn-command-list-from-prefix "fs-"))
 
 
 (defun fsi-command-list-readonly (&rest foo)
   "Used by erbc.el..  and erbot-install "
-  (erbnoc-command-list-from-prefix "fsi-"))
+  (erbn-command-list-from-prefix "fsi-"))
 
 
-(defun erbnoc-command-list-from-prefix (prefix &rest foo)
+(defun erbn-command-list-from-prefix (prefix &rest foo)
   "Used by erbc.el.. should return a string.."
   (let*
       ((longnames (erbutils-matching-functions prefix))
@@ -1577,7 +1577,7 @@ EXPR is the full initial expression, well, mostly..
 			   )))))
 
 
-(defcustom erbnoc-greeting-string
+(defcustom erbn-greeting-string
   "Greetings and Salutations from %s" "")
 
 
@@ -1605,7 +1605,7 @@ it was addressed at last. "
 	    (string-match erbot-nick (first exprlist))))
       (setq gotit t
 	    ans
-	    (format erbnoc-greeting-string
+	    (format erbn-greeting-string
 	     erbot-nick)))
       ((or
 	(member "hi" exprlist)
@@ -2046,7 +2046,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	     ))
 	   ((and expandp (member cc '("lisp")))
 	    (erbeng-main 
-	     (concat erbnoc-char " (progn "
+	     (concat erbn-char " (progn "
 		     (substring aa
 				(with-temp-buffer
 				  (insert aa)
@@ -2457,27 +2457,27 @@ Syntax: , no foo is bar."
       (apply 'fs-set-term args))))
 
 
-(defcustom erbnoc-fortune-p t
+(defcustom erbn-fortune-p t
   "This is true by default.. since (shell-command \"fortune\") is not
 risky.. ")
 
   
-(defun erbnoc-fortune (arg)
+(defun erbn-fortune (arg)
   (unless arg (setq arg ""))
   (cond
    ((string= arg "")
     (erbutils-eval-until-limited
-     '(erbnoc-shell-command-to-string (concat "fortune " arg)
-				      (list erbnoc-fortune-p)
+     '(erbn-shell-command-to-string (concat "fortune " arg)
+				      (list erbn-fortune-p)
 				      )))
    (t
-    (erbnoc-shell-command-to-string (concat "fortune " arg)
-				    (list erbnoc-fortune-p)
+    (erbn-shell-command-to-string (concat "fortune " arg)
+				    (list erbn-fortune-p)
 				    ))))
 
 
 (defun fsi-fortune (&rest args)
-  (erbnoc-fortune ""))
+  (erbn-fortune ""))
 
 
 (defalias 'fs-f 'fs-fortune)
@@ -2491,27 +2491,27 @@ risky.. ")
 
 
 (defun fs-f-f (&rest args)
-  (erbnoc-fortune "-f"))
+  (erbn-fortune "-f"))
 
 (defun fs-f-off (&rest args)
-  (erbnoc-fortune "-o"))
+  (erbn-fortune "-o"))
 (defalias 'fs-f-o 'fs-f-off)
 (defalias 'fs-f-offensive 'fs-f-off)
 
 
 (defun fs-f-debian-hints (&rest args)
-  (erbnoc-fortune "debian-hints"))
+  (erbn-fortune "debian-hints"))
 (defalias 'fs-debian-hints 'fs-f-debian-hints)
 
 
 
 (defun fs-f-twisted-quotes (&rest args)
-  (erbnoc-fortune "twisted-quotes"))
+  (erbn-fortune "twisted-quotes"))
 (defalias 'fs-quotes 'fs-f-twisted-quotes)
 (defalias 'fs-f-quotes 'fs-f-twisted-quotes)
 
 (defun fs-f-literature (&rest args)
-  (erbnoc-fortune "literature"))
+  (erbn-fortune "literature"))
 (defalias 'fs-f-lit 'fs-f-literature)
 (defalias 'fs-lit 'fs-f-literature)
 (defalias 'fs-literature 'fs-f-literature)
@@ -2519,34 +2519,34 @@ risky.. ")
 
 
 (defun fs-f-riddles(&rest args)
-  (erbnoc-fortune "riddles"))
+  (erbn-fortune "riddles"))
 (defalias 'fs-riddle 'fs-f-riddles)
 
 
 
 (defun fs-f-art (&rest args)
-  (erbnoc-fortune "art"))
+  (erbn-fortune "art"))
 (defalias 'fs-art 'fs-f-art)
 
 
 
 
 (defun fs-f-bofh-excuses (&rest args)
-  (erbnoc-fortune "bofh-excuses"))
+  (erbn-fortune "bofh-excuses"))
 (defalias 'fs-bofh 'fs-f-bofh-excuses)
 
 
 
 
 (defun fs-f-ascii-art (&rest args)
-  (erbnoc-fortune "ascii-art"))
+  (erbn-fortune "ascii-art"))
 (defalias 'fs-ascii 'fs-f-ascii-art)
 
 
 
 
 (defun fs-f-computers (&rest args)
-  (erbnoc-fortune "computers"))
+  (erbn-fortune "computers"))
 
 (defalias 'fs-f-computer 'fs-f-computers)
 
@@ -2555,7 +2555,7 @@ risky.. ")
 
 
 (defun fs-f-cookies (&rest args)
-  (erbnoc-fortune "cookies"))
+  (erbn-fortune "cookies"))
 
 (defalias 'fs-f-cookie 'fs-f-cookies)
 (defalias 'fs-cookie 'fs-f-cookies)
@@ -2569,7 +2569,7 @@ risky.. ")
 
 
 (defun fs-f-definitions (&rest args)
-  (erbnoc-fortune "definitions"))
+  (erbn-fortune "definitions"))
 
 (defalias 'fs-def 'fs-f-defintions)
 
@@ -2577,7 +2577,7 @@ risky.. ")
 
 
 (defun fs-f-drugs (&rest args)
-  (erbnoc-fortune "drugs"))
+  (erbn-fortune "drugs"))
 (defalias 'fs-drugs 'fs-f-drugs)
 (defalias 'fs-drug 'fs-f-drugs)
 
@@ -2585,17 +2585,17 @@ risky.. ")
 
 
 (defun fs-f-education (&rest args)
-  (erbnoc-fortune "education"))
+  (erbn-fortune "education"))
 
 
 (defun fs-f-ethnic (&rest args)
-  (erbnoc-fortune "ethnic"))
+  (erbn-fortune "ethnic"))
 
 
 
 
 (defun fs-f-food (&rest args)
-  (erbnoc-fortune "food"))
+  (erbn-fortune "food"))
 (defalias 'fs-food 'fs-f-food)
 
 
@@ -2604,46 +2604,46 @@ risky.. ")
 
 
 (defun fs-f-goedel (&rest args)
-  (erbnoc-fortune "goedel"))
+  (erbn-fortune "goedel"))
 (defalias 'fs-goedel 'fs-f-goedel)
 
 
 
 
 (defun fs-f-humorists (&rest args)
-  (erbnoc-fortune "humorists"))
+  (erbn-fortune "humorists"))
 
 
 (defun fs-f-kids (&rest args)
-  (erbnoc-fortune "kids"))
+  (erbn-fortune "kids"))
 
 
 (defun fs-f-law (&rest args)
-  (erbnoc-fortune "law"))
+  (erbn-fortune "law"))
 
 (defalias 'fs-law 'fs-f-law)
 
 
 
 (defun fs-f-linuxcookie (&rest args)
-  (erbnoc-fortune "linuxcookie"))
+  (erbn-fortune "linuxcookie"))
 
 
 (defun fs-f-love (&rest args)
-  (erbnoc-fortune "love"))
+  (erbn-fortune "love"))
 
 (defun fs-f-magic (&rest args)
-  (erbnoc-fortune "magic"))
+  (erbn-fortune "magic"))
 
 
 
 (defun fs-f-medicine(&rest args)
-  (erbnoc-fortune "medicine"))
+  (erbn-fortune "medicine"))
 
 
 
 (defun fs-f-men-women (&rest args)
-  (erbnoc-fortune "men-women"))
+  (erbn-fortune "men-women"))
 
 (defalias 'fs-sexwar 'fs-f-men-women)
 
@@ -2652,51 +2652,51 @@ risky.. ")
 
 
 (defun fs-f-miscellaneous(&rest args)
-  (erbnoc-fortune "miscellaneous"))
+  (erbn-fortune "miscellaneous"))
 
 (defalias 'fs-f-misc 'fs-f-miscellaneous)
 
 
 
 (defun fs-f-news (&rest args)
-  (erbnoc-fortune "news"))
+  (erbn-fortune "news"))
 
 
 
 (defun fs-f-people (&rest args)
-  (erbnoc-fortune "people"))
+  (erbn-fortune "people"))
 
 
 (defun fs-f-pets (&rest args)
-  (erbnoc-fortune "pets"))
+  (erbn-fortune "pets"))
 
 
 
 (defun fs-f-platitudes (&rest args)
-  (erbnoc-fortune "platitudes"))
+  (erbn-fortune "platitudes"))
 
 
 
 (defun fs-f-politics (&rest args)
-  (erbnoc-fortune "politics"))
+  (erbn-fortune "politics"))
 
 
 (defun fs-f-science (&rest args)
-  (erbnoc-fortune "science"))
+  (erbn-fortune "science"))
 
 (defun fs-f-songs-poems (&rest args)
-  (erbnoc-fortune "songs-poems"))
+  (erbn-fortune "songs-poems"))
 
 
 (defun fs-f-sports(&rest args)
-  (erbnoc-fortune "sports"))
+  (erbn-fortune "sports"))
 
 
 
 
 
 (defun fs-f-startrek (&rest args)
-  (erbnoc-fortune "startrek"))
+  (erbn-fortune "startrek"))
 (defalias 'fs-startrek 'fs-f-startrek)
 
 
@@ -2704,35 +2704,35 @@ risky.. ")
 
 
 (defun fs-f-translate-me (&rest args)
-  (erbnoc-fortune "translate-me"))
+  (erbn-fortune "translate-me"))
 
 
 
 (defun fs-f-wisdom(&rest args)
-  (erbnoc-fortune "wisdom"))
+  (erbn-fortune "wisdom"))
 (defalias 'fs-wisdom 'fs-f-wisdom)
 
 
 
 (defun fs-f-work (&rest args)
-  (erbnoc-fortune "work"))
+  (erbn-fortune "work"))
 
 
 
 (defun fs-f-linux (&rest args)
-  (erbnoc-fortune "linux"))
+  (erbn-fortune "linux"))
 
 (defun fs-f-perl (&rest args)
-  (erbnoc-fortune "perl"))
+  (erbn-fortune "perl"))
 
 (defun fs-f-knghtbrd (&rest args)
-  (erbnoc-fortune "knghtbrd"))
+  (erbn-fortune "knghtbrd"))
 
 
 
 
 (defun fs-f-quotes-emacs-channel (&rest args)
-  (erbnoc-fortune "~/fortune-emacschannelquotes"))
+  (erbn-fortune "~/fortune-emacschannelquotes"))
 (defalias 'fs-f-emacs 'fs-f-quotes-emacs-channel)
 (defalias 'fs-f-quotes-emacs 'fs-f-quotes-emacs-channel)
 (defalias 'fs-quotes-emacs 'fs-f-quotes-emacs-channel)
@@ -2933,7 +2933,7 @@ here."
 	(setq more (buffer-substring new-point (point-max)))
 	(if 
 	    (string-match "[^ \t\n]" more )
-	    (setq ans (concat ans " ..[Type " erbnoc-char "more]"))	    
+	    (setq ans (concat ans " ..[Type " erbn-char "more]"))	    
 	  (when nomorep (setq more "")))
 	)
       )
@@ -3028,38 +3028,38 @@ here."
     
 
 (defun fsi-apropos (&optional regexp N M &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos regexp N M))
+  (fs-apropos-basic 'erbn-apropos regexp N M))
 (defun fsi-apropos-command (&optional regexp n m &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos-command regexp n m ))
+  (fs-apropos-basic 'erbn-apropos-command regexp n m ))
 (defun fsi-apropos-variable (&optional regexp n m &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos-variable regexp n m ))
+  (fs-apropos-basic 'erbn-apropos-variable regexp n m ))
 (defun fsi-apropos-function (&optional regexp n m &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos-function regexp n m ))
+  (fs-apropos-basic 'erbn-apropos-function regexp n m ))
 (defun fsi-apropos-value (&optional regexp n m &rest ignored)
   (fs-apropos-basic 'apropos-value regexp n m ))
 (defun fsi-apropos-documentation (&optional regexp n m &rest ignored)
-  (fs-apropos-basic 'erbnoc-apropos-documentation  regexp n m ))
+  (fs-apropos-basic 'erbn-apropos-documentation  regexp n m ))
 
-(defun erbnoc-apropos-documentation (reg)
+(defun erbn-apropos-documentation (reg)
   (mapcar 'car (apropos-documentation reg)))
-(defun erbnoc-apropos-command (reg)
+(defun erbn-apropos-command (reg)
   (apropos-internal reg
 		    'commandp))
 
 
 
-(defun erbnoc-apropos-function (reg)
+(defun erbn-apropos-function (reg)
   (apropos-internal reg
 		    'functionp))
 
-(defun erbnoc-apropos-variable (reg)
+(defun erbn-apropos-variable (reg)
   (apropos-internal reg 
 		    (lambda (s)
 		      (or (boundp s)
 			  (user-variable-p s)))))
 
 
-(defun erbnoc-apropos (regexp)
+(defun erbn-apropos (regexp)
   (apropos-internal regexp
 		    (lambda (symbol)
 		      (or
@@ -3455,7 +3455,7 @@ number N, and ending at M-1. The first record is numbered 0.
   "TODO: implemenet fixedcase, literal, subexp... If needed, let the
 author know.."
   (unless (and from to term)
-    (error (format "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER)" erbnoc-char)))
+    (error (format "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER)" erbn-char)))
   (erbnocmd-iterate-internal term number 'replace-regexp-in-string from to
 			     nil)
   (format "Replaced regexp %S with %S" from to))
@@ -3478,7 +3478,7 @@ author know.."
 
 (defun fsi-merge (&optional name dest &rest args)
   (unless (and name dest (not args))
-    (error (format "Syntax: %s merge TERM1 TERM2" erbnoc-char)))
+    (error (format "Syntax: %s merge TERM1 TERM2" erbn-char)))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (when (string= (downcase name) (downcase dest))
@@ -3507,7 +3507,7 @@ author know.."
 Do not confuse this function with fs-rearrange which rearranges the
 order of entries within a given term. "
   (when (or args (not (and name dest)))
-    (error (format "Format: %s mv foo bar" erbnoc-char)))
+    (error (format "Format: %s mv foo bar" erbn-char)))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (cond
@@ -3541,10 +3541,10 @@ order of entries within a given term. "
   (catch 'erbnocmd-tag-foo
     (unless (equal (length msg) 3) 
       (throw 'erbnocmd-tag-foo
-	     `(fs-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
+	     `(fs-error (format "Syntax: %s N->M in TERM" erbn-char))))
   (unless (equal (downcase (format "%s" (second msg))) "in")
     (throw 'erbnocmd-tag-foo
-	   `(fs-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
+	   `(fs-error (format "Syntax: %s N->M in TERM" erbn-char))))
   (let (term
 	fromto
 	lenfromto
@@ -3555,7 +3555,7 @@ order of entries within a given term. "
     (setq lenfromto (length fromto))
     (unless (= lenfromto 2)
       (throw 'erbnocmd-tag-foo
-	     `(fs-error (format "Syntax: %s N->M in TERM" erbnoc-char))))
+	     `(fs-error (format "Syntax: %s N->M in TERM" erbn-char))))
     `(fs-rearrange ,(first fromto) ,(second fromto) ,term))))
 
 
@@ -3699,7 +3699,7 @@ MSG here is a list which needs to be combined.  "
 (defun fsi-replace-string (&optional from to term number)
   (unless (and from to term)
     (error 
-     (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbnoc-char)))
+     (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbn-char)))
   (erbot-working
    (erbnocmd-iterate-internal 
     (or (erbbdb-get-exact-name term ) term)
@@ -3788,12 +3788,12 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defun fsi-info-file (&optional infofile regexp)
   (unless regexp 
-    (error (format "Syntax: %s info-node nodename REGEXP" erbnoc-char)))
+    (error (format "Syntax: %s info-node nodename REGEXP" erbn-char)))
   (unless (stringp regexp) (setq regexp (format "%s" regexp)))
 
 
   (unless infofile (error (format "Syntax: %s info info-file REGEXP" 
-			      erbnoc-char)))
+			      erbn-char)))
   (unless (stringp infofile) (setq infofile (format "%s" infofile)))
 
   (cond
@@ -3817,7 +3817,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defun fsi-locate-library (&optional arg &rest rest)
   "REST WILL be ignored :-)"
-  (unless arg (format (error "Syntax: %s locate-library LIB" erbnoc-char)))
+  (unless arg (format (error "Syntax: %s locate-library LIB" erbn-char)))
   (unless (stringp arg)
     (setq arg (format "%s" arg)))
   (locate-library arg))
@@ -3831,7 +3831,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 (defun fsi-dict (&optional word &rest ignore)
-  (unless word (error (format "Syntax: %s d[ict] word" erbnoc-char)))
+  (unless word (error (format "Syntax: %s d[ict] word" erbn-char)))
   (unless (stringp word) (setq word (format "%s" word)))
   (fs-dictionary-search word))
 
@@ -3920,15 +3920,15 @@ last time i checked , equalp seemed to work as well.. "
 ;;; 	 "No karma defined for %s, use ,ENTITY++ or ,karma-create" fir
 ;;; 	 )))))
 
-;;; (defvar erbnoc-karma-pt 10)
+;;; (defvar erbn-karma-pt 10)
 
 ;;; (defun fs-karma-increase (&optional arg points &rest ignore)
 ;;;   (unless arg (error "Syntax: foo++ [&optional NUMBER]"))
 ;;;   (when (stringp points)
 ;;;     (setq points (ignore-errors (read points))))
 ;;;   (unless (and (integerp points) 
-;;; 	       (<= (abs points) erbnoc-karma-pt))
-;;;     (setq points erbnoc-karma-pt))
+;;; 	       (<= (abs points) erbn-karma-pt))
+;;;     (setq points erbn-karma-pt))
 ;;;   (setq arg (downcase (format "%s" arg)))
 ;;;   (erbkarma-increase arg points))
 
@@ -3950,8 +3950,8 @@ last time i checked , equalp seemed to work as well.. "
 ;;;   (when (stringp points)
 ;;;     (setq points (ignore-errors (read points))))
 ;;;   (unless (and (integerp points) 
-;;; 	       (<= (abs points) erbnoc-karma-pt))
-;;;     (setq points erbnoc-karma-pt))
+;;; 	       (<= (abs points) erbn-karma-pt))
+;;;     (setq points erbn-karma-pt))
 ;;;   (setq arg (downcase (format "%s" arg)))
 ;;;   (erbkarma-decrease arg points))
 
@@ -3974,7 +3974,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun fsi-country (&optional ct)
-  (unless ct (error (format "Syntax: %s country NM (example , country jp)" erbnoc-char)))
+  (unless ct (error (format "Syntax: %s country NM (example , country jp)" erbn-char)))
   (setq ct (format "%s" ct))
   (let ((addp (and (> (length ct) 1)
 		   ;; does not start with .
@@ -4119,7 +4119,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (erbutils-defalias-i '(faith-correct-string))
 
-(defun erbnoc-shell-test (string &optional substrings)
+(defun erbn-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
 out harmful shell code..
 
@@ -4138,9 +4138,9 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 	    substrings)
     found))
 
-(defalias 'fsi-shell-test 'erbnoc-shell-test)
+(defalias 'fsi-shell-test 'erbn-shell-test)
 
-(defmacro erbnoc-with-web-page-buffer (site &rest body)
+(defmacro erbn-with-web-page-buffer (site &rest body)
   (let ((buffer (make-symbol "web-buffer")))
     `(let ((,buffer (url-retrieve-synchronously ,site)))
        (save-excursion
@@ -4152,9 +4152,9 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
            (kill-buffer ,buffer))))))
 
 (defun fsi-web-page-title (&optional site &rest args)
-  (unless site (error (format "Syntax: %s web-page-title SITE" erbnoc-char)))
+  (unless site (error (format "Syntax: %s web-page-title SITE" erbn-char)))
   (setq site (format "%s" site))
-  (erbnoc-with-web-page-buffer site
+  (erbn-with-web-page-buffer site
     (let* ((case-fold-search t)
            (beg (search-forward "<title>" nil t))
            (end (search-forward "</title>" nil t)))
@@ -4165,9 +4165,9 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
                 "not available")))))
 
 (defun fsi-wserver (&optional site &rest args)
-  (unless site (error (format "Syntax: %s wserver SITE" erbnoc-char)))
+  (unless site (error (format "Syntax: %s wserver SITE" erbn-char)))
   (setq site (format "%s" site))
-  (erbnoc-with-web-page-buffer site
+  (erbn-with-web-page-buffer site
     (buffer-substring (point-min) 
                       (or (search-forward "\n\n" nil t)
                           (point-max)))))
@@ -4175,9 +4175,9 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fs-webserver 'fs-wserver)
 
 (defun fsi-web (&optional site &rest args)
-  (unless site (error (format "Syntax: %s web SITE" erbnoc-char)))
+  (unless site (error (format "Syntax: %s web SITE" erbn-char)))
   (setq site (format "%s" site))
-  (erbnoc-with-web-page-buffer site
+  (erbn-with-web-page-buffer site
     (shell-command-on-region (or (search-forward "\n\n" nil t)
                                  (point-min))
                              (point-max)
@@ -4677,7 +4677,7 @@ setq fs-t to nil :-) ")
 
 (erbutils-defalias-i '(macroexpand))
 (defun fsi-kick (&optional reason &rest ignore)
-  (erc-cmd-KICK erbnoc-nick (when reason (format "%s" reason))))
+  (erc-cmd-KICK erbn-nick (when reason (format "%s" reason))))
 
 
 ;;"/usr/share/emacs/21.2/lisp/emacs-lisp/pp.el" 
@@ -4704,17 +4704,17 @@ setq fs-t to nil :-) ")
 query to another user. "
   `(cond
     ;; This can occur when you are requesting a parse..
-    ((null erbnoc-nick)
+    ((null erbn-nick)
      (progn ,@args))
     (t
      (progn 
-       (setq erbnoc-tgt erbnoc-nick)
+       (setq erbn-tgt erbn-nick)
        ;; If there isn't already a buffer, create one..
-       (erbnoc-query erbnoc-nick)
+       (erbn-query erbn-nick)
        ,@args))))
 
-(defun erbnoc-query (qnick)
-  (save-excursion (erc-query qnick erbnoc-buffer)))
+(defun erbn-query (qnick)
+  (save-excursion (erc-query qnick erbn-buffer)))
 
 
 

@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.20 2005/01/01 04:37:31 deego Exp $
+;; $Id: erbmsg.el,v 1.21 2005/01/08 17:53:08 deego Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.20 $")
+  "Version 0.2 $Revision: 1.21 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -455,7 +455,7 @@ more complex tasks.
     (format "[type %s]"
             (mapconcat (lambda (choice)
                          (format "%s%s"
-                                 erbnoc-char
+                                 erbn-char
                                  (car choice)))
                        choices "/"))))
 

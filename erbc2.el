@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2004-12-31 23:24:58 deego>
+;; Time-stamp: <2005-01-08 12:52:26 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -54,19 +54,19 @@
 
 ;;; Real Code:
 
-(defvar erbnoc-while-max 10000)
-(defvar erbnoc-while-ctr 0)
+(defvar erbn-while-max 10000)
+(defvar erbn-while-ctr 0)
 (defmacro fs-while (cond &rest body)
   `(let
-       ((erbnoc-while-ctr 0))
+       ((erbn-while-ctr 0))
      (while
 	 ,cond
        ;; this should enable the with-timeout checks..
        (sleep-for 0.01)
-       (if (> erbnoc-while-ctr erbnoc-while-max)
+       (if (> erbn-while-ctr erbn-while-max)
 	   (error "Max while iterations exceeded: %S"
-		  erbnoc-while-ctr))
-       (incf erbnoc-while-ctr)
+		  erbn-while-ctr))
+       (incf erbn-while-ctr)
        nil
        ,@body)))
        
@@ -94,10 +94,10 @@
 
 
 
-(defvar erbnoc-tmp-avar nil)
-(defvar erbnoc-tmp-newargs nil)
+(defvar erbn-tmp-avar nil)
+(defvar erbn-tmp-newargs nil)
 
-(defun erbnoc-apply-sandbox-args-old (args)
+(defun erbn-apply-sandbox-args-old (args)
   (cond
    ((= (length args) 0) nil)
    ((= (length args) 1) 
@@ -105,8 +105,8 @@
       (mapcar 'erblisp-sandbox-quoted args)))
    (t
     (cons (erblisp-sandbox-quoted (car args))
-	  (erbnoc-apply-sandbox-args (cdr args))))))
-(defun erbnoc-apply-sandbox-args (args)
+	  (erbn-apply-sandbox-args (cdr args))))))
+(defun erbn-apply-sandbox-args (args)
   (cond
    ((not (listp args))
     (erblisp-sandbox args))
@@ -114,44 +114,44 @@
    (t
     (mapcar 'erblisp-sandbox args))))
 
-(defvar erbnoc-apptmpa)
-(defvar erbnoc-apptmpb)
-(defvar erbnoc-apptmpc)
-(defvar erbnoc-apptmpd)
-(defvar erbnoc-tmpsymbolp)
+(defvar erbn-apptmpa)
+(defvar erbn-apptmpb)
+(defvar erbn-apptmpc)
+(defvar erbn-apptmpd)
+(defvar erbn-tmpsymbolp)
 
 
 (defmacro fs-apply (fcnsym &rest args)
   ""
   (unless fcnsym (error "No function to fs-apply!"))
-  (let (erbnoc-tmpargs
-	(erbnoc-tmplen (length args))
-	erbnoc-tmpfirstargs
-	erbnoc-lastargs
-	erbnoc-tmpspecialp ;; denotes: NIL: no arguments at all.
-	erbnoc-tmpnoinitialp ;; denotes the case when the len args =1..
+  (let (erbn-tmpargs
+	(erbn-tmplen (length args))
+	erbn-tmpfirstargs
+	erbn-lastargs
+	erbn-tmpspecialp ;; denotes: NIL: no arguments at all.
+	erbn-tmpnoinitialp ;; denotes the case when the len args =1..
 	)
     (cond
      ((= (length args) 0)
-      (setq erbnoc-tmpspecialp t))
+      (setq erbn-tmpspecialp t))
      ((= (length args) 1)
-      (setq erbnoc-tmpnoinitialp t)))
+      (setq erbn-tmpnoinitialp t)))
     (cond
      ((null args)
-      (setq erbnoc-tmpargs nil)
-      (setq erbnoc-tmplastargs nil)
-      (setq erbnoc-tmpspecialp nil))
+      (setq erbn-tmpargs nil)
+      (setq erbn-tmplastargs nil)
+      (setq erbn-tmpspecialp nil))
      (t
-      (setq erbnoc-tmpargs
-	    (append (subseq args 0 (- erbnoc-tmplen 1))))
-      (setq erbnoc-tmplastargs
+      (setq erbn-tmpargs
+	    (append (subseq args 0 (- erbn-tmplen 1))))
+      (setq erbn-tmplastargs
 	    (first (last args)))))
-    (setq erbnoc-tmpargs (erbnoc-apply-sandbox-args erbnoc-tmpargs))
-    (setq erbnoc-tmplastargs 
-	  (if (and (listp erbnoc-tmplastargs)
-	       (equal (car erbnoc-tmplastargs) 'quote))
-	      erbnoc-tmplastargs
-	    (erbnoc-apply-sandbox-args erbnoc-tmplastargs)))
+    (setq erbn-tmpargs (erbn-apply-sandbox-args erbn-tmpargs))
+    (setq erbn-tmplastargs 
+	  (if (and (listp erbn-tmplastargs)
+	       (equal (car erbn-tmplastargs) 'quote))
+	      erbn-tmplastargs
+	    (erbn-apply-sandbox-args erbn-tmplastargs)))
     (cond
      ((listp fcnsym)
       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
@@ -159,46 +159,46 @@
       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
      (t (error "No clue how to apply that. ")))
     (cond
-     (erbnoc-tmpspecialp
+     (erbn-tmpspecialp
       `(apply ,fcnsym nil))
-     (erbnoc-tmpnoinitialp
-      `(apply ,fcnsym ,erbnoc-tmplastargs))
+     (erbn-tmpnoinitialp
+      `(apply ,fcnsym ,erbn-tmplastargs))
      (t
-      `(apply ,fcnsym ,@erbnoc-tmpargs ,erbnoc-tmplastargs)))))
+      `(apply ,fcnsym ,@erbn-tmpargs ,erbn-tmplastargs)))))
 
 
 (defmacro fs-apply-old (fcnsym &rest args)
   (unless fcnsym (error "No function to fs-apply!"))
-  (let (erbnoc-tmpargs
-	(erbnoc-tmplen (length args))
-	erbnoc-tmpnewargs
+  (let (erbn-tmpargs
+	(erbn-tmplen (length args))
+	erbn-tmpnewargs
 	)
     (cond
      ((null args)
-      (setq erbnoc-tmpargs nil))
+      (setq erbn-tmpargs nil))
      (t
-      (setq erbnoc-tmpargs
-	    (append (subseq args 0 (- erbnoc-tmplen 1))
+      (setq erbn-tmpargs
+	    (append (subseq args 0 (- erbn-tmplen 1))
 		    (last args)))))
     
     (let* (
-	   (erbnoc-tmp-newargs (erbnoc-apply-sandbox-args erbnoc-tmpargs))
-	   (erbnoc-tmp-newlen (length erbnoc-tmp-newargs)))
+	   (erbn-tmp-newargs (erbn-apply-sandbox-args erbn-tmpargs))
+	   (erbn-tmp-newlen (length erbn-tmp-newargs)))
     (cond
      ((listp fcnsym)
       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
      ((symbolp fcnsym)
       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
      (t (error "No clue how to apply that. ")))
-    `(let ((erbnoc-tmp-avar ,fcnsym))
+    `(let ((erbn-tmp-avar ,fcnsym))
        (cond
-	((symbolp erbnoc-tmp-avar)
-	 (setq erbnoc-tmp-avar
-	       (erblisp-sandbox-quoted erbnoc-tmp-avar)))
+	((symbolp erbn-tmp-avar)
+	 (setq erbn-tmp-avar
+	       (erblisp-sandbox-quoted erbn-tmp-avar)))
 	(t "nada"))
-       ,(if (= erbnoc-tmp-newlen 0)
-	    `(apply erbnoc-tmp-avar nil)
-	  `(apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs nil))))))
+       ,(if (= erbn-tmp-newlen 0)
+	    `(apply erbn-tmp-avar nil)
+	  `(apply erbn-tmp-avar ,@erbn-tmp-newargs nil))))))
 
 (defmacro fs-funcall (symbol &rest args)
   `(fs-apply ,symbol ,@args nil))
@@ -208,8 +208,8 @@
 ;; hm, WTF is this?  Was it me?  silly me.. Why did I do this?? 
 (defalias 'fs-function 'identity)
 
-(defvar erbnoc-read-mode nil)
-(defvar erbnoc-read-input nil)
+(defvar erbn-read-mode nil)
+(defvar erbn-read-input nil)
 
 (defvar fs-internal-botread-prompt "Enter: ")
 
@@ -218,14 +218,14 @@
   (ignore-errors
     (erbot-reply (concat prompt "") proc nick tgt msg nil))
   (setq fs-internal-botread-prompt "Enter: ")
-  (setq erbnoc-read-mode t)
+  (setq erbn-read-mode t)
   (while 
-      (not erbnoc-read-input)
+      (not erbn-read-input)
     (sleep-for 0.1)
     (sit-for 0.1))
-  (let ((input erbnoc-read-input))
-    (setq erbnoc-read-input nil)
-    (setq erbnoc-read-mode nil)
+  (let ((input erbn-read-input))
+    (setq erbn-read-input nil)
+    (setq erbn-read-mode nil)
     input))
 
 (defun fsi-dun-mprinc (str)
@@ -234,21 +234,21 @@
   (setq fs-internal-botread-prompt str))  
     
 (defun fsi-botread-feed-internal (str)
-  (setq erbnoc-read-input str)
+  (setq erbn-read-input str)
   (format 
    "Thanks for feeding the read-line.  Msg obtained: %s"
    str)
-  (setq erbnoc-read-mode nil)
+  (setq erbn-read-mode nil)
   str)
 
 
 
 ;; i love this thing.. just no time to finish this yet..
 
-;;; (defvar erbnoc-calsmart-tmp-expr nil)
-;;; (defvar erbnoc-calsmart-tmp-exprb nil)
-;;; (defvar erbnoc-calsmart-tmp-exprc nil)
-;;; (defvar erbnoc-calsmart-tmp-error nil)
+;;; (defvar erbn-calsmart-tmp-expr nil)
+;;; (defvar erbn-calsmart-tmp-exprb nil)
+;;; (defvar erbn-calsmart-tmp-exprc nil)
+;;; (defvar erbn-calsmart-tmp-error nil)
 
 ;;; (defmacro fs-calsmart (&rest exprs)
 ;; "This will insert parenthesis appropriately, so you can type stuff
@@ -261,26 +261,26 @@
 ;;;     (t
 ;;;      `(choose-with 
 ;;;        (let* (
-;;; 	      (erbnoc-calsmart-tmp-expr expr)
-;;; 	      (erbnoc-calsmart-tmp-exprb 
-;;; 	       (erbnoc-calsmart-break-expr erbnoc-calsmart-tmp-expr))
-;;; 	      (erbnoc-calsmart-tmp-exprc 
-;;; 	       (choose (list erbnoc-calsmart-expr 
-;;; 			     erbnoc-calsmart-tmp-exprb)))
+;;; 	      (erbn-calsmart-tmp-expr expr)
+;;; 	      (erbn-calsmart-tmp-exprb 
+;;; 	       (erbn-calsmart-break-expr erbn-calsmart-tmp-expr))
+;;; 	      (erbn-calsmart-tmp-exprc 
+;;; 	       (choose (list erbn-calsmart-expr 
+;;; 			     erbn-calsmart-tmp-exprb)))
 ;;; 	      )
 ;;; 	 (cond
-;;; 	  (erbnoc-calsmart-tmp-exprb
-;;; 	   (condition-case erbnoc-calsmart-tmp-error
-;;; 	       (eval erbnoc-calsmart-tmp-exprc)
+;;; 	  (erbn-calsmart-tmp-exprb
+;;; 	   (condition-case erbn-calsmart-tmp-error
+;;; 	       (eval erbn-calsmart-tmp-exprc)
 ;;; 	     (error (choose-fail))))
 ;;; 	  ;; couldn't break.. just do the normal thing. 
-;;; 	  (t (eval erbnoc-calsmart-tmp-expr))))))))
+;;; 	  (t (eval erbn-calsmart-tmp-expr))))))))
     
 
-;;; (defun erbnoc-calsmart-break-expr (expr)
+;;; (defun erbn-calsmart-break-expr (expr)
 ;;;   "Expr is a list, which we intend to break.  WE prefer breaking such
 ;;; that the broken function gets 2 arguments.
-;;; We want to rewrap everything by erbnoc-calsmart, so things get broken
+;;; We want to rewrap everything by erbn-calsmart, so things get broken
 ;;; further..  
   
 	   

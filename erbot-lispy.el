@@ -1,5 +1,5 @@
 ;;; erbot-lispy.el --- ErBot integration in Lispy
-;; Time-stamp: <2005-01-03 00:29:20 deego>
+;; Time-stamp: <2005-01-08 12:52:18 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot-lispy.el
 ;; Package: erbot
@@ -41,10 +41,10 @@
        (progn
          (setq erbot-end-user-nick-latest nick)
          (setq fs-tgt tgt)
-         (setq erbnoc-tgt tgt)
+         (setq erbn-tgt tgt)
 
          (setq fs-nick nick)
-         (setq erbnoc-nick nick)
+         (setq erbn-nick nick)
 
          (let ((msgg
                 (erbeng-main msg nil nick tgt nil (list nick nick nick))))
