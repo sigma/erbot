@@ -167,7 +167,7 @@ when joining the channel"
               (channel (aref parsed 2))
               (nick (erc-parse-user usernickhost)))
          (setq erbmsg-internal-msg-cookie (random))
-         (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie nick)))
+         (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie (car nick))))
            (and msgs
                 (erc-message "PRIVMSG"
                              (format "%s %s"
