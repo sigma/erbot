@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-29 14:54:42 deego>
+;; Time-stamp: <2005-04-01 11:44:28 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -916,6 +916,10 @@ local, because the parent function calling this function should have
 		      msgstr
 		      ))
 		))
+
+
+	  ;; do a dead check
+	  (erbn-dead-check)
 	  
 	  (setq
 	   newmsglist
@@ -924,6 +928,9 @@ local, because the parent function calling this function should have
 	    ;; are in a read mode..
 	    (erbn-read-mode
 	     (fs-botread-feed-internal msgstr))	    
+
+
+
 	    ;; already in lisp form...  just need to sandbox..
 	    ((and lispmsg 
 		  (or
@@ -4780,6 +4787,36 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 				     units-convert-1 units-convert)))
 
 
+(defvar erbn-nicks-dead nil)
+
+(defun erbn-mark-dead (&rest ignore)
+  (let ((ni (format "%s" erbn-nick)))
+    (unless (string= ni "nil")
+      (add-to-list 'erbn-nicks-dead (format "%s" erbn-nick)))))
+
+
+
+;; allow people to mark themselves dead :-)
+(defalias 'fsi-mark-dead 'erbn-mark-dead)
+
+(defun erbn-unmark-dead (nick)
+  (setq erbn-nicks-dead  (remove (format "%s" nick) erbn-nicks-dead)))
+
+
+
+(defun erbn-dead-check (&rest ignore)
+  (when (fsi-dead-p erbn-nick)
+    (error "I see dead people! 
+                     .... (but I don't talk to them!)")))
+
+(defalias 'fsi-dead-check 'erbn-dead-check)
+
+(defun erbn-dead-p (&optional nick)
+  (unless nick (setq nick erbn-nick))
+  (member (format "%s" nick) erbn-nicks-dead))
+
+(defalias 'fsi-dead-p 'erbn-dead-p)
+
 
 
 (defun fs-give (&optional nini &rest stuff)
@@ -4840,27 +4877,31 @@ setq fs-t to nil :-) ")
   "See the doc of fs-t ")
 
 
-(defun fs-revive (&optional name &rest ignore)
+(defun fsi-revive (&optional name &rest ignore)
   (unless name (error "no one to revive"))
   (setq name (format "%s" name))
-
-  (cond
-   ((string= name nick) 
-    (concat "Thou idiot, " nick ", thou canst not revive thyself!"))
-   (t (concat
-       "/me sprinkles some "
-       (erbutils-random
-	'("clear" "murky" "boiling" "dark" "holy" "smelly"))
-       " potion on "
-       (format "%s" name)
-       " and utters some prayers.  "
-       (erbutils-random
-	(list
-	 (format "%s wakes up" name)
-	 "Nothing happens."
-	 (format "%s wakes up, all refreshed. " name)
-	 (format "%s wakes up, all confused. " name)
-	 ))))))
+  (let (ansstr)
+    (setq ansstr 
+	  (cond
+	   ((string= name nick) 
+	    (concat "Thou idiot, " nick ", thou canst not revive thyself!"))
+	   (t (concat
+	       "/me sprinkles some "
+	       (erbutils-random
+		'("clear" "murky" "boiling" "dark" "holy" "smelly"))
+	       " potion on "
+	       (format "%s" name)
+	       " and utters some prayers.  "
+	       (erbutils-random
+		(list
+		 (format "%s wakes up" name)
+		 "Nothing happens."
+		 (format "%s wakes up, all refreshed. " name)
+		 (format "%s wakes up, all confused. " name)
+		 ))))))
+    (when (string-match "wakes up" ansstr)
+      (erbn-unmark-dead name))
+    ansstr))
 
 ;; this may be unsafe, remove it:     
 ;; (defalias 'fs-sandbox-quoted 'erblisp-sandbox-quoted)
@@ -4868,8 +4909,6 @@ setq fs-t to nil :-) ")
 ;; (defalias 'fs-sandbox 'erblisp-sandbox)
 
 (erbutils-defalias-i '(macroexpand))
-(defun fsi-kick (&optional reason &rest ignore)
-  (erc-cmd-KICK erbn-nick (when reason (format "%s" reason))))
 
 
 ;;"/usr/share/emacs/21.2/lisp/emacs-lisp/pp.el" 

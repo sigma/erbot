@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2005-01-08 12:52:25 deego>
+;; Time-stamp: <2005-04-01 11:35:04 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -435,6 +435,11 @@ to query using PROMPT, or just return t."
 
 (defalias 'fsi-RR 'fs-russian-roulette)
 (defalias 'fsi-rr 'fs-russian-roulette)
+
+
+(defun fsi-kick (&optional reason &rest ignore)
+  (erbn-mark-dead)
+  (erc-cmd-KICK erbn-nick (when reason (format "%s" reason))))
 
 (provide 'erbc4)
 (run-hooks 'erbc4-after-load-hook)
