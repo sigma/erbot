@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2004-05-11 13:06:19 deego>
+;; Time-stamp: <2004-05-26 13:51:40 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -166,13 +166,33 @@ to query using PROMPT, or just return t."
 
 ;;; Real Code:
 
+;;<lion> It's like 2 lines of code to pull down the names of all the
+;;pages.
+
+;; <lion> import xmlrpclib
+;; <lion> srcwiki =xmlrpclib.ServerProxy("http://mywiki.org/?action=xmlrpc2")
+;; <lion> allpages = srcwiki.getAllPages()
+;; <lion> The wiki has to support the xml-rpc interface.
+;; <lion> But for MoinMoin,
+;;<lion> it's pretty much ubiquitous
+;; http://twistedmatrix.com/wiki/moin/WikiRpc
+;; <lion> Bayle Shanks has written a thing called the "InterWiki Gateway."
+;; <lion> It's not quite mature yet,
+;; <lion> but it's goal is to make it so that the XML-RPC API will work
+;; with any wiki.
+;; <lion> It'll just handle the back-end stuff of figuring out "what type
+;; of wiki
+;;        is it" and "how do I scrape the information out."
+;; <lion> But it's not quite there yet.
+
+
 (defcustom erbwiki-index-pages
   '(
 
 
     ("si"
      "http://www.gnufans.net/cgi-bin/singularity.pl?"
-     "\"http://www.gnufans.net/cgi-bin/singularity.pl?action=index\""
+     "\"http://localhost/cgi-bin/singularity.pl?action=index\""
      nil
      "singbot: "
      )
