@@ -307,15 +307,20 @@ to query using PROMPT, or just return t."
 	(erblisp-sandbox sym))
   (let 
       ;; this is to be returned..
-      ((result (fmakunbound sym)))
+      ((result (fmakunbound sym))
+       (sexps       (erbutils-file-sexps erbnoc-pf-file)))
+	
     ;; now we want to remove any definition of sym from the user
     ;; file: 
     
     (erbnoc-write-sexps-to-file
      erbnoc-pf-file
-     (first (member-if
-	     (lambda (arg) (equal (second arg) sym))
-	     (erbutils-file-sexps erbnoc-pf-file))))
+     (remove 
+      (first 
+       (member-if
+	(lambda (arg) (equal (second arg) sym))
+	sexps))
+      sexps))
     (fs-pf-load)
     result))
 
