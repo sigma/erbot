@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-16 15:25:10 deego>
+;; Time-stamp: <2003-05-16 17:34:17 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3433,7 +3433,7 @@ last time i checked , equalp seemed to work as well.. "
    (erbutils-random
     '((format "%s%s explodes into %s pieces!"
 	      watch erbot-nick pieces)
-      (format "%s, with his botheart broken into %s pieces, has left: \"Goodbye\"" 
+      (format "%s, with botheart broken into %s pieces, has left: \"Goodbye\"" 
 	      erbot-nick pieces))))))
 
 
