@@ -401,7 +401,11 @@ to query using PROMPT, or just return t."
   (if (not (fs-auth-bankerp))
       (error (concat nick ": you can't initialize the money")))
   (mapc (lambda (nick)
-          (setf (gethash nick erbnoc-money) init))
+          (setf (gethash (if (stringp nick)
+                             (intern nick)
+                             nick)
+                         erbnoc-money)
+                init))
         nicks)
   "Money initialized.")
 
