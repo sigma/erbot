@@ -287,7 +287,7 @@ to query using PROMPT, or just return t."
         ;; Give the losers their money back.
         (maphash (lambda (nick amount)
                    (incf (gethash nick erbnoc-money) amount))
-                 losing-table)
+                 losing-table))
        ((and (= (hash-table-count losing-table) 0)
              (not maybe-dead-nick))
         ;; Give the winners their money back.
@@ -311,7 +311,7 @@ to query using PROMPT, or just return t."
                              (round unpercent))))
                    winning-table))))
     (clrhash winning-table)
-    (clrhash losing-table))))
+    (clrhash losing-table)))
 
 (defvar erbnoc-chamber (random 6))
 
@@ -389,7 +389,7 @@ to query using PROMPT, or just return t."
 
 (defun fs-reset-money (&rest ignored)
   (if (not (fs-auth-bankerp))
-      (error (concat nick "You can't reset the money.")))
+      (error (concat nick ": You can't reset the money.")))
   (clrhash erbnoc-money)
   (clrhash erbnoc-RR-empty-bets)
   (clrhash erbnoc-RR-bullet-bets)
