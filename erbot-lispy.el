@@ -27,10 +27,8 @@
        (setq nick (match-string 1 line))
        (setq tgt nick)
        (setq msg (match-string 2 line)))
-      ((string-match "^<Mtp>.*$" line)
-       (setq nick nil))
-      ((string-match (format "^<%s>.*$" lispy-remote-user) line)
-       (setq nick nil))
+      ((string-match (format "^<\\(Mtp\\|%s\\)>.*$" lispy-remote-user) line)
+       nil)
       ((string-match "^<\\(\\w+\\)> \\(.*\\)$" line)
        (setq nick (match-string 1 line))
        (setq tgt "#chan")
@@ -63,9 +61,6 @@
   (unless (stringp main-reply)
     (setq main-reply (format "%S" main-reply)))
   (let ((reply (erbot-frob-with-init-string main-reply)))
-    (when (and reply
-	       (not (erbot-safep reply)))
-      (setq reply (concat " " reply)))
     (unless
 	(or
 	 (null erbot-reply-p)
@@ -73,14 +68,17 @@
 	 (equal main-reply "noreply"))
       ;; now we are actually gonna reply.
       (setq reply (fs-limit-lines reply))
-      (let ((lines (split-string reply "\n"))
-             p)
+      (let ((lines (split-string reply "\n")))
         (mapc
          (lambda (line)
            (lispy-message (concat (if (string-match "^#" tgt)
-				      (if (string-match "^/" line) "" " ")
+				      (if (erbot-lispy-safep line) "" " ")
 				    (format "tell %s " tgt)) line "\n")))
          lines)))))
+
+;; Mtp does not use prefixed commands, activate the right ones via aliases
+(defun erbot-lispy-safep (msg)
+  (string-match "^/" line))
 
 (defadvice erbot-install (after ad-erbot-install-lispy-after act)
   (add-hook 'lispy-post-insert-hook 'erbot-lispy-remote))
