@@ -39,6 +39,8 @@
 
 ;; still to write
 
+;;; TODO:
+;; - functionality to forget the erbmsg-question-* pile
 
 ;;; Data
 
@@ -46,6 +48,13 @@
 (defvar erbmsg-msg-hash-table (make-hash-table :test 'equal)
   "This is a hash-table holding all the messages.")
 
+(defgroup erbmsg nil
+	"The erbmsg module for erbot"
+	:group 'applications)
+
+(defcustom erbmsg-default-magic-words '("mymsgs")
+	"List of default magic words for messages with magic words."
+	:group 'erbmsg)
 
 
 (defun fs-msg-with-magic-words (nick &rest msg)
@@ -69,6 +78,7 @@ Note: magic words are not currently implemented and just
          (magic-words))
     (puthash cnick (vector msg ctime magic-words) nicks-ht))
   "msg memorized for delivery")
+(defalias 'fs-msg-wmw 'fs-msg-with-magic-words)
 
 
 (defun erbmsg-parse (msg proc nick tgt localp userinfo)
@@ -92,6 +102,7 @@ see erbmsg-question part below :)."
          (maphash (lambda (fromnick msg-data)
                     (let ((magic-words (aref msg-data 2)))
                       (add-to-list 'magic-words fromnick)
+                      (nconc magic-words erbmsg-default-magic-words)
                       (and (string-match
                             (mapconcat 'identity magic-words "\\|")
                             msg)
@@ -108,41 +119,58 @@ see erbmsg-question part below :)."
 
 		;; again the erbmsg stuff 
 		(and pending-msgs 
-				 (format "'%S"
-								 (format "erm, %s msgs pending, see them? %s"
-												 (length pending-msgs)
-												 (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ',pending-msgs))
-																						(query (erbmsg-query-pending-msgs ,nick ',pending-msgs))
-																						(post (erbmsg-post-pending-msgs ,nick ',pending-msgs))
-																						(flush (erbmsg-flush-pending-msgs ,nick))
-																						(no (ignore)))
-																					nick))))))
+				 (let ((msg-cookie (erbmsg-generate-msg-cookie pending-msgs)))
+					 (format "'%S"
+									 (format "erm, %s msgs pending, see them? %s"
+													 (length pending-msgs)
+													 (erbmsg-question `((notice (erbmsg-notice-pending-msgs ,nick ,msg-cookie))
+																							(query (erbmsg-query-pending-msgs ,nick ',msg-cookie))
+																							(post (erbmsg-post-pending-msgs ,nick ',msg-cookie))
+																							(flush (erbmsg-flush-pending-msgs ,nick))
+																							(no (ignore)))
+																						nick)))))))
 
-(defun erbmsg-notice-pending-msgs (nick msgs)
+
+(defun erbmsg-generate-msg-cookie (pending-msgs)
+	"Generates for the bunch of `pending-msgs' a message cookie."
+	(let* ((msg-cookie (format "%.8x" (random))))
+		(puthash msg-cookie pending-msgs erbmsg-msg-hash-table)
+		msg-cookie))
+
+
+
+;; reply functions
+(defun erbmsg-notice-pending-msgs (nick msg-cookie)
 	"NOTICEs all `msgs' to the user `nick'."
 	(ignore))
 
-(defun erbmsg-query-pending-msgs (nick msgs)
+(defun erbmsg-query-pending-msgs (nick msg-cookie)
 	"PRIVMSGs all `msgs' to the user `nick'."
 	(ignore))
 
-(defun erbmsg-post-pending-msgs (nick msgs)
+(defun erbmsg-post-pending-msgs (nick msg-cookie)
 	"Publically post all `msgs' to current channel"
-	(let ((tgt fs-tgt))
+	(let ((tgt fs-tgt)
+				(msgs (gethash msg-cookie erbmsg-msg-hash-table)))
 		(mapc (lambda (msg)
 						(let ((msgfrom (aref msg 0))
 									(msgtext (aref msg 1))
 									(msgtime (aref msg 2)))
 							(erc-send-message (format "%s %s: %s"
 																				msgfrom
-																				(format-time-string "%D %T" msgtime)
+																				(format-time-string "%D %T (%Z)" msgtime)
 																				msgtext))))
 					msgs)
+		(remhash msg-cookie erbmsg-msg-hash-table)
 		(erbmsg-flush-pending-msgs nick)))
 
 (defun erbmsg-flush-pending-msgs (nick)
 	"Flushes all pending messages for user `nick'."
-	(ignore))
+	(erc-send-message "messages are currently not flushed due to debugging reasons."))
+
+
+;;; just some tricks to create gazillions of msgs w/o IRC
+;; (puthash "asathor" (vector "another one with my second nick ;P" (current-time) nil) (gethash "hroptatyr" erbmsg-msg-hash-table))
 
 
 
