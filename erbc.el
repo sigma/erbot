@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-04-22 16:32:59 deego>
+;; Time-stamp: <2004-04-22 21:53:06 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -7,7 +7,32 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: NA
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-
+;; Other files: 
+;;; erball.el --- Functions on all files. 
+;;; erbbdb.el --- 
+;;; erbc.el --- Erbot user-interface commands.
+;;; erbc2.el --- mostly: special functions for erbc.el
+;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
+;;; erbc4.el --- Russian Roulette 
+;;; erbc5.el --- continuation of erbc.el
+;;; erbc6.el --- fsbot functions contributed by freenode users,
+;;; esp. #emacsers.
+;;; erbcompat.el --- Erbot GNU Emacs/XEmacs compatibility issues
+;;; erbcountry.el
+;;; erbc-special.el --- Special/dangerous implementation functions.
+;;; erbdata.el --- 
+;;; erbedit.el --- quicker operator editing of bots' bbdb
+;;; erbeng.el ---  english 
+;;; erbforget.el --- Help make the bots forget some TERMS. 
+;;; erbkarma.el ---
+;;; erblisp.el --- 
+;;; erblog.el --- 
+;;; erbmsg.el --- memoserv-esque functions for Erbot
+;;; erbot.el --- Another robot for ERC.
+;;; erbp.el --- NOT FUNCTIONAL personal erbot-interface, stolen from dunnet.el
+;;; erbtrain.el --- Train erbot (erbot).. 
+;;; erbutils.el ---  utils
+;;; erbwiki.el ---
 
 (defvar fs-home-page
   "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
