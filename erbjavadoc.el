@@ -242,7 +242,7 @@ erbot.el invokes this function."
 			       ;; extra parameters to our callback 
 			       ;; functions. We need these so that
 			       ;; we can invoke erbot-reply.
-			       (list base proc nick tgt))))
+			       (list base proc erbnoc-nick tgt))))
       (push base erbjavadoc-scraped-urls)
       (erbjavadoc-save-data)
       (format "I'm downloading the javadocs now ..."))))
