@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-02-28 16:10:57 deego>
+;; Time-stamp: <2005-03-22 11:04:55 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -271,27 +271,46 @@ to query using PROMPT, or just return t."
   
   ;; the given fcn icould be a number or string, in which
    ;; case sandboxing won't touch it, so we need to override that case.
-  (unless 
-      (and (listp body)
-	   (> (length body) 0))
-    (error "Function body should have a length of 1 or more"))
-  (unless (symbolp fcn)
-    (error "Defun symbols only! :P"))
-  
-  (erbn-readonly-check fcn)
-  
-  (erbn-write-sexps-to-file
-   erbn-pf-file
-   (erbn-create-defun-overwrite
-    (erbutils-file-sexps erbn-pf-file)
-    (cons 'defun 
-	  (cons fcn 
-		(cons args 
-		      (cons 
-		       '(sit-for 0)
-		       body)))) fcn))
-  (fsi-pf-load)
-  `(quote ,fcn))
+  (let ((docp nil))
+    (unless 
+	(and (listp body)
+	     (> (length body) 0))
+      (error "Function body should have a length of 1 or more"))
+    (unless (symbolp fcn)
+      (error "Defun symbols only! :P"))
+    ;; doc string exists, and is followed by more stuff..
+    (when (and (> (length body) 1)
+	       (stringp (first body)))
+      (setq docp t))
+    (erbn-readonly-check fcn)
+    
+    (erbn-write-sexps-to-file
+     erbn-pf-file
+     (erbn-create-defun-overwrite
+      (erbutils-file-sexps erbn-pf-file)
+      (if docp
+	  
+	  (cons 'defun 
+		(cons fcn 
+		      (cons args 
+			    (cons 
+			     (first body)
+			     (cons
+			      '(sit-for 0)
+			      (cdr body))))))
+
+	  (cons 'defun 
+		(cons fcn 
+		      (cons args 
+			    (cons (first body)
+				  (cons 
+				   '(sit-for 0)
+				   body)))))
+	  )
+      
+      fcn))
+    (fsi-pf-load)
+    `(quote ,fcn)))
 
 
 

@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-21 15:33:20 deego>
+;; Time-stamp: <2005-03-22 12:16:27 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -115,8 +115,8 @@ this string should have a length of EXACTLY 2.
 
 
 
-(defvar fs-tgt "Tgt visible to the end-user, as well as changeable by them.")
-(defvar erbn-tgt "Tgt visible to the end-user, but NOT changeable by them.")
+(defvar fs-tgt nil "Tgt visible to the end-user, as well as changeable by them.")
+(defvar erbn-tgt nil "Tgt NOT changeable by enduser.")
 
 (defvar fs-nick "")
 (defvar erbn-nick "")
@@ -2980,8 +2980,38 @@ than fs-limit-lines in all.."
     "\n"))
 
 
-(defcustom fs-more "" "" :group 'erbc)
+(defvar erbn-more nil
+  "Alist of pending more-strings per target.  Each target is a
+string. ")
 ;;(make-variable-buffer-local 'fs-more)
+
+(defun erbn-more-get (&optional target)
+  "When target is nil, we get the latest more that occurred in ANY
+channel, else we get the more from the channel indicated by target. "
+  (setq target (format "%S" target))
+  (let ((str (cdr (assoc target erbn-more))))
+    (if (and (stringp str)
+	     (not (string= str "")))
+	str
+      (fs-describe "more"))))
+
+(defalias 'fsi-more-get 'erbn-more-get)
+
+(defun erbn-more-set (str &optional target)
+  (setq target (format "%S" target))
+  (if (assoc target erbn-more)
+      (setf (cdr (assoc target erbn-more)) str)
+    (add-to-list 'erbn-more (cons target str)))
+  (if (assoc "nil" erbn-more)
+      (setf (cdr (assoc "nil" erbn-more)) str)
+    (add-to-list 'erbn-more (cons "nil" str)))
+  erbn-more)
+
+
+(defun fsi-more-set (&optional str)
+  (unless str (error "Need a string. "))
+  (erbn-more-set str erbn-tgt))
+
 
 
 (defun fsi-limit-lines (str0 &optional nomorep &rest ignored)
@@ -3060,7 +3090,8 @@ here."
 	  (when nomorep (setq more "")))
 	)
       )
-    (setq fs-more more)
+    ;;(setq fs-more more)
+    (erbn-more-set more erbn-tgt)
     ans))
 
 
@@ -3078,20 +3109,26 @@ here."
 		(setq ender "..+ more")
 		(subseq brstr 0 (- fs-limit-lines 1)))
 	    brstr)))
-    (if condp (setq fs-more 
+    (if condp (fs-more-set 
 		      (mapconcat 'identity 
 				 (subseq brstr (- fs-limit-lines
 						  1))
 				 "\n"))
-      (setq fs-more ""))
+      (fs-more-set ""))
     (concat (mapconcat 'identity goodstr "\n") ender)))
 
 (defun fsi-more (&rest args)
   "Display the contents of the cache. "
-  (if (and (stringp fs-more) 
-	   (not (string= fs-more "")))
-      fs-more
-    (fs-describe "more")))
+  (let ((str (fsi-more-get erbn-tgt)))
+    (if (and (stringp str)
+	     (not (string= str "")))
+	str
+      (fs-describe "more"))))
+
+;;   (if (and (stringp fs-more) 
+;; 	   (not (string= fs-more "")))
+;;       fs-more
+;;     (fs-describe "more")))
 	
 
 (defun fsi-limit-lines-long (str &rest ignored)
