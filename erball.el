@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2003-06-20 10:30:06 deego>
+;; Time-stamp: <03/06/21 17:07:12 freundt>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -32,7 +32,7 @@
 (require 'erbforget)
 (require 'erbedit)
 (require 'erbtrain)
-(require 'erbwiki)
+(ignore-errors (require 'erbwiki))
 (require 'erbunlisp)
 
 (require 'flame)
