@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-04-06 13:58:49 deego>
+;; Time-stamp: <2004-04-22 16:32:59 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1170,27 +1170,28 @@ Optional argument NICK ."
 Optional argument NICK ."
   
   
-  
-  (unless nick (setq nick "someone sexy"))
-  (setq nick (format "%s" nick))
-  (cond
-   ((member nick (list "you" "me"))
-    (erbutils-random
-     '("Thank you.  Enjoyed that. "
-       "Thanks, I love you even more now. "
-       "Wouldn't that amount to interspecies sex? "
-       "Sex between humans and machines is not known to produce anything useful. ")))
-   ((member nick
-	    (list erbot-nick "yourself" "self"))
-    (erbutils-random
-     '("This is a complicated operation. Can't (yet) perform operation on self. "
-       "Please train me on this maneuver. ")))
-   (t
-    (eval
-     (erbutils-random
-      '((format "/me  goes with %s to a private place..." nick)
-	(format "/me looks at %s and yells \"NEVER!\"" nick)
-	(format "/me looks at %s lustfully" nick)))))))
+  (let ((nonep nil))
+    (unless nick (setq nick "someone sexy") (setq nonep t))
+    (setq nick (format "%s" nick))
+    (cond
+     ((and (not nonep) (member nick (list "you" "me")))
+      (erbutils-random
+       '("Thank you.  Enjoyed that. "
+	 "Thanks, I love you even more now. "
+	 "Wouldn't that amount to interspecies sex? "
+	 "Sex between humans and machines is not known to produce
+anything useful. ")))
+     ((member nick
+	      (list erbot-nick "yourself" "self"))
+      (erbutils-random
+       '("This is a complicated operation. Can't (yet) perform operation on self. "
+	 "Please train me on this maneuver. ")))
+     (t
+      (eval
+       (erbutils-random
+	'((format "/me  goes with %s to a private place..." nick)
+	  (format "/me looks at %s and yells \"NEVER!\"" nick)
+	  (format "/me looks at %s lustfully" nick))))))))
 
 (defalias 'fs-fuck 'fs-love)
 
