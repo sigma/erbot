@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-06-17 15:54:43 deego>
+;; Time-stamp: <2004-10-27 11:31:47 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -689,8 +689,11 @@ not, try to reconnect. "
 
 (defun erbot-safep (reply)
   (or
-   (not (string-match "^/" reply))
+   (string-match "^[0-9a-zA-Z]" reply)
+   ;;(not (string-match "^/" reply)) -- this is bad.. since, control
+   ;;characters are bad... beginnning ^A for example, will send CTCP requests..
    (equal 0 (string-match "^/me " reply))))
+
 
 
 (defun erbot-dunnet-install ()
