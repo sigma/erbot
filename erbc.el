@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-12-14 10:38:04 deego>
+;; Time-stamp: <2004-12-31 20:20:01 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2356,6 +2356,8 @@ Record should be a single entity here... a string..."
       (format "Not added. This entry already exists in the term %S" name))
      (t 
       (erbbdb-add name record)
+      ;;(run-hook-with-args 'erbot-notify-add-functions nick channel
+      ;;name (length notes) 
       (format "Added entry to the term %S" name)))))
 
 
@@ -4597,6 +4599,11 @@ setq fs-t to nil :-) ")
 
 (defun fs-pp (object &rest ignore)
   (pp object))
+
+
+
+
+
 
 
 (erbutils-defalias '(ignore))
