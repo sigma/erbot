@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2004-05-26 13:51:40 deego>
+;; Time-stamp: <2004-08-06 11:16:24 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -186,7 +186,10 @@ to query using PROMPT, or just return t."
 ;; <lion> But it's not quite there yet.
 
 
+;;TODO: add this wiki:
+;;http://www.nanoaging.com/wiki/index.php/Main_Page"
 (defcustom erbwiki-index-pages
+
   '(
 
 
@@ -227,7 +230,15 @@ to query using PROMPT, or just return t."
 
 
 
-    ("cw"
+    ("ew"
+     "http://www.emacswiki.org/cgi-bin/wiki.pl?"
+     "\"http://www.emacswiki.org/cgi-bin/wiki.pl?action=index\""
+     nil
+     "fsbot: "
+     )
+
+
+B    ("cw"
      "http://www.emacswiki.org/cgi-bin/community/"
      "\"http://www.emacswiki.org/cgi-bin/community?action=index;raw=1\""
      nil
@@ -235,13 +246,6 @@ to query using PROMPT, or just return t."
      )
 
 
-
-    ("ew"
-     "http://www.emacswiki.org/cgi-bin/wiki.pl?"
-     "\"http://www.emacswiki.org/cgi-bin/wiki.pl?action=index\""
-     nil
-     "fsbot: "
-     )
 
     ("fw"
      "http://www.etrumeus.com/ferment/"
