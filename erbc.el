@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-17 16:06:13 deego>
+;; Time-stamp: <2005-03-21 15:33:20 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -570,7 +570,17 @@ Finally, wanna parse messages whose last item contains erbot..
 Optional argument PROC .
 Optional argument NICK .
 Optional argument TGT .
-Optional argument FOO ."
+Optional argument FOO .
+
+We will also bind a number of variables, as appropriate, for example,
+fs-msg*, fs-args, fs-a, fs-b... so that these vars can be used
+anywhere in the code, or the user-defined parts of the code...
+
+In the grand scheme of things, these bindings should turn out to be
+local, because the parent function calling this function should have
+'letted these variables. 
+
+"
   ;;(when (stringp msg)
    ;; (setq  msg (split-string msg)))
   ;msg
@@ -580,8 +590,13 @@ Optional argument FOO ."
   ;foo
   (setq fs-internal-original-message msg)
   (setq msg (fs-parse-preprocess-message msg))
-  (let 
+  (setq fs-msg msg)
+  (setq fs-msgsansbot msg)
+  (let* 
       (
+
+
+       (msg (fs-parse-preprocess-message msg))
        (origmsg msg)
        ;;(fs-internal-message-sans-bot-name fs-internal-message-sans-bot-name)
        (foundquery nil)
@@ -642,7 +657,7 @@ Optional argument FOO ."
 		   ;;(string-match (concat "^" erbn-char) msg)
 		   ;;(string-match erbn-char-double  msg))
 		   )
-	  (setq founddoublequery t)
+	  (setq foundquerydouble t)
 	  (setq msg (concat erbn-char " (m8b)")))))
 
     (when (and (stringp msg)
@@ -697,7 +712,8 @@ Optional argument FOO ."
 
     ;; now we split strings..
     (setq msg (split-string msg))
-
+    (setq fs-msglist msg)
+    (setq fs-msglistsansbot msg)
     (cond
      ( (and (first msg) 
 	    (let ((pos 
@@ -881,7 +897,7 @@ Optional argument FOO ."
 	(setq leave-alone-p t)))
 
 
-
+    (setq fs-msglistsansbot msg)
 ;;;====================================================
     ;; now do the work..
     (if leave-alone-p
@@ -1953,6 +1969,51 @@ it was addressed at last. "
 		       
 
 (defvar fs-internal-describe-literally-p nil)
+
+
+
+
+(defvar fs-msg "The exact current message being parsed. ")
+(defvar fs-msglist "Message broken into list.  This list may have
+removed characters like ?  and ,,  No guarantees here.  See
+fs-msgsandbot instead.")
+(defvar fs-msgsansbot nil "Current message being parsed, but the
+invocation part removed.  ")
+
+(defvar fs-msglistsansbot nil
+  "Message broken into list, invocation parts removed.  
+
+.. with the invokation parts, like ,, or , or fsbot:, removed.  Thus,
+if message taken from the middle of a sentence, then this is the list
+from only that part. ")
+
+
+
+
+(defvar fs-args nil
+  "Will be used when using the lisp form")
+
+
+
+(defvar fs-a nil
+  "Will be used when using the lisp form")
+
+
+(defvar fs-b nil
+  "Will be used when using the lisp form")
+
+
+(defvar fs-c nil
+  "Will be used when using the lisp form")
+
+(defvar fs-d nil
+  "Will be used when using the lisp form")
+
+(defvar fs-e nil
+  "Will be used when using the lisp form")
+
+
+
 (defun fsi-describe-literally (&rest rest)
   (unless rest
     (error "Format: , describe-literally TERM [FROM] [TO]"))
@@ -1975,186 +2036,203 @@ it was addressed at last. "
 Looks for TERM, and shows its descriptions starting at description
 number N, and ending at M-1. The first record is numbered 0. 
 "
-  (when fs-found-query-p 
-    (setq N 0)
-    (setq M 1))
-  (unless prestring (setq prestring ""))
-  (unless mainterm 
-     (error 
-     "Format , (describe TERM &optional number1 number2)"))
-  (let* ((bar (cons mainterm (cons N rest)))
-	 (foo (format "%s" mainterm))
-	 (barbar
-	  (append
-	   (and mainterm (list mainterm))
-	   (and N (list N))
-	   (and M (list M))
-	   rest))
+  (let 
+      ;;((fs-args (append (list mainterm N M prestring expr) rest)))
+      ;; nothing, just a let not used any more..
+      ((fs-nothingsorry nil))
+    ;; in the global scheme of things, this will turn out to be only a
+    ;; local binding, since erbeng-main will have (let)'ed this.  Same
+    ;; for fs-a, fs-b, fs-c...
 
-	    )
-    (setq foo (fs-correct-entry foo))
-    (if (stringp N)
-	(setq N (read N)))
-    (unless (integerp N)
-      (setq N 0))
-    (if (stringp M)
-	(setq M (read M)))
-    (if (and (integerp M) (= M N))
-	(setq M (+ N 1)))
-    (unless (stringp foo)
-      (setq foo (format "%s" foo)))
-    (let* ((result0
-	    (erbbdb-get-exact-notes
-	     foo
-	     ))
-	   (result1 (and (stringp result0)
-			(ignore-errors (read result0))))
-	   (len (length result1))
-	   (newM (if (and (integerp M)
-			  (< M len))
-		     M len))
-	   (result (subseq result1 N newM))
-	   (shortenedp (or (< newM len)
-			   (> N 0)))
-		   )
-
-      
-      (cond
-       ;; in cond0
-       (result1
-	(let* (
-	       ;; notice the use of result1 here, not result. 
-	       (aa (first result1))
-	       (aarest (cdr result1))
-	       (bb (split-string aa))
-
-	       (cc (first bb))
-	       (dd (second bb))
-	       (ddd (or (and (stringp dd) (regexp-quote dd)) ""))
-	       (ee (cdr bb))
-	       (expandp 
-		(and 
-		 (not fs-internal-describe-literally-p)
-		 
-		 ;;(equal len 1)
-		 ))
-
-	       )
-	  
-	  (if (and  
-	       (equal cc "directonly") 
-	       ;;(equal len 1)
-	       )
-	      ;; hmm this if part still doesn't take care of aa..
-	      (if fs-found-query-p
-		  (progn
-		    (setq aa "lisp 'noreply")
-		    (setq bb (split-string aa))
-		    (setq cc (first bb))
-		    (setq dd (second bb))
-		    (setq dd (or (and (stringp dd) (regexp-quote dd)) ""))
-		    (setq ee (cdr bb)))
-		(when expandp
-		  (progn
-		    (setq bb (cdr bb))
-		    (setq aa (mapconcat 'identity bb " "))
-		    (setq result1 (cons aa aarest))
-		    (setq result (subseq result1 N newM))
-		    (setq cc (first bb))
-		    (setq dd (second bb))
-		    (setq ddd (or (and (stringp dd)
-				       (regexp-quote dd)) ""))
-		    (setq ee (cdr bb))))
-
-
-		
-		))
-	  (cond 
-	   ((and expandp
-		 (erbutils-string= cc "redirect")
-		 dd)
-	    (apply 'fs-describe ddd
-		   N M 
-		   (format "[->] " 
-			   )
-		   rest))
-	   ((and expandp (member cc '("unecho" "noecho"))
-		 dd)
-		 ;;dd)
-	    (erbutils-itemize 
-	     (cons
-	      (format "%s" 
-		      (mapconcat 'identity ee " "))
-	      (cdr result))
-	     N
-	     shortenedp
-	     ))
-	   ((and expandp (member cc '("lisp")))
-	    (erbeng-main 
-	     (concat erbn-char " (progn "
-		     (substring aa
-				(with-temp-buffer
-				  (insert aa)
-				  (goto-char (point-min))
-				  (search-forward "lisp" nil t)))
-		     " )")
-
-	     erbeng-proc 
-	     erbeng-nick erbeng-tgt erbeng-localp 
-	     erbeng-userinfo))
-
-
-	   (t 
-	    (erbutils-add-nick-maybe
-	      (concat 
-	       prestring
-	       (format
-		(erbutils-random
-		 '(
-		   ;;"%s is perhaps "
-		   "%s is like, "
-		   "I heard %s is "
-		   "I think %s is "
-		   ;;"/me thinks %s is "
-		   "%s -- "
-		   ;;"%s is "
-		   "%s is "
-		   "hmm, %s is "
-		   "From memory, %s is "
-		   ))
-		;; 2004-01-27 T17:21:55-0500 (Tuesday)    D. Goel
-		;; why regexp-quote here??  changing it..
-		;;(regexp-quote foo)
-		foo
-		)
-	       ;; and notice the use of result here..
-	       (if result
-		   (erbutils-itemize result N shortenedp)
-		 (erbutils-itemize result1 0))
-	       )))
-	    
-	    
-	    
-	    )))
+    (setq fs-args (mapcar 'fsi-read-or-orig (cdr fs-msglistsansbot)))
+    (when fs-found-query-p 
+      (setq N 0)
+      (setq M 1))
+    (unless prestring (setq prestring ""))
+    (unless mainterm 
+      (error 
+       "Format , (describe TERM &optional number1 number2)"))
+    (let* ((bar (cons mainterm (cons N rest)))
+	   (foo (format "%s" mainterm))
+	   (barbar
+	    (append
+	     (and mainterm (list mainterm))
+	     (and N (list N))
+	     (and M (list M))
+	     rest))
+	   
+	   )
+      (setq foo (fs-correct-entry foo))
+      (if (stringp N)
+	  (setq N (read N)))
+      (unless (integerp N)
+	(setq N 0))
+      (if (stringp M)
+	  (setq M (read M)))
+      (if (and (integerp M) (= M N))
+	  (setq M (+ N 1)))
+      (unless (stringp foo)
+	(setq foo (format "%s" foo)))
+      (let* ((result0
+	      (erbbdb-get-exact-notes
+	       foo
+	       ))
+	     (result1 (and (stringp result0)
+			   (ignore-errors (read result0))))
+	     (len (length result1))
+	     (newM (if (and (integerp M)
+			    (< M len))
+		       M len))
+	     (result (subseq result1 N newM))
+	     (shortenedp (or (< newM len)
+			     (> N 0)))
+	     )
 	
-       ;; in cond0
-       ;; else
-       (fs-found-query-p 
-	'noreply)
-       ((not erbnocmd-describe-search-p)
-	;; most likely: redirected but the redirected stuff does not exist..
-	(format 
-	 "Missing redirect. %s is now on fire.               (Try , dl) " 
-		erbot-nick mainterm))
-       (t
-	;; prevent any further expansions on further loopbacks. 
-	(let ((erbnocmd-describe-search-p nil))
-	  (fs-search 
-	   mainterm nil nil 
-	   (concat prestring "try: ")
-	   ;;barbar
-	   expr
-	   )))))))
+	
+	(cond
+	 ;; in cond0
+	 (result1
+	  (let* (
+		 ;; notice the use of result1 here, not result. 
+		 (aa (first result1))
+		 (aarest (cdr result1))
+		 (bb (split-string aa))
+		 
+		 (cc (first bb))
+		 (dd (second bb))
+		 (ddd (or (and (stringp dd) (regexp-quote dd)) ""))
+		 (ee (cdr bb))
+		 (expandp 
+		  (and 
+		   (not fs-internal-describe-literally-p)
+		   
+		   ;;(equal len 1)
+		   ))
+		 
+		 )
+	    
+	    (if (and  
+		 (equal cc "directonly") 
+		 ;;(equal len 1)
+		 )
+		;; hmm this if part still doesn't take care of aa..
+		(if fs-found-query-p
+		    (progn
+		      (setq aa "lisp 'noreply")
+		      (setq bb (split-string aa))
+		      (setq cc (first bb))
+		      (setq dd (second bb))
+		      (setq dd (or (and (stringp dd) (regexp-quote dd)) ""))
+		      (setq ee (cdr bb)))
+		  (when expandp
+		    (progn
+		      (setq bb (cdr bb))
+		      (setq aa (mapconcat 'identity bb " "))
+		      (setq result1 (cons aa aarest))
+		      (setq result (subseq result1 N newM))
+		      (setq cc (first bb))
+		      (setq dd (second bb))
+		      (setq ddd (or (and (stringp dd)
+					 (regexp-quote dd)) ""))
+		      (setq ee (cdr bb))))
+		  
+		  
+		  
+		  ))
+	    (cond 
+	     ((and expandp
+		   (erbutils-string= cc "redirect")
+		   dd)
+	      (apply 'fs-describe ddd
+		     N M 
+		     (format "[->] " 
+			     )
+		     rest))
+	     ((and expandp (member cc '("unecho" "noecho"))
+		   dd)
+	      ;;dd)
+	      (erbutils-itemize 
+	       (cons
+		(format "%s" 
+			(mapconcat 'identity ee " "))
+		(cdr result))
+	       N
+	       shortenedp
+	       ))
+	     ((and expandp (member cc '("lisp")))
+	      (let*
+		  ((fs-nothingsorry nil))
+		   ;; (fs-args fs-args) ;; no need
+		(setq fs-a (nth 0 fs-args))
+		(setq fs-b (nth 1 fs-args))
+		(setq fs-c (nth 2 fs-args))
+		(setq fs-d (nth 3 fs-args))
+		(setq fs-e (nth 4 fs-args))
+		(erbeng-main 
+		 (concat erbn-char " (progn "
+			 (substring aa
+				    (with-temp-buffer
+				      (insert aa)
+				      (goto-char (point-min))
+				      (search-forward "lisp" nil t)))
+			 " )")
+		 
+		 erbeng-proc 
+		 erbeng-nick erbeng-tgt erbeng-localp 
+		 erbeng-userinfo)))
+	     
+	     
+	     (t 
+	      (erbutils-add-nick-maybe
+	       (concat 
+		prestring
+		(format
+		 (erbutils-random
+		  '(
+		    ;;"%s is perhaps "
+		    "%s is like, "
+		    "I heard %s is "
+		    "I think %s is "
+		    ;;"/me thinks %s is "
+		    "%s -- "
+		    ;;"%s is "
+		    "%s is "
+		    "hmm, %s is "
+		    "From memory, %s is "
+		    ))
+		 ;; 2004-01-27 T17:21:55-0500 (Tuesday)    D. Goel
+		 ;; why regexp-quote here??  changing it..
+		 ;;(regexp-quote foo)
+		 foo
+		 )
+		;; and notice the use of result here..
+		(if result
+		    (erbutils-itemize result N shortenedp)
+		  (erbutils-itemize result1 0))
+		)))
+	     
+	     
+	     
+	     )))
+	 
+	 ;; in cond0
+	 ;; else
+	 (fs-found-query-p 
+	  'noreply)
+	 ((not erbnocmd-describe-search-p)
+	  ;; most likely: redirected but the redirected stuff does not exist..
+	  (format 
+	   "Missing redirect. %s is now on fire.               (Try , dl) " 
+	   erbot-nick mainterm))
+	 (t
+	  ;; prevent any further expansions on further loopbacks. 
+	  (let ((erbnocmd-describe-search-p nil))
+	    (fs-search 
+	     mainterm nil nil 
+	     (concat prestring "try: ")
+	     ;;barbar
+	     expr
+	     ))))))))
 
 (defvar fs-internal-doctor-rarity 80
   "A large number(1--100) means rarer doctor inovcation upon no matches."
@@ -3862,7 +3940,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defun fsi-locate-library (&optional arg &rest rest)
   "REST WILL be ignored :-)"
-  (unless arg (format (error "Syntax: %s locate-library LIB" erbn-char)))
+  (unless arg (error "Syntax: %s locate-library LIB" erbn-char))
   (unless (stringp arg)
     (setq arg (format "%s" arg)))
   (locate-library arg))
@@ -4792,9 +4870,22 @@ query to another user. "
   (save-excursion (erc-query qnick erbn-buffer)))
 
 
+    
+(defun fsi-read-or-orig (arg)
+  "  If string and can read, read, else return the arg. 
+Note: Used by fs-describe"
+  (cond
+   ((stringp arg)
+    (condition-case fs-tmp (read arg)
+      (error arg)))
+   (t arg)))
 
 
-
+(defun fsi-read (str)
+  (cond
+   ((stringp str)
+    (read str))
+   (t (error "The bot will only read from strings. "))))
 
 
 
