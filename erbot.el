@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-06-19 12:25:56 deego>
+;; Time-stamp: <2003-07-10 15:30:53 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -548,6 +548,34 @@ those things..
   (mapcar '(lambda (arg) (list (car arg) (caddr arg)))
 	  erbot-servers-channels))
 
+
+;;;###autoload
+(defun erbot-alive-p ()
+  "Is atleast one connection still alive?"
+  (require 'cl-extra)
+  (some 
+   (mapcar 
+    (lambda (buf)
+      (save-excursion
+	(set-buffer buf)
+	(erc-process-alive)))
+    (erc-buffer-list))))
+
+(defvar erbot-reconnection-attempts nil)
+
+;;;###autoload
+(defun erbot-keep-alive (&rest args)
+  "Periodically check if atleast one connection is still alive.  If
+not, try to reconnect. "
+  (require 'idledo)
+  (idledo-add-periodic-action-crude
+   '(unless (erbot-alive-p)
+      (add-to-list 'erbot-reconnection-attempts
+		   (message "Erbot trying to reconnect at %s" 
+			    (format-time-string
+			     "%Y%m%d-%H%M-%S")))
+      (ignore-errors (apply 'erbot-join-servers args)))))
+  
 ;;;###autoload
 (defun erbot-join-servers (&optional server port nick
 				   user-full-name

@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2003-06-26 16:51:17 deego>
+;; Time-stamp: <2003-06-30 12:17:41 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -253,7 +253,7 @@ to query using PROMPT, or just return t."
      vars)))
 
 
-(defcustom fs-pv-save-rarity 10000
+(defcustom fs-pv-save-rarity 100000
   "if this is 1000, then file is saved one in as thousand times... ")
 
 ;;;###autoload
