@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-22 21:32:54 deego>
+;; Time-stamp: <2004-03-16 09:35:39 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -504,6 +504,11 @@ reply please be abbreviated. ")
   (list 1)
   "")
 
+
+(defcustom fs-m8b-p nil
+  "Change it to t for the magic 8-ball... define m8b then of
+course...")
+
 (defun fs-parse-preprocess-message (msg)
   (let ((len (length msg)))
     (when (and
@@ -586,20 +591,22 @@ Optional argument FOO ."
     ;; 2003-11-14 T15:36:38-0500 (Friday)    D. Goel
     ;; requested by elf: 
     ;; if double ??, then make it a call to m8b
-    (let (len)
-      (when (and (stringp msg)
-		 (progn
-		   (setq len (length msg)) t)
-		 (> len  1)
-		 (string= "??"
-			  (substring msg (- len 2) len))
-		 (or
-		  (string-match 
-		   erbot-nick msg)
-		  (string-match (concat "^" erbnoc-char) msg)
-		  (string-match erbnoc-char-double  msg)))
-	(setq founddoublequery t)
-	(setq msg (concat erbnoc-char " (m8b)"))))
+    (when fs-m8b-p
+      (let (len)
+	(when (and (stringp msg)
+		   (progn
+		     (setq len (length msg)) t)
+		   (> len  1)
+		   (string= "??"
+			    (substring msg (- len 2) len))
+		   ;;(or
+		   ;;(string-match 
+		   ;;erbot-nick msg)
+		   ;;(string-match (concat "^" erbnoc-char) msg)
+		   ;;(string-match erbnoc-char-double  msg))
+		   )
+	  (setq founddoublequery t)
+	  (setq msg (concat erbnoc-char " (m8b)")))))
 
     (when (and (stringp msg)
 	       (> (length msg) 0)
@@ -967,7 +974,12 @@ Optional argument FOO ."
 	      (or
 	       (erbutils-string= (first msg) "no" t)
 	       (erbutils-string= (first msg) "no," t))
-	      (erbutils-string= (third msg) "is"))
+	      (or
+	       (erbutils-string= (third msg) "is")
+	       (erbutils-string= (third msg) "are")
+	       )
+
+	      )
 	     (erblisp-sandbox-fuzzy
 	      `(fs-set-force ,(second msg)
 				 ;;,@(erbutils-quote-list (cdddr msg))))
@@ -1941,7 +1953,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	      (cdr result1))))
 	   ((and expandp (member cc '("lisp")))
 	    (erbeng-main 
-	     (concat ", (progn "
+	     (concat erbnoc-char " (progn "
 		     (substring aa
 				(with-temp-buffer
 				  (insert aa)
@@ -1972,7 +1984,10 @@ number N, and ending at M-1. The first record is numbered 0.
 		   "hmm, %s is "
 		   "From memory, %s is "
 		   ))
-		(regexp-quote foo)
+		;; 2004-01-27 T17:21:55-0500 (Tuesday)    D. Goel
+		;; why regexp-quote here??  changing it..
+		;;(regexp-quote foo)
+		foo
 		)
 	       ;; and notice the use of result here..
 	       (if result
@@ -2132,7 +2147,18 @@ Numbering of positions starts from 0. "
 (defun fs-forget (&optional name number &rest dummy)
   "Remove the entry correponding to NAME in the database.  
 With NUMBER, forget only the NUMBERth entry of NAME. "
-  
+
+  ;; before we do the usual thing, let's see if we need to and can get
+  ;; away with exchanging name and number.
+  (when 
+      (and 
+       (numberp name)
+       (not (string= (format "%s" number) 
+		     "all"))
+       )
+    (let ((fstmp number))
+      (setq number name)
+      (setq name fstmp)))
   (unless (stringp name)
     (setq name (format "%s" name)))
   (unless name
@@ -2334,16 +2360,298 @@ Syntax: , no foo is bar."
       (apply 'fs-set-term args))))
 
 
-(defcustom fs-fortune-p t
+(defcustom erbnoc-fortune-p t
   "This is true by default.. since (shell-command \"fortune\") is not
 risky.. ")
 
   
+(defun erbnoc-fortune (arg)
+  (unless arg (setq arg ""))
+  (cond
+   ((string= arg "")
+    (erbutils-eval-until-limited
+     '(erbnoc-shell-command-to-string (concat "fortune " arg)
+				      (list erbnoc-fortune-p)
+				      )))
+   (t
+    (erbnoc-shell-command-to-string (concat "fortune " arg)
+				    (list erbnoc-fortune-p)
+				    ))))
+
+
 (defun fs-fortune (&rest args)
-  (erbutils-eval-until-limited
-   '(erbnoc-shell-command-to-string "fortune" 
-				    (list fs-fortune-p)
-				    )))
+  (erbnoc-fortune ""))
+
+
+(defalias 'fs-f 'fs-fortune)
+ 
+(defun fs-fortunes-help (&rest args)
+  (concat "Type ,fortune, or any of the commands beginning with f- : "
+	  (fs-commands "^f-")))
+
+(defalias 'fs-fortune-help 'fs-fortunes-help)
+(defalias 'fs-f-help 'fs-fortunes-help)
+
+
+(defun fs-f-f (&rest args)
+  (erbnoc-fortune "-f"))
+
+(defun fs-f-off (&rest args)
+  (erbnoc-fortune "-o"))
+(defalias 'fs-f-o 'fs-f-off)
+(defalias 'fs-f-offensive 'fs-f-off)
+
+
+(defun fs-f-debian-hints (&rest args)
+  (erbnoc-fortune "debian-hints"))
+(defalias 'fs-debian-hints 'fs-f-debian-hints)
+
+
+
+(defun fs-f-twisted-quotes (&rest args)
+  (erbnoc-fortune "twisted-quotes"))
+(defalias 'fs-quotes 'fs-f-twisted-quotes)
+(defalias 'fs-f-quotes 'fs-f-twisted-quotes)
+
+(defun fs-f-literature (&rest args)
+  (erbnoc-fortune "literature"))
+(defalias 'fs-f-lit 'fs-f-literature)
+(defalias 'fs-lit 'fs-f-literature)
+(defalias 'fs-literature 'fs-f-literature)
+
+
+
+(defun fs-f-riddles(&rest args)
+  (erbnoc-fortune "riddles"))
+(defalias 'fs-riddle 'fs-f-riddles)
+
+
+
+(defun fs-f-art (&rest args)
+  (erbnoc-fortune "art"))
+(defalias 'fs-art 'fs-f-art)
+
+
+
+
+(defun fs-f-bofh-excuses (&rest args)
+  (erbnoc-fortune "bofh-excuses"))
+(defalias 'fs-bofh 'fs-f-bofh-excuses)
+
+
+
+
+(defun fs-f-ascii-art (&rest args)
+  (erbnoc-fortune "ascii-art"))
+(defalias 'fs-ascii 'fs-f-ascii-art)
+
+
+
+
+(defun fs-f-computers (&rest args)
+  (erbnoc-fortune "computers"))
+
+(defalias 'fs-f-computer 'fs-f-computers)
+
+
+
+
+
+(defun fs-f-cookies (&rest args)
+  (erbnoc-fortune "cookies"))
+
+(defalias 'fs-f-cookie 'fs-f-cookies)
+(defalias 'fs-cookie 'fs-f-cookies)
+
+
+
+
+(defun fs-f-cookies (&rest args)
+  (erbnoc-fortune "cookies"))
+
+(defalias 'fs-f-cookie 'fs-f-cookies)
+(defalias 'fs-cookie 'fs-f-cookies)
+
+
+(defun fs-f-definitions (&rest args)
+  (erbnoc-fortune "definitions"))
+
+(defalias 'fs-def 'fs-f-defintions)
+
+
+
+
+(defun fs-f-drugs (&rest args)
+  (erbnoc-fortune "drugs"))
+(defalias 'fs-drugs 'fs-f-drugs)
+(defalias 'fs-drug 'fs-f-drugs)
+
+
+
+
+(defun fs-f-education (&rest args)
+  (erbnoc-fortune "education"))
+
+
+(defun fs-f-ethnic (&rest args)
+  (erbnoc-fortune "ethnic"))
+
+
+
+
+(defun fs-f-food (&rest args)
+  (erbnoc-fortune "food"))
+(defalias 'fs-food 'fs-f-food)
+
+
+
+
+
+
+(defun fs-f-goedel (&rest args)
+  (erbnoc-fortune "goedel"))
+(defalias 'fs-goedel 'fs-f-goedel)
+
+
+
+
+(defun fs-f-humorists (&rest args)
+  (erbnoc-fortune "humorists"))
+
+
+(defun fs-f-kids (&rest args)
+  (erbnoc-fortune "kids"))
+
+
+(defun fs-f-law (&rest args)
+  (erbnoc-fortune "law"))
+
+(defalias 'fs-law 'fs-f-law)
+
+
+
+(defun fs-f-linuxcookie (&rest args)
+  (erbnoc-fortune "linuxcookie"))
+
+
+(defun fs-f-love (&rest args)
+  (erbnoc-fortune "love"))
+
+(defun fs-f-magic (&rest args)
+  (erbnoc-fortune "magic"))
+
+
+
+(defun fs-f-medicine(&rest args)
+  (erbnoc-fortune "medicine"))
+
+
+
+(defun fs-f-men-women (&rest args)
+  (erbnoc-fortune "men-women"))
+
+(defalias 'fs-sexwar 'fs-f-men-women)
+
+
+
+
+
+(defun fs-f-miscellaneous(&rest args)
+  (erbnoc-fortune "miscellaneous"))
+
+(defalias 'fs-f-misc 'fs-f-miscellaneous)
+
+
+
+(defun fs-f-news (&rest args)
+  (erbnoc-fortune "news"))
+
+
+
+(defun fs-f-people (&rest args)
+  (erbnoc-fortune "people"))
+
+
+(defun fs-f-pets (&rest args)
+  (erbnoc-fortune "pets"))
+
+
+
+(defun fs-f-platitudes (&rest args)
+  (erbnoc-fortune "platitudes"))
+
+
+
+(defun fs-f-politics (&rest args)
+  (erbnoc-fortune "politics"))
+
+
+(defun fs-f-science (&rest args)
+  (erbnoc-fortune "science"))
+
+(defun fs-f-songs-poems (&rest args)
+  (erbnoc-fortune "songs-poems"))
+
+
+(defun fs-f-sports(&rest args)
+  (erbnoc-fortune "sports"))
+
+
+
+
+
+(defun fs-f-startrek (&rest args)
+  (erbnoc-fortune "startrek"))
+(defalias 'fs-startrek 'fs-f-startrek)
+
+
+
+(defun fs-f-startrek (&rest args)
+  (erbnoc-fortune "startrek"))
+(defalias 'fs-startrek 'fs-f-startrek)
+
+(defun fs-f-translate-me (&rest args)
+  (erbnoc-fortune "translate-me"))
+
+
+
+(defun fs-f-wisdom(&rest args)
+  (erbnoc-fortune "wisdom"))
+(defalias 'fs-wisdom 'fs-f-wisdom)
+
+
+
+(defun fs-f-work (&rest args)
+  (erbnoc-fortune "work"))
+
+
+(defun fs-f-work (&rest args)
+  (erbnoc-fortune "work"))
+
+(defun fs-f-linux (&rest args)
+  (erbnoc-fortune "linux"))
+
+(defun fs-f-perl (&rest args)
+  (erbnoc-fortune "perl"))
+
+(defun fs-f-knghtbrd (&rest args)
+  (erbnoc-fortune "knghtbrd"))
+
+
+
+
+(defun fs-f-quotes-emacs-channel (&rest args)
+  (erbnoc-fortune "~/fortune-emacschannelquotes"))
+(defalias 'fs-f-emacs 'fs-f-quotes-emacs-channel)
+(defalias 'fs-f-quotes-emacs 'fs-f-quotes-emacs-channel)
+(defalias 'fs-quotes-emacs 'fs-f-quotes-emacs-channel)
+(defalias 'fs-quotes-emacs-channel 'fs-f-quotes-emacs-channel)
+
+
+
+
+
+
 
 
 
@@ -2508,7 +2816,15 @@ here."
 	       (backward-char) (setq this-point (point))
 	       ))
        ((and limitedp
-	     (progn (ignore-errors (backward-word 1))
+	     (progn (ignore-errors 
+		      ;; we want a backward-word 1 here, but only
+		      ;; whitespace is regarded as word-boundary for
+		      ;; us. 
+		      (when 
+			  (search-backward-regexp "\\( \\|\n\\|\t\\)" nil t)
+			(forward-char 1))
+		      ;;(backward-word 1)
+		      )
 		    (> (point) (point-min))))
 	(setq new-point (point))
 	(setq this-point new-point))
@@ -3043,7 +3359,10 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defalias 'fs-google-meatball 'fs-google-usemod)
 
-(defun fs-replace-regexp (&optional from to term number)
+(defun fs-replace-regexp (&optional from to term number delimited
+				    fixedcase literal subexp)
+  "TODO: implemenet fixedcase, literal, subexp... If needed, let the
+author know.."
   (unless (and from to term)
     (error (format "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER)" erbnoc-char)))
   (erbnocmd-iterate-internal term number 'replace-regexp-in-string from to
@@ -3344,16 +3663,57 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 
+(defun fs-info-emacs (&optional regexp)
+  (fs-info-file "emacs" regexp))
 
+(defun fs-info-elisp (&optional regexp)
+  (fs-info-file "elisp" regexp))
+
+(defun fs-info-efaq (&optional regexp)
+  (fs-info-file "efaq" regexp))
+
+(defun fs-info-eintr (&optional regexp)
+  (fs-info-file "eintr" regexp))
 
 (defun fs-info (&optional regexp)
-  (unless regexp (error (format "Syntax: %s info REGEXP" erbnoc-char)))
-  (unless (stringp regexp) (setq regexp (format "%s" regexp)))
-  (Info-goto-node "(Emacs)")
-  (if (Info-search regexp)
+  (or
+   (ignore-errors (fs-info-emacs regexp))
+   (ignore-errors (fs-info-elisp regexp))
+   (ignore-errors (fs-info-efaq regexp))
+   (ignore-errors (fs-info-eintr regexp))
+   (error "Not found in Emacs manual, elisp manual, Emacs FAQ and Elisp intro")))
 
-      t
-    nil))
+
+
+
+
+(defun fs-info-file (&optional infofile regexp)
+  (unless regexp 
+    (error (format "Syntax: %s info-node nodename REGEXP" erbnoc-char)))
+  (unless (stringp regexp) (setq regexp (format "%s" regexp)))
+
+
+  (unless infofile (error (format "Syntax: %s info info-file REGEXP" 
+			      erbnoc-char)))
+  (unless (stringp infofile) (setq infofile (format "%s" infofile)))
+
+  (cond
+   ((ignore-errors (Info-goto-node 
+		    (concat "(" infofile ")" regexp)))
+    (concat "Press C-x C-e after: (info \"("
+	    infofile ")" Info-current-node
+	    "\")")
+    )
+   ((progn
+      (ignore-errors 
+	(Info-goto-node (concat "(" infofile ")"))
+	(Info-top-node)
+	(Info-search regexp)))
+    (concat "Press C-x C-e after: (info  \"("
+	    infofile
+	    ")" Info-current-node
+	    "\")"))
+   (t (error "Regexp or infofile not found in the file"))))
 
 
 (defun fs-locate-library (&optional arg &rest rest)
@@ -3461,7 +3821,16 @@ last time i checked , equalp seemed to work as well.. "
 ;;;   (erbkarma-increase arg points))
 
 (defun fs-karma-increase (&rest args)
-  (error "Karma system is currently being reworked. "))
+  (if (car args)
+    (format
+     "Noted, %s.  One %s-point for %s!"					
+     nick
+     (erbutils-random '("brownie" "karma" "wiki" "rms" "lispy"))
+     (car args))
+    "")
+  ;;(error "Karma system is currently being reworked. ")
+  )
+
 (defalias 'fs-karma-decrease 'fs-karma-increase)
 
 ;;; (defun fs-karma-decrease (&optional arg points &rest ignore)
@@ -3813,7 +4182,7 @@ last time i checked , equalp seemed to work as well.. "
 (defalias 'fs-replace-regexp-in-string 'replace-regexp-in-string)
 (defalias 'fs-replace-match 'replace-match)
 
-(defalias 'fs-number-to-string 'string-to-number)
+(defalias 'fs-number-to-string 'number-to-string)
 (defalias 'fs-format 'format)
 (erbutils-defalias '(format-time-string))
 
@@ -4161,9 +4530,13 @@ setq fs-t to nil :-) ")
 
 (erbutils-defalias '(parse-time-string))
 
+(erbutils-defalias '(reverse))
+
 (defun fs-pp (object &rest ignore)
   (pp object))
 
+
+(erbutils-defalias '(ignore))
 (provide 'erbc)
 (run-hooks 'fs-after-load-hooks)
 
