@@ -1,5 +1,5 @@
 ;;; erbrss.el --- Provide an RSS feed from your erbot.
-;; Time-stamp: <2004-12-29 23:54:33 forcer>
+;; Time-stamp: <2005-01-01 17:30:49 forcer>
 ;; Copyright (C) 2004 Jorgen Schaefer
 ;; Emacs Lisp Archive entry
 ;; Filename: erbrss.el
@@ -112,12 +112,16 @@ This is suitable for `erbot-notify-add-functions'."
                  (format "Added entry %i of %s: %s" entry-num term entry)
                  (format "%s in %s" nick channel)))
 
-(defun erbrss-forget (nick channel term entry-num entry)
+(defun erbrss-forget (nick channel term entry-num entry remaining-entries)
   "Note a removal from the erbot database.
 This is suitable for `erbot-notify-forget-functions'."
   (erbrss-rc-add term
                  (if (not (eq entry-num 'all))
-                     (format "Forgot entry %i of %s: %s" entry-num term entry)
+                     (format "Forgot entry %i of %s: %s\n\nRemaining:\n%s"
+                             entry-num
+                             term
+                             entry
+                             (mapconcat #'identity remaining-entries "\n"))
                    (format "Forgot %s:\n\n%s"
                            term
                            (mapconcat #'identity entry "\n")))
