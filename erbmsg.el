@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.17 2004/06/26 12:30:18 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.18 2004/07/26 20:18:59 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.17 $")
+  "Version 0.2 $Revision: 1.18 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -121,8 +121,8 @@ messages are saved here")
   "Hook called before a new message has been posted.
 The raw message is passed as argument.")
 (defvar erbmsg-new-msg-post-hook
-	(when erbmsg-auto-dump-message-tables
-		'(erbmsg-regular-dump))
+  (when erbmsg-auto-dump-message-tables
+    '(erbmsg-regular-dump))
   "Hook called after a new message has been posted.
 The parsed message \(split to nicks and actual message text\)
 is passed as argument.")
@@ -268,12 +268,14 @@ when joining the channel"
          (setq erbmsg-internal-msg-cookie (random))
          (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie nick)))
            (and msgs
-                (> (- (nth 1 (current-time)) (nth 1 last-access)) erbmsg-notify-on-join-timeout)
+                (or (null last-access)
+                    (> (- (nth 1 (current-time)) (nth 1 last-access))
+                       erbmsg-notify-on-join-timeout))
                 (erc-message "PRIVMSG"
                              (format "%s %s"
                                      channel
                                      msgs)))
-					 'noreply))))
+           'noreply))))
 (if erbot-on-new-erc-p
     (add-hook 'erc-server-JOIN-functions 'erbmsg-notify-msg-on-JOIN)
   (add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN))

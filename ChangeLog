@@ -1,3 +1,8 @@
+2004-07-26  S Freundt  <hroptatyr@gna.org>
+
+	* erbmsg.el: (erbmsg-notify-msg-on-JOIN)
+	- fixed bug with last-access used for the first time
+
 2004-06-26  S Freundt  <hroptatyr@gna.org>
 
 	* erbmsg.el: 
