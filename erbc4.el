@@ -193,14 +193,19 @@ to query using PROMPT, or just return t."
          (not-table (if (eq table erbnoc-RR-bullet-bets)
                         erbnoc-RR-empty-bets
                       erbnoc-RR-bullet-bets)))
-    (if (gethash nick not-table)
-        (format "%s: Idiot, you can can only bet on one outcome (%s)."
-                nick on-what)
+    (cond
+     ((gethash nick not-table)
+      (format "%s: Idiot, you can can only bet on one outcome (%s)."
+              nick on-what))
+     ((< (gethash nick erbnoc-money) how-much)
+      (format "%s: Fool, you can't bet more than you've got (%d)."
+              nick (gethash nick erbnoc-money)))
+     (else
       (erbnoc-move-money nick erbnoc-money table how-much)
       (format "%s has bet %d GEMs so far on a %s."
               nick
               (gethash nick table)
-              on-what))))
+              on-what)))))
 
 (defun fs-lend (to-whom how-much)
   (let* ((nick (intern nick))
