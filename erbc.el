@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-07-08 13:36:54 deego>
+;; Time-stamp: <2004-12-14 10:38:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4435,10 +4435,17 @@ last time i checked , equalp seemed to work as well.. "
 (erbutils-defalias '(incf))
 (erbutils-defalias '(faith-quote))
 (erbutils-defalias '(zerop))
-(erbutils-defalias '(buffer-substring))
+;;(erbutils-defalias '(buffer-substring))
 (erbutils-defalias '(buffer-substring-no-properties))
-(erbutils-defalias '(buffer-string))
+;;(erbutils-defalias '(buffer-string))
 
+;; We define it to be no-properties, else people can (setq foo
+;; (buffer-string)).. and cause a huge uservariables file.. 
+
+(defun fs-buffer-string (&rest args)
+  (buffer-string-no-properties (point-min) (point-max)))
+
+(defalias 'fs-buffer-substring 'buffer-substring-no-properties)
 
 
 (erbutils-defalias 
