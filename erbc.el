@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-06-11 16:46:06 deego>
+;; Time-stamp: <2004-06-17 16:03:36 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1921,7 +1921,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	(let* (
 	       ;; notice the use of result1 here, not result. 
 	       (aa (first result1))
-	       
+	       (aarest (cdr result1))
 	       (bb (split-string aa))
 
 	       (cc (first bb))
@@ -1954,8 +1954,8 @@ number N, and ending at M-1. The first record is numbered 0.
 		  (progn
 		    (setq bb (cdr bb))
 		    (setq aa (mapconcat 'identity bb " "))
-		    (setq result1 (list aa))
-		    (setq result result1)
+		    (setq result1 (cons aa aarest))
+		    (setq result (subseq result1 N newM))
 		    (setq cc (first bb))
 		    (setq dd (second bb))
 		    (setq ddd (or (and (stringp dd)
