@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-23 08:43:56 deego>
+;; Time-stamp: <2003-05-26 11:46:58 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1019,17 +1019,17 @@ Else, of course, do the usual thing: viz. call describe...
 	(concat aa erbnoc-char " " erbc-nick)
 	(concat erbc-nick erbnoc-char " " aa))))))
 
-;; (defun erbc-hi (&optional nick &rest args)
-;;   ".
-;; Optional argument NICK .
-;; Optional argument ARGS ."
-;;   (if (and nick (not (string-match erbot-nick (format "%s" nick))))
-;;       (format "hi %s !!" 
-;; 	      (let ((foo (split-string (format "%s" nick )
-;; 				       "[^a-bA-Z0-0]")))
-;; 		(or (first foo) nick))
-;; 	      )
-;;     (erbc-describe "hi")))
+(defun erbc-greet (&optional nick &rest args)
+  ".
+ Optional argument NICK .
+ Optional argument ARGS ."
+  (if (and nick (not (string-match erbot-nick (format "%s" nick))))
+       (format "hi %s !!" 
+	       (let ((foo (split-string (format "%s" nick )
+					"[^a-bA-Z0-0]")))
+		 (or (first foo) nick))
+	       )
+    (erbc-describe "hi")))
 
 ;;; (defun erbc-ni (&optional nick &rest args)
 ;;;   ".
