@@ -4165,6 +4165,8 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defmacro erbn-with-web-page-buffer (site &rest body)
   (let ((buffer (make-symbol "web-buffer")))
     `(let ((,buffer (url-retrieve-synchronously ,site)))
+       (when (null ,buffer)
+         (error "Invalid URL %s" site))
        (save-excursion
          (set-buffer ,buffer)
          (goto-char (point-min))
