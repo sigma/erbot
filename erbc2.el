@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-20 13:43:17 deego>
+;; Time-stamp: <2003-06-20 16:35:55 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -121,12 +121,8 @@
 (defun erbnoc-apply-sandbox-args (args)
   (cond
    ((= (length args) 0) nil)
-   ((= (length args) 1) 
-    (if (equal (caar args) 'quote) args
-      (mapcar 'erblisp-sandbox-quoted args)))
    (t
-    (cons (erblisp-sandbox-quoted (car args))
-	  (erbnoc-apply-sandbox-args (cdr args))))))
+    (mapcar 'erblisp-sandbox args))))
 
 (defvar erbnoc-apptmpa)
 (defvar erbnoc-apptmpb)
@@ -137,7 +133,7 @@
 (defmacro fs-apply (fcnsym &rest args)
   (unless fcnsym (error "No function to fs-apply!"))
   (let (erbnoc-tmpargs
-	(erbnoc-len (length args))
+	(erbnoc-tmplen (length args))
 	erbnoc-tmpnewargs
 	)
     (cond
@@ -145,11 +141,11 @@
       (setq erbnoc-tmpargs nil))
      (t
       (setq erbnoc-tmpargs
-	    (append (subseq args 0 2)
-		    (first (last args))))))
-      
+	    (append (subseq args 0 (- erbnoc-tmplen 1))
+		    (last args)))))
+    
     (let* (
-	   (erbnoc-tmp-newargs (erbnoc-apply-sandbox-args args))
+	   (erbnoc-tmp-newargs (erbnoc-apply-sandbox-args erbnoc-tmpargs))
 	   (erbnoc-tmp-newlen (length erbnoc-tmp-newargs)))
     (cond
      ((listp fcnsym)
@@ -165,7 +161,7 @@
 	(t "nada"))
        ,(if (= erbnoc-tmp-newlen 0)
 	    `(apply erbnoc-tmp-avar nil)
-	  `(apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs))))))
+	  `(apply erbnoc-tmp-avar ,@erbnoc-tmp-newargs nil))))))
 
 (defmacro fs-funcall (symbol &rest args)
   `(fs-apply ,symbol ,@args nil))
