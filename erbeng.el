@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2005-03-21 15:36:53 deego>
+;; Time-stamp: <2005-03-29 14:10:31 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -123,11 +123,11 @@ nil nil\ nil nil nil nil nil nil nil nil]
    (fs-msglist fs-msglist)
    (fs-msgsansbot fs-msgsansbot)
    (fs-msglistsansbot fs-msglistsansbot)
-   (fs-a fs-a)
-   (fs-b fs-b)
-   (fs-c fs-c)
-   (fs-d fs-d)
-   (fs-e fs-e)
+   (fs-lispa fs-lispa)
+   (fs-lispb fs-lispb)
+   (fs-lispc fs-lispc)
+   (fs-lispd fs-lispd)
+   (fs-lispe fs-lispe)
    )
     ;;(concat nick ": " "/leave Test.. one big big test...")
     ;;(erbutils-ignore-errors

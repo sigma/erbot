@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-01-08 12:52:18 deego>
+;; Time-stamp: <2005-03-29 13:59:29 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -654,6 +654,11 @@ those things..
 	   lines))))))
 
 
+(defcustom erbot-setf-p nil
+  "If you want your bot to allow setf, set this symbol to non-nil at
+the beginning of your .emacs")
+
+  
 ;;;###autoload
 (defun erbot-install ()
   "Run this function AFTER loading all the files..."
@@ -674,8 +679,33 @@ those things..
 	 (add-hook 'erc-server-376-hook
 		   'erbot-autojoin-channels))
 	)
-  (erbot-install-symbols))
+  (erbot-install-symbols)
+  (when erbot-setf-p (erbot-install-setf))
+  )
 
+
+
+(defun erbot-install-setf ()
+  (interactive)
+  (defalias 'fs-setf 'setf)
+  (require 'cl)
+  (let*
+      ((syms 
+	(apropos-internal "" (lambda (a) (get a 'setf-method))))
+       (fssyms 
+	(mapcar
+	 (lambda (a) (intern (format "fs-%s" a)))
+	 syms))
+       (fsisyms 
+	(mapcar
+	 (lambda (a) (intern (format "fsi-%s" a)))
+	 syms)))
+    (mapcar*
+     (lambda (a b c) 
+       (let ((foo (get a 'setf-method)))
+	 (put b 'setf-method foo)
+	 (put c 'setf-method foo)))
+     syms fssyms fsisyms)))
 
 
 

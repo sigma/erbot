@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-23 09:42:33 deego>
+;; Time-stamp: <2005-03-29 14:11:13 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -573,7 +573,7 @@ Optional argument TGT .
 Optional argument FOO .
 
 We will also bind a number of variables, as appropriate, for example,
-fs-msg*, fs-args, fs-a, fs-b... so that these vars can be used
+fs-msg*, fs-lispargs, fs-lispa , fs-lispb... so that these vars can be used
 anywhere in the code, or the user-defined parts of the code...
 
 In the grand scheme of things, these bindings should turn out to be
@@ -1990,26 +1990,26 @@ from only that part. ")
 
 
 
-(defvar fs-args nil
+(defvar fs-lispargs nil
   "Will be used when using the lisp form")
 
 
 
-(defvar fs-a nil
+(defvar fs-lispa nil
   "Will be used when using the lisp form")
 
 
-(defvar fs-b nil
+(defvar fs-lispb nil
   "Will be used when using the lisp form")
 
 
-(defvar fs-c nil
+(defvar fs-lispc nil
   "Will be used when using the lisp form")
 
-(defvar fs-d nil
+(defvar fs-lispd nil
   "Will be used when using the lisp form")
 
-(defvar fs-e nil
+(defvar fs-lispe nil
   "Will be used when using the lisp form")
 
 
@@ -2037,14 +2037,14 @@ Looks for TERM, and shows its descriptions starting at description
 number N, and ending at M-1. The first record is numbered 0. 
 "
   (let 
-      ;;((fs-args (append (list mainterm N M prestring expr) rest)))
+      ;;((fs-lispargs (append (list mainterm N M prestring expr) rest)))
       ;; nothing, just a let not used any more..
       ((fs-nothingsorry nil))
     ;; in the global scheme of things, this will turn out to be only a
     ;; local binding, since erbeng-main will have (let)'ed this.  Same
-    ;; for fs-a, fs-b, fs-c...
+    ;; for fs-lispa , fs-lispb, fs-lispc...
 
-    (setq fs-args (mapcar 'fsi-read-or-orig (cdr fs-msglistsansbot)))
+    (setq fs-lispargs (mapcar 'fsi-read-or-orig (cdr fs-msglistsansbot)))
     (when fs-found-query-p 
       (setq N 0)
       (setq M 1))
@@ -2162,12 +2162,12 @@ number N, and ending at M-1. The first record is numbered 0.
 	     ((and expandp (member cc '("lisp")))
 	      (let*
 		  ((fs-nothingsorry nil))
-		   ;; (fs-args fs-args) ;; no need
-		(setq fs-a (nth 0 fs-args))
-		(setq fs-b (nth 1 fs-args))
-		(setq fs-c (nth 2 fs-args))
-		(setq fs-d (nth 3 fs-args))
-		(setq fs-e (nth 4 fs-args))
+		   ;; (fs-lispargs fs-lispargs) ;; no need
+		(setq fs-lispa (nth 0 fs-lispargs))
+		(setq fs-lispb (nth 1 fs-lispargs))
+		(setq fs-lispc (nth 2 fs-lispargs))
+		(setq fs-lispd (nth 3 fs-lispargs))
+		(setq fs-lispe (nth 4 fs-lispargs))
 		(erbeng-main 
 		 (concat erbn-char " (progn "
 			 (substring aa
@@ -4394,6 +4394,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defconst fs-bunny 142857)
 (defconst fs-pi pi)
 (defconst fs-e e)
+(defconst fs-euler e)
 (defconst fs-emacs-version emacs-version)
 
 (defalias 'fsi-emacs-version 'emacs-version)
