@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2004-03-28 11:27:24 deego>
+;; Time-stamp: <2004-04-01 10:28:19 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -163,6 +163,13 @@ to query using PROMPT, or just return t."
   '(
 
 
+    ("si"
+     "http://www.gnufans.net/cgi-bin/singularity.pl?"
+     "http://www.gnufans.net/cgi-bin/singularity.pl?action=index"
+     nil
+     "singbot: "
+     )
+
     ("ai2"
      "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?"
      "http://www.ifi.unizh.ch/ailab/aiwiki/aiw.cgi?action=index"
@@ -170,12 +177,7 @@ to query using PROMPT, or just return t."
      "singbot: "
      )
 
-    ("si"
-     "http://www.gnufans.net/cgi-bin/singularity.pl?"
-     "http://www.gnufans.net/cgi-bin/singularity.pl?action=index"
-     nil
-     "singbot: "
-     )
+
 
     ("sl"
      "http://www.sl4.org/bin/wiki.pl?"
@@ -201,6 +203,10 @@ to query using PROMPT, or just return t."
      nil
      "fsbot: "
      )
+
+
+
+
 
 
     ("fw"
