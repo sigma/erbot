@@ -1,19 +1,19 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-10-27 12:08:53 deego>
+;; Time-stamp: <17/11/2004 16:41:03 Yann Hodique>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
-;; Authors:  David Edmunston (dme@dme.org) 
+;; Authors:  David Edmunston (dme@dme.org)
 ;; Modified by: D. Goel <deego@gnufans.org>
 ;; Version: 0.0
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; Maintainer: Deepak Goel <deego@gnufans.org>
 
- 
+
 (defvar erbot-home-page
   "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot/pub/emacspub/lisp-mine/erbot/")
 
-;; Version: 
+;; Version:
 ;; Keywords: ERC, IRC, chat, robot, bot
 
 ;; Copyright (C) 2002 Deepak Goel, FSF
@@ -45,17 +45,17 @@
 
 
 ;; Thanks for erbot's/erbot's behavior and their data go to a lot
-;; of people on #emacs, like: 
+;; of people on #emacs, like:
 ;; kensanata (Alex Schroeder)
 ;; resolve (Damien Elmes)
 ;; bpt  (Brian P. Templeton)
 ;; forcer (Jorgen "forcer" Schaefer)
 ;; and many others
 
-;; and also to bot(s): 
+;; and also to bot(s):
 ;; apt on debian, for english syntax examples.
 
-;; Thanks for code go to: 
+;; Thanks for code go to:
 ;; David Edmonsdon (who wrote erc-robot.el which is what this started
 ;; out from).
 ;; Nick Hober (who wrote google.el)
@@ -66,7 +66,7 @@
 
 ;; Quick start:
 (defvar erbot-quick-start
-  "Add (erbot-install) to .emacs.. and join channels.. 
+  "Add (erbot-install) to .emacs.. and join channels..
 for a more detailed example, look at fsbot's .emacs here:
 http://deego.gnufans.org/~fsbot/dotemacs-fsbot ..
 
@@ -211,17 +211,17 @@ properly.
 
 
 (defcustom erbot-ignore-nicks '("^apt[0-9]?$" "bot" "google" "serv")
-  "A list of REGEXPS. 
+  "A list of REGEXPS.
 Nicks matching these regexps will be ignored by the bot, viz. not
-generate replies. 
+generate replies.
 
 I would suggest including atleast bot, google and serv here to prevent
 infinite chat loops with other bots.  :)
-" 
+"
 :type '(repeat regexp)
 :group 'erbot)
 
-(defcustom erbot-use-whitelist nil "Use a whitelist for accessing the bot. 
+(defcustom erbot-use-whitelist nil "Use a whitelist for accessing the bot.
 Any request from another source will be ignored. If a source is present in whitelist
 and in `erbot-ignore-nicks' it is ignored"
 :type 'boolean
@@ -236,11 +236,11 @@ and in `erbot-ignore-nicks' it is ignored"
 (run-hooks 'erbot-before-load-hooks)
 
 
-(defgroup erbot nil 
+(defgroup erbot nil
   "The group erbot"
    :group 'applications)
 
-(defcustom erbot-nick "fsbot" 
+(defcustom erbot-nick "fsbot"
 "Changing this in the middle of things
 may have unspecified and unpleasant results..."
 :group 'erbot)
@@ -261,7 +261,7 @@ may have unspecified and unpleasant results..."
             ))
 	(".gnome.org"
          ("#testgnome")
-	 ;; optional but: 
+	 ;; optional but:
 	 6667
 	 ))
       "Servers and channels ..."
@@ -284,7 +284,7 @@ may have unspecified and unpleasant results..."
 
 
 
-(defcustom erbot-erbmsg-p nil 
+(defcustom erbot-erbmsg-p nil
   "When true, erball.el loads the erbmsg module by default ")
 
 ; This function is used by the example above.
@@ -321,7 +321,7 @@ may have unspecified and unpleasant results..."
   "Glue the dunnet into the ERC robot."
   (save-excursion
     (let ((freshp nil)
-	  outpoint res ans 
+	  outpoint res ans
 	  (pre "")
 	  full
 	  )
@@ -336,7 +336,7 @@ may have unspecified and unpleasant results..."
       (when (string-match "save" arg)
 	(setq arg "save ~/pub/dunnet/dunnet.game")
 	(setq pre "Will save to ~/pub/dunnet/dunnet.game"))
-      (cond 
+      (cond
        ((string-match "^.?more" arg)
 	(setq ans (fs-more)))
        (t
@@ -345,27 +345,27 @@ may have unspecified and unpleasant results..."
 	(setq outpoint (if freshp (point-min) (point)))
 	(unless freshp (dun-parse 1))
 	(setq ans
-	      (buffer-substring-no-properties 
+	      (buffer-substring-no-properties
 	       outpoint (- (point-max) 1)))
 	(when (equal arg "quit")
 	  (when (kill-buffer "*dungeon*")))))
       (setq full (concat pre ans))
-      (when 
-	  (string-match  
+      (when
+	  (string-match
 	   "I don't understand that"
 	   full)
-	(setq 
+	(setq
 	 full
-	 (concat 
+	 (concat
 	  full
 	  " I am in dunnet mode.  For regular fsbot, type , (dunnet-mode)")))
       full)))
 
-(defvar erbot-quiet-p nil 
+(defvar erbot-quiet-p nil
   "When non-nil, the erbot only listens, never replies")
 (defun erbot-quiet ()
   (interactive)
-  (setq erbot-quiet-p 
+  (setq erbot-quiet-p
 	(not erbot-quiet-p))
   (message "set to %S" erbot-quiet-p))
 
@@ -397,13 +397,13 @@ the new erc-backend functions."
 		      (t (aref parsed 1))))
 	 (userinfo (erc-parse-user sspec))
 	 (nick (nth 0 userinfo))
-	 
+
 	 (cmdargs (and erbot-on-new-erc-p
 		       (erc-response.command-args parsed)))
 	 (tgta (cond (cmdargs
 		      (nth 0 cmdargs))
 		     (t (aref parsed 2))))
-	 (tgt (if (equalp tgta erbot-nick)
+	 (tgt (if (equalp tgta (or (erc-current-nick) erbot-nick))
 		  nick
 		tgta))
 	 (msg (cond (cmdargs
@@ -413,33 +413,33 @@ the new erc-backend functions."
 	 )
     ;; changing the structure here..
     ;; also changing erbot-command to erbot-reply..
-    ;; from now on, erend-main will take care of what to reply.. 
+    ;; from now on, erend-main will take care of what to reply..
     ;; erbot-reply will simply take the reply and reply that...
     ;; should not be setq.. else other invocations may change it..
     ;;(setq erbot-end-user-nick nick)
-    
+
     (setq erbot-end-user-nick-latest erbot-end-user-nick)
     (setq fs-tgt tgt)
     (setq erbnoc-tgt tgt)
-    
+
     (setq fs-nick nick)
     (setq erbnoc-nick nick)
-    
+
     (let ((msgg
-	   (erbeng-main msg proc nick tgt nil userinfo)))	   
+	   (erbeng-main msg proc nick tgt nil userinfo)))
       ;; erbot-reply needs a correct buffer...
       (set-buffer (process-buffer proc))
-      
+
       (cond
        (erbot-quiet-p nil)
        ((and erbot-quiet-target-p-function
 	     (funcall erbot-quiet-target-p-function tgt nick msg))
 	nil)
-       (t (erbot-reply 
+       (t (erbot-reply
 	   msgg
 	   proc nick tgt msg nil
 	   )))
-      
+
       ))
   nil)
 
@@ -452,7 +452,7 @@ the new erc-backend functions."
       (insert reply)
       (goto-char (point-min))
       (while (re-search-forward "\n" nil t)
-	(replace-match 
+	(replace-match
 	 (concat "\n" erbot-init-string) nil t))
       (concat erbot-init-string (buffer-string))))))
 
@@ -483,7 +483,7 @@ those things..
   (message "erbot-reply-p set to %S" erbot-reply-p)
   )
 (defun erbot-reply (main-reply proc from tgt msg locally-generated)
-  "Robot worker.  Should do nothing when main-reply is nil. 
+  "Robot worker.  Should do nothing when main-reply is nil.
 
 "
   (unless (stringp main-reply)
@@ -503,15 +503,15 @@ those things..
 	;;			      (and (stringp allowed-users)
 	;;				   (string-match allowed-users
 	;;						 (regexp-quote from)))))
-	
-	
-	
+
+
+
 	;;(reply (concat from ": " main-reply))
 	;; my frobbing of reply..
-	(reply 
+	(reply
 	 (erbot-frob-with-init-string main-reply))
-	
-	
+
+
 	(rep-buffer (erc-get-buffer tgt proc)))
     ;;(if permitted
     ;;				  (if l
@@ -524,19 +524,19 @@ those things..
 	       (not (erbot-safep reply)))
       (setq reply (concat " " reply)))
     (erc-log reply)
-    
-    
+
+
     (unless
 	(or
 	 (null erbot-reply-p)
 	 (equal main-reply 'noreply)
 	 (equal main-reply "noreply"))
-      ;; now we are actually gonna reply. 
+      ;; now we are actually gonna reply.
       (save-excursion
 	(setq reply (fs-limit-lines reply))
 	(if rep-buffer (set-buffer rep-buffer)
 	;;; this alternative reply somehow never gets sent out..
-	  ;;(setq reply (concat "msg " from " " 
+	  ;;(setq reply (concat "msg " from " "
 	  ;;		      "No private msgs.. try #testopn"))
 	  ;;(set-buffer (erc-get-buffer tgt proc))
 	  (progn
@@ -552,7 +552,7 @@ those things..
 	     (goto-char (point-max))
 	     (setq p (re-search-backward (erc-prompt)))
 	     ;;(insert (erc-format-timestamp) "<" me "> ")
-	     (insert ;;(erc-format-timestamp) 
+	     (insert ;;(erc-format-timestamp)
 	      "<" me "> ")
 	     (erc-put-text-property 0 (length line) 'face
 				    'erbot-face line)
@@ -566,7 +566,7 @@ those things..
 	     (set-marker (process-mark erc-process) (point))
 	     (set-marker erc-insert-marker (point))
 	     (goto-char (point-max))
-	     
+
 	     (erc-process-input-line (concat line "\n") t multiline-p))
 	   lines))))))
 
@@ -611,9 +611,9 @@ those things..
 (defun erbot-alive-p ()
   "Is atleast one connection still alive?"
   ;;(require 'cl-extra)
-  (some 
+  (some
    'identity
-   (mapcar 
+   (mapcar
     (lambda (buf)
       (save-excursion
 	(set-buffer buf)
@@ -630,11 +630,11 @@ not, try to reconnect. "
   (idledo-add-periodic-action-crude
    '(unless (erbot-alive-p)
       (add-to-list 'erbot-reconnection-attempts
-		   (message "Erbot trying to reconnect at %s" 
+		   (message "Erbot trying to reconnect at %s"
 			    (format-time-string
 			     "%Y%m%d-%H%M-%S")))
       (ignore-errors (apply 'erbot-join-servers args)))))
-  
+
 ;;;###autoload
 (defun erbot-join-servers (&optional server port nick
 				   user-full-name
@@ -649,7 +649,7 @@ not, try to reconnect. "
 	   (car arg) (cadr arg) nick user-full-name not-connect-arg passwd)
 	  (sit-for 1)
 	  )
-       
+
        ;; get the list of servers
        (erbot-get-servers)
 
@@ -688,15 +688,15 @@ not, try to reconnect. "
 
 
 (defun erbot-safep (reply)
-  
+
   (or
    (string-match "^[0-9a-zA-Z]" reply)
    ;;(not (string-match "^/" reply)) -- this is bad.. since, control
    ;;characters are bad... beginnning ^A for example, will send CTCP requests..
-   
+
    ;; Allow /me commands.. but only when the rest of the text has no
    ;; control characters..
-   (and (equal 0 (string-match "^/me " reply)) 
+   (and (equal 0 (string-match "^/me " reply))
 	(let ((rlist (string-to-list reply)))
 	  (not (member-if (lambda (a) (< a 32)) rlist))))))
 
