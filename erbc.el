@@ -1187,7 +1187,19 @@ Else, of course, do the usual thing: viz. call describe...
 (defun fs-kiss (&optional nick &rest foo)
   "Nada.
 Optional argument NICK ."
-  (format "/me kisses %s" nick))
+  (setq nick (format "%s" (or nick "itself")))
+  (cond
+   ((member nick (list erbot-nick "yourself" "self"))
+    (eval 
+     (erbutils-random
+      '("I'd rather kiss you"
+        "Kiss myself? Why?"))))
+   (t
+    (eval 
+     (erbutils-random
+      '((format "/me kisses %s" nick)
+        (format "/me gives %s a big smooch" nick)
+        (format "/me runs in the other direction, shouting NEVER!!")))))))
 
 (defun fs-hug (&optional nick)
   (unless nick (setq nick "itself"))
