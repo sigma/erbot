@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-06 16:26:43 deego>
+;; Time-stamp: <2005-01-06 16:56:10 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -97,10 +97,10 @@ different bots.
 
 Is really a string, but the length of the string should be 1,. 
 ")
-(defcustom erbnoc-char-double ",,"
+(defcustom erbnoc-char-double (concat erbnoc-char erbnoc-char)
   "The string which calls the bot from midsentence
 
-this string shoul dhave a length 2
+this string should have a length of EXACTLY 2.
 
 ")
 
