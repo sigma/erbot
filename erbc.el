@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-01 11:44:28 deego>
+;; Time-stamp: <2005-04-01 13:14:13 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -551,6 +551,12 @@ When string, will be matched against target. "
 	   (setq msg (subseq msg 0 -1)))))
   msg)
 
+(defvar erbn-dead-check-p nil
+  "If non-nil, we will not reply to people who have shot themselves
+using mark-dead or russian roulette.  These people need to be revived
+first. Of course, like any magic, revival sometimes works, and
+sometimes doesn't.")
+
 (defun fsi-lispify (&optional msg proc nick tgt localp
 				 userinfo &rest foo)
   "Parse the english MSG into a lisp command. 
@@ -919,7 +925,9 @@ local, because the parent function calling this function should have
 
 
 	  ;; do a dead check
-	  (erbn-dead-check)
+	  (when erbn-dead-check-p (and (not foundquery)
+				       (erbn-dead-check)))
+
 	  
 	  (setq
 	   newmsglist
@@ -4565,7 +4573,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fs-gn 'fs-google-nevadamissouri)
 (defalias 'fs-gp 'fs-google-planetmath)
 (defalias 'fs-gt 'fs-google-twiki)
-(defalias 'fs-gu 'fs-google-usemod)
+;;(defalias 'fs-gu 'fs-google-usemod)
 
 (defalias 'fsi-mark 'mark)
 (defalias 'fsi-point 'point)
