@@ -41,10 +41,15 @@
 
 ;;; TODOs that have been done:
 
+;; 2004/03/31:
+;; - store which channel the memo came from
+;; - added garbage collection function (erbmsg-garbage-cleanse-cookies) to
+;;   clean up erbmsg-msg-cookie-hash-table from unreferenced cookies
+
 ;;; TODO:
-;; - functionality to forget the erbmsg-question-* pile
+;; - functionality to forget the erbmsg-question-* pile effectively
 ;; - save erbmsg-msg-hash-table across sessions
-;; - allow multiple message between two users
+;; - find unused cookies in erbmsg-msg-cookie-hash-table
 
 ;;; Data
 
@@ -68,6 +73,9 @@ messages are saved here")
   :group 'erbmsg)
 
 
+;;(set-time-zone-rule "UTC")
+
+
 (defun fs-memo (nick &rest msg)
   "Specify your message and the nick to dedicate to here, as in:
 
@@ -82,10 +90,11 @@ Note: magic words are not currently implemented."
                                      erbmsg-msg-hash-table)))
               (msg (erbutils-stringize msg))
               (cnick fs-nick)
+							(cchan fs-tgt)
               (ctime (current-time))
               (magic-words)
               ;; composition of the new memo
-              (newmsg (vector cnick msg ctime magic-words))
+              (newmsg (vector cnick cchan msg ctime magic-words))
               (newcookie (erbmsg-generate-msg-cookie newmsg))
               ;; now memos from that user already in the system
               (cmsgs (gethash cnick nicks-ht)))
@@ -93,6 +102,7 @@ Note: magic words are not currently implemented."
          (puthash nick cmsgs nicks-ht))
        "msg memorized for delivery"))
 (defalias 'fs-msg-wmw 'fs-memo) ;; just for compatibility
+(defalias 'fs-msg-with-magic-words 'fs-memo)
 
 
 (defun fs-msg-mymsgs (&rest line)
@@ -145,7 +155,7 @@ when joining the channel"
               (channel (aref parsed 2))
               (nick (erc-parse-user usernickhost)))
          (setq erbmsg-internal-msg-cookie (random))
-         (let* ((msgs (fs-msg-mymsgs nick erbmsg-internal-msg-cookie)))
+         (let* ((msgs (fs-msg-mymsgs :internal erbmsg-internal-msg-cookie nick)))
            (and msgs
                 (erc-message "PRIVMSG"
                              (format "%s %s"
@@ -174,7 +184,7 @@ see erbmsg-question part below :)."
          (pending-actions))
     (and nicks-ht nil
          (maphash (lambda (fromnick msg-data)
-                    (let ((magic-words (aref msg-data 2)))
+                    (let ((magic-words (aref msg-data 3)))
                       (add-to-list 'magic-words (format "me?ss?a?ge?s? ?\\(?:from\\)? %s" fromnick))
                       (nconc magic-words erbmsg-default-magic-words)
                       (and (string-match
@@ -247,12 +257,14 @@ instead of PRIVMSG you may specify another sending method."
          (mapc (lambda (msg)
                  (or (and msg
                           (let ((msgfrom (aref msg 0))
-                                (msgtext (aref msg 1))
-                                (msgtime (aref msg 2)))
+																(msgchan (aref msg 1))
+                                (msgtext (aref msg 2))
+                                (msgtime (aref msg 3)))
                             (erc-message method
-                                         (format "%s %s %s: %s"
+                                         (format "%s %s@%s %s: %s"
                                                  target
                                                  msgfrom
+																								 msgchan
                                                  (format-time-string "%D %T (%Z)" msgtime)
                                                  msgtext))))
                      (erc-message method (format "%s invalid message cookie" target))))
@@ -280,14 +292,36 @@ instead of PRIVMSG you may specify another sending method."
 
 
 
+;; garbage collection
+
+(defun erbmsg-garbage-cleanse-cookies nil
+	"Collects garbage from `erbmsg-msg-cookie-hash-table' when
+there's no referring entry in `erbmsg-msg-hash-table'."
+	(maphash (lambda (cookie-k cookie-v)
+						 (let ((cookie cookie-k)
+									 (referred))
+							 (catch 'ref-exists-p
+								 (maphash (lambda (memo-k memo-v)
+														(maphash (lambda (from cookie-list)
+																			 (and (member cookie cookie-list)
+																						(setq referred t)
+																						(throw 'ref-exists-p t)))
+																		 memo-v))
+													erbmsg-msg-hash-table))
+							 (unless referred
+								 (remhash cookie erbmsg-msg-cookie-hash-table))))
+					 erbmsg-msg-cookie-hash-table))
+;; erbmsg-msg-cookie-hash-table
+;; (erbmsg-garbage-cleanse-cookies)
+
+
+
 
 
 ;;; just some tricks to create gazillions of msgs w/o IRC
 ;; (clrhash erbmsg-msg-hash-table)
 ;; (puthash "hroptatyr" (make-hash-table :test 'equal) erbmsg-msg-hash-table)
 ;; (puthash "asathor" '("22224444" "33336666") (gethash "hroptatyr" erbmsg-msg-hash-table))
-
-
 
 
 
