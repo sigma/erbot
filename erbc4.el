@@ -184,10 +184,12 @@ to query using PROMPT, or just return t."
         (incf (gethash nick table2) amount)
       (setf (gethash nick table2) amount))))
 
-(defun fs-bet (arg1 arg2)
+(defun fs-bet (arg1 arg2 &rest ignored)
   (let* ((nick (intern nick))
          (on-what (if (symbolp arg1) arg1 arg2))
          (how-much (if (numberp arg2) arg2 arg1))
+         (_ (if (< how-much 0)
+                (error "You can't bet negative amounts, moron.")))
          (table (case on-what
                   ((empty no-bullet click) erbnoc-RR-empty-bets)
                   ((bullet bang blam) erbnoc-RR-bullet-bets)
@@ -209,7 +211,7 @@ to query using PROMPT, or just return t."
               (gethash nick table)
               on-what)))))
 
-(defun fs-lend (arg1 arg2)
+(defun fs-lend (arg1 arg2 &rest ignored)
   (let* ((to-whom (if (symbolp arg1) arg1 arg2))
          (how-much (if (numberp arg2) arg2 arg1))
          (nick (intern nick))
@@ -278,49 +280,38 @@ to query using PROMPT, or just return t."
 (defvar erbnoc-log "")
 
 (defun erbnoc-distribute (maybe-dead-nick winning-table losing-table)
-  (cond
-   ((and (= (hash-table-count winning-table) 0)
-         (not maybe-dead-nick))
-    ;; Give the losers their money back.
-    (maphash (lambda (nick amount)
-               (incf (gethash nick erbnoc-money) amount))
-             losing-table)
-    "Hah, no one bet for what won.")
-   ((and (= (hash-table-count losing-table) 0)
-         (not maybe-dead-nick))
-    (maphash (lambda (nick amount)
-               (incf (gethash nick erbnoc-money) amount))
-             winning-table)
-    "You winners don't get any extra dough since no one lost the bet.")
-   (t
-    (let* ((winning-bets (erbnoc-valueshash winning-table))
-           (total-win-bets (apply #'+ winning-bets))
-           (total-money
-            (apply #'+
-                   (if maybe-dead-nick
-                       (erbnoc-all-money maybe-dead-nick)
-                     0)
-                   total-win-bets
-                   (erbnoc-valueshash losing-table))))
-      (setq erbnoc-log
-            (concat erbnoc-log
-                    (format "\ntotal-win-bets: %d\ntotal-money: %d\n"
-                            total-win-bets
-                            total-money)))
-      (maphash (lambda (nick amount)
-                 (let* ((percent (erbnoc-percent amount total-win-bets))
-                        (unpercent (erbnoc-unpercent percent total-money)))
-                   (setq erbnoc-log
-                         (concat erbnoc-log
-                                 (format "\npercent: %f\nunpercent: %f\n"
-                                         percent
-                                         unpercent)))
-                   (incf (gethash nick erbnoc-money)
-                         (round unpercent))))
-               winning-table)
-
-      (clrhash winning-table)
-      (clrhash losing-table)))))
+  (prog1
+      (cond
+       ((and (= (hash-table-count winning-table) 0)
+             (not maybe-dead-nick))
+        ;; Give the losers their money back.
+        (maphash (lambda (nick amount)
+                   (incf (gethash nick erbnoc-money) amount))
+                 losing-table)
+       ((and (= (hash-table-count losing-table) 0)
+             (not maybe-dead-nick))
+        ;; Give the winners their money back.
+        (maphash (lambda (nick amount)
+                   (incf (gethash nick erbnoc-money) amount))
+                 winning-table))
+       (t
+        (let* ((winning-bets (erbnoc-valueshash winning-table))
+               (total-win-bets (apply #'+ winning-bets))
+               (total-money
+                (apply #'+
+                       (if maybe-dead-nick
+                           (erbnoc-all-money maybe-dead-nick)
+                         0)
+                       total-win-bets
+                       (erbnoc-valueshash losing-table))))
+          (maphash (lambda (nick amount)
+                     (let* ((percent (erbnoc-percent amount total-win-bets))
+                            (unpercent (erbnoc-unpercent percent total-money)))
+                       (incf (gethash nick erbnoc-money)
+                             (round unpercent))))
+                   winning-table))))
+    (clrhash winning-table)
+    (clrhash losing-table)))
 
 (defvar erbnoc-chamber (random 6))
 
@@ -363,46 +354,40 @@ to query using PROMPT, or just return t."
 (defun erbnoc-rr-click ()
   (funcall (fs-random-choose erbnoc-rr-clicks)))
 
-(defun fs-add-bang (bang)
+(defun fs-add-bang (&rest bangs)
   (setq erbnoc-rr-bangs
-        (cons bang erbnoc-rr-bangs)))
-(defun fs-add-click (click)
+        (concat bangs erbnoc-rr-bangs)))
+(defun fs-add-click (&rest clicks)
   (setq erbnoc-rr-clicks
-        (cons click erbnoc-rr-clicks)))
+        (concat clicks erbnoc-rr-clicks)))
 
-(defun fs-russian-roulette ()
-  (let ((dist (if (or (= (hash-table-count erbnoc-RR-bullet-bets) 0)
-                      (= (hash-table-count erbnoc-RR-empty-bets) 0))
-                  (lambda (&rest ignored) nil)
-                #'erbnoc-distribute)))
-    (if (= erbnoc-chamber 5)
-        (progn
-          (setq erbnoc-chamber (random 6))
-          ;; Don't let them do that, because it confuses the distribution
-          ;; process.
-          (if (gethash nick erbnoc-RR-bullet-bets)
-              (error (concat nick ": Idiot, don't bet on your own death.")))
-          (funcall dist
-                   (intern nick)
-                   erbnoc-RR-bullet-bets
-                   erbnoc-RR-empty-bets)
-          (erbnoc-rr-bang))
-      (incf erbnoc-chamber)
-      (funcall dist
-               nil
-               erbnoc-RR-empty-bets
-               erbnoc-RR-bullet-bets)
-      (erbnoc-rr-click))))
+(defun fs-russian-roulette (&rest ignored)
+  (if (= erbnoc-chamber 5)
+      (progn
+        (setq erbnoc-chamber (random 6))
+        ;; Don't let them do that, because it confuses the distribution
+        ;; process.
+        (if (gethash nick erbnoc-RR-bullet-bets)
+            (error (concat nick ": Idiot, don't bet on your own death.")))
+        (erbnoc-distribute (intern nick)
+                           erbnoc-RR-bullet-bets
+                           erbnoc-RR-empty-bets)
+        (erbnoc-rr-bang))
+    (incf erbnoc-chamber)
+    (erbnoc-distribute nil
+                       erbnoc-RR-empty-bets
+                       erbnoc-RR-bullet-bets)
+    (erbnoc-rr-click)))
 
 (defvar erbnoc-auth-bankers '())
 
-(defun erbnoc-add-banker (nick)
+(defun erbnoc-add-banker (nick &rest ignored)
   (add-to-list 'erbnoc-auth-bankers nick))
 
 (defun fs-auth-bankerp ()
   (member (intern nick) erbnoc-auth-bankers))
 
-(defun fs-reset-money ()
+(defun fs-reset-money (&rest ignored)
   (if (not (fs-auth-bankerp))
       (error (concat nick "You can't reset the money.")))
   (clrhash erbnoc-money)
