@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2003-06-19 12:25:57 deego>
+;; Time-stamp: <2004-03-29 18:09:26 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -139,6 +139,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 	  
 	   ))
 	(and (featurep 'erbmsg)
+	     erbot-erbmsg-p
 	     (erbmsg-parse msg proc nick tgt localp userinfo))))
     
     ;;(if (and (first parsed-msg) erbot-nick
