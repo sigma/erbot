@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.15 2004/06/20 22:31:30 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.16 2004/06/26 02:47:23 hroptatyr Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -8,12 +8,13 @@
 ;; Keywords: memo, message, 
 ;; Version: still conceptional
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+;; URL: http://www.emacswiki.org/cgi-bin/wiki.pl?ErbMsg
 ;; For latest version:
 
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.1 $Revision: 1.15 $")
+  "Version 0.2 $Revision: 1.16 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -38,12 +39,23 @@
 
 ;;; Comments:
 
-;; still to write
+;; - To automagically save the whole message table with each incoming message
+;;   put following to your .erbot:
+;;
+;;   (add-hook 'erbmsg-new-msg-post-hook 'erbmsg-regular-dump)
+;;
+;; - To clean up message cookies with every flushed message, add
+;;
+;;   (add-hook 'erbmsg-flush-post-hook 'erbmsg-garbage-cleanse-cookies)
+
 
 ;;; TODOs that have been done:
 
-;; 2004/06/20:
-;; - added interval to not notify on channel joins 
+;; 2004/06/22:
+;; - added dump routines to dump message hash tables to hard disk
+;; - added routines for restoring from dumped message files
+;; - added interval within erbot does not notify on channel joins
+;; - added erbmsg-new-msg-(pre|post)-hook
 ;; 2004/04/09:
 ;; - added support for multiple recipients (see fs-memo for syntax)
 ;; - abstracted fs-memo stuff to two defuns (erbmsg-memo-parse-msg and erbmsg-memorize-msg)
@@ -81,9 +93,39 @@ messages are saved here")
   :group 'erbmsg)
 
 
+;;; dump settings
+
+(defcustom erbmsg-dump-file "~/public_html/data/messages.dump"
+  "File to dump message hash tables to."
+  :group 'erbmsg)
+
+(defcustom erbmsg-auto-restore-message-tables t
+  "Whether to automagically restore contents of `erbmsg-dump-file'."
+  :group 'erbmsg
+  :type 'boolean)
+
+(defcustom erbmsg-auto-dump-message-tables nil
+  "Whether to automagically dump hash tables to `erbmsg-dump-file'."
+  :group 'erbmsg
+  :type 'boolean)
+
+
+
 ;;; uncomment this to normalize to UTC
 ;;(set-time-zone-rule "UTC0")
 
+(defvar erbmsg-after-load-hook nil
+  "Hook called after `erbmsg' has been loaded.")
+
+(defvar erbmsg-new-msg-pre-hook nil
+  "Hook called before a new message has been posted.
+The raw message is passed as argument.")
+(defvar erbmsg-new-msg-post-hook
+	(when erbmsg-auto-dump-message-tables
+		'(erbmsg-regular-dump))
+  "Hook called after a new message has been posted.
+The parsed message \(split to nicks and actual message text\)
+is passed as argument.")
 (defvar erbmsg-flush-pre-hook nil
   "Hook called before erbmsg-flush-pending-msgs is called.")
 (defvar erbmsg-flush-post-hook nil
@@ -106,16 +148,18 @@ Allowed syntaxes:
 
 Note: magic words are not currently implemented."
   (or (and erbot-erbmsg-p
-					 msg
-					 (let* ((msg-raw (erbutils-stringize msg))
-									(nicks+msg (erbmsg-memo-parse-msg msg-raw)))
-						 (mapc (lambda (nick+msg)
-										 (let* ((nick (car nick+msg))
-														(msg (nth 1 nick+msg)))
-											 (erbmsg-memorize-msg nick msg)))
-									 nicks+msg)
-						 "msg memorized for delivery"))
-			'noreply))
+           msg
+           (let* ((msg-raw (erbutils-stringize msg))
+                  (nicks+msg (erbmsg-memo-parse-msg msg-raw)))
+             (run-hook-with-args 'erbmsg-new-msg-pre-hook msg-raw)
+             (mapc (lambda (nick+msg)
+                     (let* ((nick (car nick+msg))
+                            (msg (nth 1 nick+msg)))
+                       (erbmsg-memorize-msg nick msg)))
+                   nicks+msg)
+             (run-hook-with-args 'erbmsg-new-msg-post-hook nicks+msg)
+             "msg memorized for delivery"))
+      'noreply))
 (defalias 'fs-msg-wmw 'fs-memo) ;; just for compatibility
 (defalias 'fs-msg-with-magic-words 'fs-memo)
 
@@ -150,7 +194,7 @@ Note: magic words are not currently implemented."
          ;; now memos from that user already in the system
          (cmsgs (gethash cnick nicks-ht)))
     (add-to-list 'cmsgs newcookie)
-    (puthash nick cmsgs nicks-ht)))
+    (puthash cnick cmsgs nicks-ht)))
 
 
 
@@ -213,11 +257,11 @@ Note: magic words are not currently implemented."
 when joining the channel"
   (and erbot-erbmsg-p
        (let* ((usernickhost (if erbot-on-new-erc-p
-																(erc-response.sender parsed)
-															(aref parsed 1)))
+                                (erc-response.sender parsed)
+                              (aref parsed 1)))
               (channel (if erbot-on-new-erc-p
-													 (nth 0 (erc-response.command-args parsed))
-												 (aref parsed 2)))
+                           (nth 0 (erc-response.command-args parsed))
+                         (aref parsed 2)))
               (nick (car (erc-parse-user usernickhost)))
               (last-access (cdr-safe (assoc nick erbmsg-last-nicks-join))))
          (set-alist 'erbmsg-last-nicks-join nick (current-time))
@@ -229,10 +273,10 @@ when joining the channel"
                              (format "%s %s"
                                      channel
                                      msgs)))
-					 'noreply))))
+<          'noreply))))
 (if erbot-on-new-erc-p
-		(add-hook 'erc-server-JOIN-functions 'erbmsg-notify-msg-on-JOIN)
-	(add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN))
+    (add-hook 'erc-server-JOIN-functions 'erbmsg-notify-msg-on-JOIN)
+  (add-hook 'erc-server-JOIN-hook 'erbmsg-notify-msg-on-JOIN))
 
 
 
@@ -430,7 +474,84 @@ if so return 'noreply, if not return an according answer."
       'noreply))
 
 
+;;; dumping code
+;; this code is to make erbot remember messages after restarts
+
+(defun erbmsg-regular-dump (&rest ignore)
+  "Fun wrapper to call `erbmsg-dump-tables'."
+  (interactive)
+  (erbmsg-dump-tables))
+
+(defun erbmsg-dump-tables (&optional file)
+  "Dumps known message hash tables to a buffer in order to save it."
+  (interactive "Ferbmsg dump file: ")
+  (let ((file (or file
+                  erbmsg-dump-file)))
+    (with-temp-buffer
+      (mapc (lambda (htable)
+              (insert (format "[%s \n [\n" htable))
+              (maphash
+               (lambda (key val)
+                 (insert
+                  (format "  [%S %s]\n" key
+                          (cond
+                           ((hash-table-p val)
+                            (let (valstring)
+                              (maphash
+                               (lambda (k2 v2)
+                                 (setq valstring
+                                       (format "%s[%S %S]"
+                                               (or valstring "") k2 v2)))
+                               val)
+                              (format "(%s)" valstring)))
+                           (t (format "%S" val))))))
+               (eval htable))
+              (insert (format " ]\n]\n")))
+            '(erbmsg-msg-hash-table erbmsg-msg-cookie-hash-table))
+      (write-file erbmsg-dump-file))))
+
+(defun erbmsg-restore-tables (&optional file)
+  "Restores known message hash tables from FILE or `erbmsg-dump-file'."
+  (interactive "ferbmsg dump file: ")
+  (let* ((file (or file
+                   erbmsg-dump-file))
+         (file-vector
+          (and (file-readable-p file)
+               (with-temp-buffer
+                 (insert-file-contents file)
+                 (eval (read (format "(setq file-vector '(%s))"
+                                     (buffer-string))))))))
+    (mapvector
+     (lambda (tablevector)
+       (let ((table (aref tablevector 0))
+             (vector (aref tablevector 1)))
+         (mapvector
+          (lambda (keyval)
+            (let ((key (aref keyval 0))
+                  (val (aref keyval 1)))
+              (cond ((listp val)
+                     (let ((nickht (make-hash-table :test 'equal)))
+                       (mapc
+                        (lambda (htvec)
+                          (let ((k2 (aref htvec 0))
+                                (v2 (aref htvec 1)))
+                            (puthash k2 v2 nickht)))
+                        val)
+                       (puthash key nickht (eval table))))
+                    (t (puthash key val (eval table))))))
+          vector)))
+     file-vector)))
+
+(when (and erbot-erbmsg-p
+           erbmsg-auto-restore-message-tables
+           ;;(eq (hash-table-count erbmsg-msg-hash-table) 0)
+           )
+  (erbmsg-restore-tables))
+
+
 (provide 'erbmsg)
+
+;;; erbmsg.el ends here
 
 ;; Local variables:
 ;; indent-tab-mode: nil

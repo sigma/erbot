@@ -1,4 +1,13 @@
-2004-06-13 S Freundt <hroptatyr@gna.org>
+2004-06-26  S Freundt  <hroptatyr@gna.org>
+
+	* erbmsg.el: 
+	- added dump routines to dump message hash tables to hard disk
+	- added routines for restoring from dumped message files
+	- added interval within erbot does not notify on channel joins
+	- added erbmsg-new-msg-(pre|post)-hook
+
+2004-06-13  S Freundt  <hroptatyr@gna.org>
+
 	* erbot.el: added new var erbot-on-new-erc-p 
 	and handlers for new erc-backend facilities.
 
