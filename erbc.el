@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-03-15 10:12:33 deego>
+;; Time-stamp: <2005-03-15 14:31:36 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4132,7 +4132,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-h4x0r-maybe (&rest args)
   (let*
-      ((aa (erbutils-stringify args))
+       ((aa (erbutils-stringify args))
        (bb
 	(ignore-errors
 	  (eval 
@@ -4165,6 +4165,17 @@ last time i checked , equalp seemed to work as well.. "
 (erbutils-defalias-i '(faith-correct-string))
 (erbutils-defalias-i '(member))
 
+(erbutils-defalias-i '(stringp consp symbolp numberp listp arrayp
+			       boundp bufferp commandp consp endp
+			       equalp evenp oddp facep fboundp
+			       featurep functionp integerp keywordp
+			       keymapp listp markerp minusp natnump
+			       nlistp numberp overlayp plusp rationalp
+			       sequencep subrp tailp timerp 
+			       typep vectorp windowp xemacsp zerop))
+
+			      
+			       
 (defun erbn-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
 out harmful shell code..
@@ -4333,9 +4344,10 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fs-lart 'fs-flame)
 
 (defalias 'fsi-null 'null)
-(defalias 'fsi-atom 'null)
-(defalias 'fsi-stringp 'null)
-(defalias 'fsi-consp 'null)
+(defalias 'fsi-atom 'atom)
+;;(defalias 'fsi-stringp 'stringp)
+;;(defalias 'fsi-consp 'consp)
+
 
 
 
