@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2005-01-02 22:18:43 deego>
+;; Time-stamp: <2005-01-02 22:32:01 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -92,7 +92,7 @@ debugging."
 Format same as that of `erbforget-y-or-n-p'."
   :type 'function
   :group 'erbforget)
-(defcustom erbforget-n-or-y-p-function 'erbforget-y-or-n-p
+(defcustom erbforget-n-or-y-p-function 'erbforget-n-or-y-p
   "Function to use for interactivity-dependent `n-or-y-p'.
 Format same as that of `erbforget-n-or-y-p'."
   :type 'function
