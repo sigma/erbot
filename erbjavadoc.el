@@ -253,7 +253,7 @@ erbot.el invokes this function."
 ;; are a large number of entries to remove, the operation times out
 ;; from the top-level timer in erbot (I think)
 ;;
-;; (defun fsi-unlearn-javadocs (url)
+;; (defun fsi-forget-javadocs (url)
 ;;   "Remove all terms and entries for the URL specified.  This will
 ;; remove the appropriate entries from the bbdb.  If an entry has more
 ;; than one definition, only the relevant entry is removed."
