@@ -42,7 +42,7 @@ in this package.
 +-------+---------------------------------------------------------------------+
 |fsi-   |Like fs- but these functions and variables are only world-readable   |
 |       |and world-executable, but NOT world-writable.  The "i" stands for    |
-|       |immutable.                                                           |
+|       |immutable (or is it "internal"?)                                     |
 +-------+---------------------------------------------------------------------+
 |       |                                                                     |
 +-------+---------------------------------------------------------------------+
