@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-06 16:56:10 deego>
+;; Time-stamp: <2005-01-06 17:19:18 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -63,7 +63,7 @@
 
 
 (defvar erbc-version "NA")
-(defvar fs-version "20031114")
+(defvar fs-version "dev")
 
 
 ;;==========================================
@@ -2717,7 +2717,7 @@ risky.. ")
 ;; (defalias 'fs-cons 'cons)
 
 (defvar fs-internal-limit-line-length 125
-  "This should be a multiple of 80 .. -35 .. suggest: 210.")
+  "Suggested value: (multiple of 80) minus 35 .. suggested: 210.")
 
 (defvar fs-internal-limit-length
   300
@@ -3365,15 +3365,15 @@ number N, and ending at M-1. The first record is numbered 0.
   (fs-google-with-options "site:emacswiki.org" args))
 
 (defun fsi-google-sl4 (&rest args)
-  "Google on the emacswiki site."
+  "Google on the sl4 site."
   (fs-google-with-options "site:sl4.org" args))
 
 (defun fsi-google-planetmath (&rest args)
-  "Google on the emacswiki site."
+  "Google on the planetmath site."
   (fs-google-with-options "site:planetmath.org" args))
 
 (defun fsi-google-octave (&rest args)
-  "Google on the emacswiki site."
+  "Google on the octave site."
   (fs-google-with-options "site:octave.org" args))
 
 
@@ -3385,11 +3385,11 @@ number N, and ending at M-1. The first record is numbered 0.
 
 
 (defun fs-google-gnufans-net (&rest args)
-  "Google on the emacswiki site."
+  "Google on gnufans.net."
   (fs-google-with-options "site:gnufans.net" args))
 
 (defun fs-google-gnufans-org (&rest args)
-  "Google on the emacswiki site."
+  "Google on gnufans.org"
   (fs-google-with-options "site:gnufans.org" args))
 
 (defun fs-google-hurdwiki(&rest args)
@@ -3404,19 +3404,19 @@ number N, and ending at M-1. The first record is numbered 0.
 
 
 (defun fs-google-scarymath (&rest args)
-  "Google on the twiki site."
+  "Google on scarymath"
   (fs-google-with-options "site:http:scarymath.org" args))
 
 (defun fs-google-twiki (&rest args)
   "Google on the twiki site."
   (fs-google-with-options "site:http:twiki.org" args))
 
-(defun fs-google-usemod (&rest args)
-  "Google on the emacswiki site."
-  (fs-google-with-options "site:usemod.com" args))
+;; unprovide nonfree sites..
+;; (defun fs-google-usemod (&rest args)
+;;   "Google on usemod"
+;;   (fs-google-with-options "site:usemod.com" args))
 
-
-(defalias 'fs-google-meatball 'fs-google-usemod)
+;;(defalias 'fs-google-meatball 'fs-google-usemod)
 
 (defun fsi-replace-regexp (&optional from to term number delimited
 				    fixedcase literal subexp)
