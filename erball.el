@@ -37,6 +37,7 @@
 (require 'erbtrain)
 (ignore-errors (require 'erbwiki))
 (require 'erbunlisp)
+(require 'erbcompat)
 
 (require 'flame)
 
