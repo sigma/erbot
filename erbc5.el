@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2004-12-03 16:47:03 deego>
+;; Time-stamp: <2004-12-17 00:13:06 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -7,7 +7,7 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:  
 ;; Version:  
-;; URL: http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version: 
 
 (defconst erbc5-home-page

@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2004-04-22 23:03:31 deego>
+;; Time-stamp: <2004-12-17 00:14:12 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -12,7 +12,7 @@
 ;; Author: D. Goel <deego@glue.umd.edu>
 ;; Keywords:
 ;; Version:
-;; URL: http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
 
 (defconst erbcspecial-home-page

@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2004-04-19 10:32:13 deego>
+;; Time-stamp: <2004-12-17 00:12:43 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -7,8 +7,7 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-
-;; URL: http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
 
 (defconst erbc3-home-page

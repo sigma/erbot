@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2004-08-20 15:28:20 deego>
+;; Time-stamp: <2004-12-17 00:12:38 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -7,7 +7,8 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:
 ;; Version:
-;; URL:  http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+
 
 
 

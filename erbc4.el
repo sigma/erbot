@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2004-07-21 12:42:02 deego>
+;; Time-stamp: <2004-12-17 00:12:56 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -7,7 +7,7 @@
 ;; Author: Taylor Campbell
 ;; Keywords:
 ;; Version:
-;; URL: http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
 
 (defconst erbc4-home-page

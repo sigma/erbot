@@ -1,5 +1,5 @@
 ;;; erbedit.el --- quicker operator editing of bots' bbdb
-;; Time-stamp: <2004-03-28 11:44:19 deego>
+;; Time-stamp: <2004-12-17 00:13:59 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbedit.el
@@ -7,7 +7,7 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Keywords:  
 ;; Version:  
-;; URL: http://gnufans.net/~deego
+;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version: 
 
 (defconst erbedit-home-page
