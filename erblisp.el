@@ -1,0 +1,262 @@
+;;; erblisp.el --- 
+;; Time-stamp: <2003-04-22 09:39:33 deego>
+;; Copyright (C) 2002 D. Goel
+;; Emacs Lisp Archive entry
+;; Filename: erblisp.el
+;; Package: erblisp
+;; Author: D. Goel <deego@glue.umd.edu>
+;; Version: 99.99
+;; Author's homepage: http://deego.gnufans.org/~deego
+;; For latest version: 
+
+(defvar erblisp-home-page
+  "http://deego.gnufans.org/~deego")
+
+
+ 
+;; This file is NOT (yet) part of GNU Emacs.
+ 
+;; This is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+ 
+;; This is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+;; Boston, MA 02111-1307, USA.
+ 
+
+;; See also:
+
+
+;; Quick start:
+(defvar erblisp-quick-start
+  "Help..."
+)
+
+(defun erblisp-quick-start ()
+  "Provides electric help regarding variable `erblisp-quick-start'."
+  (interactive)
+  (with-electric-help
+   '(lambda () (insert erblisp-quick-start) nil) "*doc*"))
+
+;;; Introduction:
+;; Stuff that gets posted to gnu.emacs.sources
+;; as introduction
+(defvar erblisp-introduction
+  "Help..."
+)
+
+;;;###autoload
+(defun erblisp-introduction ()
+  "Provides electric help regarding variable `erblisp-introduction'."
+  (interactive)
+  (with-electric-help
+   '(lambda () (insert erblisp-introduction) nil) "*doc*"))
+
+;;; Commentary:
+(defvar erblisp-commentary
+  "Help..."
+)
+
+(defun erblisp-commentary ()
+  "Provides electric help regarding variable `erblisp-commentary'."
+  (interactive)
+  (with-electric-help
+   '(lambda () (insert erblisp-commentary) nil) "*doc*"))
+
+;;; History:
+
+;;; Bugs:
+
+;;; New features:
+(defvar erblisp-new-features
+  "Help..."
+)
+
+(defun erblisp-new-features ()
+  "Provides electric help regarding variable `erblisp-new-features'."
+  (interactive)
+  (with-electric-help
+   '(lambda () (insert erblisp-new-features) nil) "*doc*"))
+
+;;; TO DO:
+(defvar erblisp-todo
+  "Help..."
+)
+
+(defun erblisp-todo ()
+  "Provides electric help regarding variable `erblisp-todo'."
+  (interactive)
+  (with-electric-help
+   '(lambda () (insert erblisp-todo) nil) "*doc*"))
+
+(defvar erblisp-version "99.99")
+
+;;==========================================
+;;; Code:
+
+(defgroup erblisp nil 
+  "The group erblisp"
+   :group 'applications)
+(defcustom erblisp-before-load-hooks nil "" :group 'erblisp)
+(defcustom erblisp-after-load-hooks nil "" :group 'erblisp)
+(run-hooks 'erblisp-before-load-hooks)
+
+
+(defun erblisp-process-msg (msg &optional proc nick tgt)
+  "MSG is either a string or a tree.. If it is a tree, it looks
+something like 
+   '(foo bar (bar foo))
+
+This command sandboxes the message and then processes it.."
+
+  (if (stringp msg)
+      (setq msg (read msg)))
+  (format "%s" (eval (erblisp-sandbox-fuzzy msg))))
+
+(defun erblisp-sandbox-quoted (expr)
+  "sandboxes the whole expression even if it starts with a quote."
+  (cond
+   ((and (listp expr)
+	 (equal (first expr) 'quote))
+    (cons 'quote
+	  (mapcar 'erblisp-sandbox (cdr expr))))
+   (t (erblisp-sandbox expr))))
+
+(defun erblisp-sandbox (expr)
+  (cond 
+   ;; first condition
+   ((null expr) nil)
+   ;; second condition
+   ((listp expr) 
+    (let ((fir (first expr)))
+      (cond
+       ((listp fir)
+	(cons (erblisp-sandbox fir)
+	      (mapcar 'erblisp-sandbox (cdr expr))))
+       ((equal (format "%S" fir) "quote")
+	;; if quoted, it is fine...
+	expr)
+       (t (cons 
+	   (if (equal 0 (string-match "erbc-" (format "%S" fir)))
+	       fir
+	     (intern (concat "erbc-" (format "%S" fir))))
+	   (mapcar 'erblisp-sandbox (cdr expr)))))))
+   
+
+   ;; final condition.. --> when the expr is an atom..  It should be a
+   ;; a constant..  or an allowed atom.. allowed == prefixed with erbc-
+   (t (cond
+       ((and (symbolp expr) 
+	     (equal 0 (string-match "erbc-" (format "%s" expr))))
+	expr)
+       ((equal expr t) expr)
+       ((symbolp expr)
+	;;(boundp (intern (concat "erbc-" (format "%S" expr)))))
+	(intern (concat "erbc-" (format "%s" expr))))
+       ;; other symbol
+       ;;((symbolp expr) (list 'quote expr))
+       ;; a number or string now..
+       ;; this actually happens when they feed byte-compiled code to
+       ;; the bot, like:
+       ;;, (funcall #[nil "\300\207" [1] 1])    
+       ((not (or (symbolp expr) (numberp expr) (stringp expr)))
+	(error "%s %s" "Should not reach here.  Quantum Tunnelling! "
+	       "What are you trying to feed me? Byte-compiled code??"
+	       ))
+       (t expr)))
+   ))
+	 
+
+(defun erblisp-sandbox-fuzzy (expr)
+  "Sandboxes a message.. Ensures that the functions are all erbc-
+and the arguments are NOT variable-names... This one sandboxes
+preferably by quoting unless erbc-symbol is bound.."
+  (cond 
+
+   ;; first condition
+   ((null expr) nil)
+   
+   ;; second condition
+   ((listp expr) 
+    (let ((fir (first expr)))
+      (cond
+       ((listp fir)
+	(cons (erblisp-sandbox-fuzzy fir))
+	(mapcar 'erblisp-sandbox-fuzzy (cdr expr)))
+       ((equal (format "%S" fir) "quote")
+	;; if quoted, it is fine...
+	expr)
+       (t (cons 
+	   (if (equal 0 (string-match "erbc-" (format "%S" fir)))
+	       fir
+	     (intern (concat "erbc-" (format "%S" fir))))
+	   (mapcar 'erblisp-sandbox-fuzzy (cdr expr)))))))
+   
+
+   ;; final condition.. --> when the expr is an atom..  It should be a
+   ;; a constant..  or an allowed atom.. allowed == prefixed with erbc-
+   (t (cond
+       ((and (symbolp expr) 
+	     (equal 0 (string-match "erbc-" (format "%s" expr))))
+	expr)
+       ((and (symbolp expr)
+	     (or
+	      (boundp (intern (concat "erbc-" (format "%S" expr))))
+	      (fboundp (intern (concat "erbc-" (format "%S" expr))))
+	     ))
+	(intern (concat "erbc-" (format "%s" expr))))
+       ;; other symbol
+       ((symbolp expr) (list 'quote expr))
+       ;; a number or string now..
+
+       ((not (or (symbolp expr) (numberp expr) (stringp expr)))
+	(error "Should not reach here.  Fuzzy tunnels!"))
+       (t expr)))
+   ))
+
+
+
+
+(defun erblisp-sandbox-full(expr &optional midstream)
+  "
+This will ensure that anything rigt after parens is sandboxed by a
+erbc- prefix.  And anything else is either a symbol , or a string,
+but not a variable...  viz: quoted ...else converted into one. 
+
+midstream is in internal variable..."
+  (cond
+   ((null expr) nil)
+   ((listp expr)
+    (let* ((fir (first expr)))
+      (if (eql fir 'quote)
+	  expr
+	(cons (erblisp-sandbox-full fir)
+	      (mapcar '(lambda (arg)
+			 (erblisp-sandbox-full arg t))
+		      (cdr expr))))))  
+   ;; now we know that expr is a non-nil atom...
+   (midstream
+    (if (stringp expr) expr
+      (list 'quote expr)))
+
+
+
+   ;; midstream is untrue... expr is thus an atom at the beginning..
+   (t
+    (if (equal 0 (string-match "erbc-" (format "%s" expr)))
+	expr (intern (concat "erbc-" (format "%s" expr)))))))
+
+(provide 'erblisp)
+(run-hooks 'erblisp-after-load-hooks)
+
+
+
+;;; erblisp.el ends here
