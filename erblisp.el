@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2003-06-19 12:25:56 deego>
+;; Time-stamp: <2003-06-20 17:56:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -110,6 +110,7 @@ We WON'T do this by default since this could lead to exploits if you
 )
 
 (defun erblisp-sandbox (expr)
+  ""
   (cond 
    ;; first condition
    ((null expr) nil)

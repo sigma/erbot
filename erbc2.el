@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-06-20 16:35:55 deego>
+;; Time-stamp: <2003-06-20 17:57:58 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -130,7 +130,44 @@
 (defvar erbnoc-apptmpd)
 (defvar erbnoc-tmpsymbolp)
 
+
 (defmacro fs-apply (fcnsym &rest args)
+  ""
+  (unless fcnsym (error "No function to fs-apply!"))
+  (let (erbnoc-tmpargs
+	(erbnoc-tmplen (length args))
+	erbnoc-tmpfirstargs
+	erbnoc-lastargs
+	erbnoc-tmpspecialp 
+	)
+    (cond
+     ((null args)
+      (setq erbnoc-tmpargs nil)
+      (setq erbnoc-tmptastargs nil)
+      (setq erbnoc-tmpspecialp nil))
+     (t
+      (setq erbnoc-tmpargs
+	    (append (subseq args 0 (- erbnoc-tmplen 1))))
+      (setq erbnoc-tmplastargs
+	    (first (last args)))))
+    (setq erbnoc-tmpargs (erbnoc-apply-sandbox-args erbnoc-tmpargs))
+    (setq erbnoc-tmplastargs 
+	  (if (and (listp erbnoc-tmplastargs)
+	       (equal (car erbnoc-tmplastargs) 'quote))
+	      erbnoc-tmplastargs
+	    (erbnoc-apply-sandbox-args erbnoc-tmplastargs)))
+    (cond
+     ((listp fcnsym)
+      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
+     ((symbolp fcnsym)
+      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
+     (t (error "No clue how to apply that. ")))
+    (if erbnoc-tmpspecialp
+	`(apply ,fcnsym nil)
+      `(apply ,fcnsym ,@erbnoc-tmpargs ,erbnoc-tmplastargs))))
+
+
+(defmacro fs-apply-old (fcnsym &rest args)
   (unless fcnsym (error "No function to fs-apply!"))
   (let (erbnoc-tmpargs
 	(erbnoc-tmplen (length args))
