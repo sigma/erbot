@@ -1,4 +1,4 @@
-;;; erbutils.el --- ;; Time-stamp: <2003-05-13 09:01:46 deego>
+;;; erbutils.el --- ;; Time-stamp: <2003-05-13 09:16:55 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -610,7 +610,6 @@ prefix-rmENTRY. "
 
 
 (defun erbutils-rot13 (str)
-  (require 'rot13)
   (apply
    'string
    (mapcar
