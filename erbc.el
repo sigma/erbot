@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-08 12:52:26 deego>
+;; Time-stamp: <2005-01-23 23:07:24 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1271,23 +1271,35 @@ anything useful. ")))
 
 (defalias 'fs-fuck 'fs-love)
 
+(defvar fs-flame-target nil)
 
+
+
+(defun fsi-eval-maybe (str &optional nick)
+  (unless nick (setq nick fs-nick))
+  (let ((aa (when (stringp str)
+	      (ignore-errors (read str)))))
+    (cond
+     ((consp aa) (fsi-eval aa))
+     (t (format "%s: %s" nick str)))))
+
+    
 
 (defun fs-flame (&rest args)
-  "Doesn't really flame right now..
-Optional argument ARGS ."
-  (let ((target
+  ""
+  (let ((fs-flame-target
 	 (if (first args)
 	     (format "%s" (first args))
 	   erbot-end-user-nick))
 	(flames (ignore-errors (fs-notes "flames"))))
-    (if (string= (format "%s" target) "me")
-	(setq target erbot-end-user-nick))
+    (if (string= (format "%s" fs-flame-target) "me")
+	(setq fs-flame-target erbot-end-user-nick))
     ;; Check for flame.el support
     (cond
      ((and (consp flames) (> (length flames) 0))
-      (concat target ": " (fs-random-choose flames)))
-     (t (fs-flame-mild target)))))
+      (fsi-eval-maybe (fs-random-choose flames) fs-flame-target))
+     (t (fs-flame-mild fs-flame-target)))))
+
 
 
 
