@@ -97,8 +97,7 @@ With prefix ARG, insert version string into current buffer at point."
 ;;==========================================
 ;;; Requires: 
 (require 'cl)
-(require 'url)
-
+(require 'erburl)
 
 ;;; Code:
 
