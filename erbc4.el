@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2004-04-06 13:51:13 deego>
+;; Time-stamp: <2004-07-21 12:42:02 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -380,7 +380,9 @@ to query using PROMPT, or just return t."
                        erbnoc-RR-bullet-bets)
     (erbnoc-rr-click)))
 
-(defvar erbnoc-auth-bankers nil)
+(defvar erbnoc-auth-bankers 
+  '(deego Riastradh fledermaus _sprintf))
+
 
 (defun erbnoc-add-banker (nick &rest ignored)
   (add-to-list 'erbnoc-auth-bankers nick))
