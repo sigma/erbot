@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2005-01-01 21:02:13 deego>
+;; Time-stamp: <2005-01-01 21:05:14 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -121,7 +121,7 @@ to query using PROMPT, or just return t."
 
 
 (defun erbforget-sw (reg &optional prevent-reg matchingonly)
-  "RUN THIS WHEN AS MYBOT WHEN SU-ED TO THE BOT. 
+  "RUN THIS AS MYBOT WHEN SU-ED TO THE BOT. 
 
 Forget all terms containing occurrence of regexp REG. 
 
