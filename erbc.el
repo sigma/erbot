@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-17 09:47:24 deego>
+;; Time-stamp: <2003-06-17 15:19:02 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -86,8 +86,14 @@ this string shoul dhave a length 2
 (defcustom erbc-internal-botito-mode nil
   "Mode to turn on more english-like bunny-behavior"
   :group 'erbc)
+
 (defvar erbc-tgt "")
 (defvar erbc-nick "")
+
+(defvar erbnoc-tgt "")
+(defvar erbnoc-nick "")
+
+
 (defcustom erbc-internal-questions
   '("what" "where" "who" 
     ;; no please: 

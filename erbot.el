@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-05-29 09:03:34 deego>
+;; Time-stamp: <2003-06-17 15:19:59 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -378,7 +378,11 @@ args	- arguments to the command (optional)."
     
     (setq erbot-end-user-nick-latest erbot-end-user-nick)
     (setq erbc-tgt tgt)
+    (setq erbnoc-tgt tgt)
+
     (setq erbc-nick nick)
+    (setq erbnoc-nick nick)
+
     (let ((msgg
 	   (erbeng-main msg proc nick tgt nil userinfo)))	   
       ;; erbot-reply needs a correct buffer...
