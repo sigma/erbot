@@ -170,14 +170,146 @@ to query using PROMPT, or just return t."
 
 ;;; Real Code:
 
-(defvar erbnoc-rr-bullet (random 6))
+(defvar erbnoc-RR-empty-bets (make-hash-table))
+(defvar erbnoc-RR-bullet-bets (make-hash-table))
+(defvar erbnoc-money (make-hash-table))
 
-(defun fs-russian-roulette (&rest ignore)
-  (if (>= erbnoc-rr-bullet 5)
-      (progn 
-	(setq erbnoc-rr-bullet (random 6)) 
-	(fs-describe "rr-bang-kick")) 
-    (incf erbnoc-rr-bullet) (fs-describe "rr-click")))
+(defun erbnoc-move-money (nick table1 table2 amount)
+  (let ((cell1 (gethash nick table1))
+        (cell2 (gethash nick table2)))
+    (if cell1
+        (decf (gethash nick table1) amount)
+      (setf (gethash nick table1) (- amount)))
+    (if cell2
+        (incf (gethash nick table2) amount)
+      (setf (gethash nick table2) amount))))
+
+(defun fs-bet (on-what how-much)
+  (let* ((nick (intern nick))
+         (table (case on-what
+                  ((empty no-bullet click) erbnoc-RR-empty-bets)
+                  ((bullet bang blam) erbnoc-RR-bullet-bets)
+                  (else (error "invalid bet type" on-what))))
+         (not-table (if (eq table erbnoc-RR-bullet-bets)
+                        erbnoc-RR-empty-bets
+                      erbnoc-RR-bullet-bets)))
+    (if (gethash nick not-table)
+        (format "%s: Idiot, you can can only bet on one outcome (%s)."
+                nick on-what)
+      (erbnoc-move-money nick erbnoc-money table how-much)
+      (format "%s has bet %d GEMs so far on a %s."
+              nick
+              (gethash nick table)
+              on-what))))
+
+(defun fs-lend (to-whom how-much)
+  (let* ((nick (intern nick))
+         (money (gethash nick erbnoc-money)))
+    (if (> how-much money)
+        (error "You can't lend more than you have" nick how-much))
+    (decf (gethash nick erbnoc-money) how-much)
+    (if (gethash to-whom erbnoc-money)
+        (incf (gethash to-whom erbnoc-money) how-much)
+      (setf (gethash to-whom erbnoc-money) how-much))
+    (format "%s has lent %d GEMs to %s; %s now has %d GEMs and %s %d."
+            nick
+            how-much
+            to-whom
+
+            nick
+            (gethash nick erbnoc-money)
+
+            to-whom
+            (gethash to-whom erbnoc-money))))
+
+(defun keyshash (hash-table)
+  (let ((keys '()))
+    (maphash (lambda (key val) (push key keys)) hash-table)
+    keys))
+
+(defun valueshash (hash-table)
+  (let ((values '()))
+    (maphash (lambda (key val) (push val values)) hash-table)
+    values))
+
+(defun erbnoc-all-money (nick)
+  (let ((amount
+         (apply #'+
+                (mapcar (lambda (table)
+                          (or (gethash nick table) 0))
+                        (list erbnoc-money
+                              erbnoc-RR-bullet-bets
+                              erbnoc-RR-empty-bets)))))
+    (mapc (lambda (table)
+            (remhash nick table))
+          (list erbnoc-money
+                erbnoc-RR-bullet-bets
+                erbnoc-RR-empty-bets))
+    amount))
+
+(defun fs-money ()
+  (format "You've got %d GEMs, %s."
+          (or (gethash (intern nick) erbnoc-money) 0)
+          nick))
+
+(defun erbnoc-distribute (maybe-dead-nick winning-table losing-table)
+  (let* ((vals (valueshash losing-table))
+         (total-losing-money
+          (apply #'+
+                 (if maybe-dead-nick
+                     (cons (erbnoc-all-money maybe-dead-nick) vals)
+                   vals)))
+         (each-amount
+          (if (or (= total-losing-money 0)
+                  (= (hash-table-count winning-table) 0))
+              0
+            (/ total-losing-money
+               (hash-table-count winning-table)))))
+    (maphash (lambda (nick amount)
+               (setf (gethash nick winning-table)
+                     (+ (gethash nick winning-table) each-amount)))
+             winning-table)
+    (maphash
+     (lambda (nick amount)
+       (erbnoc-move-money nick winning-table erbnoc-money amount))
+     winning-table)
+
+    (clrhash winning-table)
+    (clrhash losing-table)))
+
+(defvar erbnoc-chamber (random 6))
+
+(defun fs-russian-roulette ()
+  (if (= erbnoc-chamber 5)
+      (progn
+        (setq erbnoc-chamber (random 6))
+        (fs-describe "rr-bang")
+        (erbnoc-distribute (intern nick)
+                           erbnoc-RR-bullet-bets
+                           erbnoc-RR-empty-bets))
+    (incf erbnoc-chamber)
+    (fs-describe "rr-click")
+    (erbnoc-distribute nil
+                       erbnoc-RR-empty-bets
+                       erbnoc-RR-bullet-bets)))
+
+(defun fs-init-money (init &rest nicks)
+  (clrhash erbnoc-money)
+  (clrhash erbnoc-RR-empty-bets)
+  (clrhash erbnoc-RR-bullet-bets)
+  (mapc (lambda (nick)
+          (setf (gethash nick erbnoc-money) init))
+        nicks)
+  "Money initialized.")
+
+;; (defvar erbnoc-rr-bullet (random 6))
+
+;; (defun fs-russian-roulette (&rest ignore)
+;;   (if (>= erbnoc-rr-bullet 5)
+;;       (progn 
+;; 	(setq erbnoc-rr-bullet (random 6)) 
+;; 	(fs-describe "rr-bang-kick")) 
+;;     (incf erbnoc-rr-bullet) (fs-describe "rr-click")))
 
 (defalias 'fs-RR 'fs-russian-roulette)
 (defalias 'fs-rr 'fs-russian-roulette)
