@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-05-03 11:15:17 deego>
+;; Time-stamp: <2003-05-16 07:36:26 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -192,7 +192,7 @@ to query using PROMPT, or just return t."
      "http://www.etrumeus.com/ferment/"
      "http://www.etrumeus.com/ferment/TitleIndex?action=titleindex"
      nil
-     "fsbot: ")
+     "wikibot: ")
 
     
     ("fs"
