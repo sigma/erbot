@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-05-13 13:36:25 deego>
+;; Time-stamp: <2003-05-15 16:25:01 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2351,9 +2351,12 @@ than erbc-limit-lines in all.."
 
 
 (defun erbc-limit-lines (str0 &optional nomorep &rest ignored)
-  "Limits the string, both,  to a reasonable number of lines and a
-reasonable number of characters, trying not to break words, if
-possible. "
+  "Limits the string, both, to a reasonable number of lines and a
+reasonable number of characters, trying not to break lines and not to
+break words, if possible. 
+
+Thus, that becomes quite a complicated algorithm, and we do that
+here."
   (let* (ans
 	 (ender "")
 	 (more "")
