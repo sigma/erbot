@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2003-06-20 07:02:39 deego>
+;; Time-stamp: <2003-08-04 17:42:24 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -171,6 +171,28 @@ to query using PROMPT, or just return t."
 ;;; Real Code:
 
 (defalias 'erbc-lisp-proper 'erbutils-listp-proper)
+
+
+(require 'calc)
+
+(defvar erbnoc-calc-time 3)
+(defcustom erbnoc-calc-p nil
+  "Enable this variable at your own risk.
+Enabling this means that fsbot will do calc operations, but those have
+no timeout build in... leading to DOS attacks. ")
+
+
+(defun fs-calc-eval (&optional str)
+  (unless erbnoc-calc-p 
+    (error "Sorry, but i am a bot! not a calc!"))
+  (unless str (error "Eval what?"))
+  (unless (stringp str)
+    (setq str (format "%s" str)))
+  (with-timeout 
+      (erbnoc-calc-time "That's WAY too much math for me!")
+    (calc-eval str)))
+    
+(defalias 'fs-calc 'fs-calc-eval)
 
 
 (provide 'erbc5)

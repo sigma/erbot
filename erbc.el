@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-07-30 13:23:40 deego>
+;; Time-stamp: <2003-08-04 17:12:41 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3992,6 +3992,15 @@ last time i checked , equalp seemed to work as well.. "
    transpose-sentences))
 
 (defalias 'fs-flatten 'erbutils-flatten)
+
+
+
+(erbutils-defalias '(log))
+(erbutils-defalias 
+ '(most-positive-fixnum
+   most-negative-fixnum))
+
+
 
 (erbutils-defalias 
  '(
