@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2004-12-31 23:06:48 deego>
+;; Time-stamp: <2005-01-05 14:16:07 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -13,43 +13,61 @@
 ;; not all of these may be required depending on how you use erbot..
 (require 'cl)
 
-(require 'doctor)
-(require 'erc)
-(require 'erc-stamp)
-(unless noninteractive (require 'dunnet))
-(require 'erbot)
-(require 'erbcountry)
-(require 'erbutils)
-(require 'erblog)
-(require 'erbeng)
-(require 'erbdata)
-(require 'erbkarma)
-(require 'erblisp)
-(require 'erbc)
-(require 'erbc2)
-(require 'erbc3)
-(require 'erbc4)
-(require 'erbc5)
-(require 'erbc6)
-(require 'erbcspecial)
-(require 'erbbdb)
-(require 'erbforget)
-(require 'erbedit)
-(require 'erbtrain)
-(ignore-errors (require 'erbwiki))
-(require 'erbunlisp)
-(require 'erbcompat)
+(defmacro erball-ignore-errors-loudly (&rest body)
+  "Like ignore-errors, but tells the error..
+
+Copied from deego's 'ignore-errors-my', which owes some of its work
+to: Kalle on 7/3/01:
+ * used backquote: something i was too lazy to convert my macro to..
+ * removed the progn: condition-case automatically has one..
+ * made sure that the return is nil.. just as it is in ignore-errors. "
+  (let ((err (gensym)))
+    `(condition-case ,err (progn ,@body)
+       (error
+	(ding t)
+	(ding t)
+	(ding t)
+	(message "IGNORED ERROR: %s" (error-message-string ,err))
+	(sit-for 1)
+	nil))))
 
 
-(ignore-errors 
-  (require 'erbmsg))
 
-(ignore-errors (require 'flame))
+(erball-ignore-errors-loudly (require 'doctor))
+(erball-ignore-errors-loudly (require 'erc))
+(erball-ignore-errors-loudly (require 'erc-stamp))
+(unless noninteractive (erball-ignore-errors-loudly (require 'dunnet)))
+(erball-ignore-errors-loudly (require 'erbot))
+(erball-ignore-errors-loudly (require 'erbcountry))
+(erball-ignore-errors-loudly (require 'erbutils))
+(erball-ignore-errors-loudly (require 'erblog))
+(erball-ignore-errors-loudly (require 'erbeng))
+(erball-ignore-errors-loudly (require 'erbdata))
+(erball-ignore-errors-loudly (require 'erbkarma))
+(erball-ignore-errors-loudly (require 'erblisp))
+(erball-ignore-errors-loudly (require 'erbc))
+(erball-ignore-errors-loudly (require 'erbc2))
+(erball-ignore-errors-loudly (require 'erbc3))
+(erball-ignore-errors-loudly (require 'erbc4))
+(erball-ignore-errors-loudly (require 'erbc5))
+(erball-ignore-errors-loudly (require 'erbc6))
+(erball-ignore-errors-loudly (require 'erbcspecial))
+(erball-ignore-errors-loudly (require 'erbbdb))
+(erball-ignore-errors-loudly (require 'erbforget))
+(erball-ignore-errors-loudly (require 'erbedit))
+(erball-ignore-errors-loudly (require 'erbtrain))
+(erball-ignore-errors-loudly (require 'erbwiki))
+(erball-ignore-errors-loudly (require 'erbunlisp))
+(erball-ignore-errors-loudly (require 'erbcompat))
 
-(ignore-errors (require 'mkback))
-(ignore-errors (require 'lines))
-(ignore-errors (require 'google))
-(ignore-errors (require 'oct))
+(erball-ignore-errors-loudly (require 'erbmsg))
+
+(erball-ignore-errors-loudly (require 'flame))
+
+(erball-ignore-errors-loudly (require 'mkback))
+(erball-ignore-errors-loudly (require 'lines))
+(erball-ignore-errors-loudly (require 'google))
+(erball-ignore-errors-loudly (require 'oct))
 
 ;; the rest of the commands here are useful to the author when editing erbot. 
 
