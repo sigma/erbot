@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2003-05-29 09:03:36 deego>
+;; Time-stamp: <2003-06-14 14:54:07 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -221,7 +221,7 @@
   
 	   
 
-(defun erbc-bash-specific-quote (&optional number)
+(defun erbc-bash-specific-quote (&optional number &rest ignored)
   "NUMBER need not be jsut NUMBER.  Any argument to
 bash-specific-quotes, like random, should work."
   (require 'bash-quotes)
