@@ -1,6 +1,6 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2003-06-20 12:21:02 deego>
-;; Copyright (C) 2003 D. Goel
+;; Time-stamp: <2003-06-20 12:33:30 deego>
+;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
 ;; Package: erbc4
