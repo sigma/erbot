@@ -1,9 +1,9 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2003-04-23 15:40:05 deego>
+;; Time-stamp: <2003-05-16 16:39:06 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
-;; Authors:  Davd Edmunston (dme@dme.org) D. Goel <deego@glue.umd.edu>
+;; Authors:  David Edmunston (dme@dme.org) D. Goel <deego@glue.umd.edu>
 ;; Version: 0.0
 ;; Author's homepage: http://deego.gnufans.org/~deego
 ;; Maintainer: Deepak Goel <deego@glue.umd.edu>
