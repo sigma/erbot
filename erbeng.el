@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2004-03-29 18:09:26 deego>
+;; Time-stamp: <2004-07-20 14:40:36 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -80,7 +80,7 @@
 ;;;###autoload
 (defun erbeng-main (msg proc nick tgt localp userinfo)
   " The main function: Takes a line of message and generates a reply to it. 
-The result is a string.  If the result is nil, that means: Do NOT reply...
+The result is a string.  If the result is 'noreply, that means: Do NOT reply...
 The last field localp is here for historical reasons, and shall be
 ignored...
 
