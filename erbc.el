@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-11-15 15:39:57 deego>
+;; Time-stamp: <2003-11-17 09:48:22 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -568,9 +568,14 @@ Optional argument FOO ."
 		   (setq len (length msg)) t)
 		 (> len  1)
 		 (string= "??"
-			  (substring msg (- len 2) len)))
+			  (substring msg (- len 2) len))
+		 (or
+		  (string-match 
+		   erbot-nick msg)
+		  (string-match (concat "^" erbnoc-char) msg)
+		  (string-match erbnoc-char-double  msg)))
 	(setq founddoublequery t)
-	(setq msg ", (m8b)")))
+	(setq msg (concat erbnoc-char " (m8b)"))))
 
     (when (and (stringp msg)
 	       (> (length msg) 0)
