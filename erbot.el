@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-03-29 13:59:29 deego>
+;; Time-stamp: <2005-03-29 14:24:11 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -703,8 +703,8 @@ the beginning of your .emacs")
     (mapcar*
      (lambda (a b c) 
        (let ((foo (get a 'setf-method)))
-	 (put b 'setf-method foo)
-	 (put c 'setf-method foo)))
+	 (when (fboundp b) (put b 'setf-method foo))
+	 (when (fboundp c) (put c 'setf-method foo))))
      syms fssyms fsisyms)))
 
 
