@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-01-08 12:52:25 deego>
+;; Time-stamp: <2005-02-09 13:02:06 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -239,13 +239,14 @@ to query using PROMPT, or just return t."
 	(apropos-internal "^fs-" 'boundp)))
     (mapcar
      (lambda (v)
-       (list 'defvar v 
-	     (eval v)))
+       `(ignore-errors 
+	  (defvar ,v
+	    (quote ,(eval v)))))
      vars)))
 
 
 (defcustom fs-pv-save-rarity 100000
-  "if this is 1000, then file is saved one in as thousand times... ")
+  "if this is 1000, then file is saved one in a  thousand times... ")
 
 ;;;###autoload
 (defun fsi-pv-save ()
@@ -253,7 +254,7 @@ to query using PROMPT, or just return t."
   (erbn-write-sexps-to-file 
    erbn-pv-file 
    (fs-pv-get-variables-values) 1000))
-   ;; this should lead to a few saves every day... not too many one hopes..
+   ;; this should lead to a few saves every day... not too many, one hopes..
 ;;1000))
 
 
@@ -269,12 +270,12 @@ to query using PROMPT, or just return t."
 (defmacro fsi-defun (fcn &rest body)
   
   ;; the given fcn icould be a number or string, in which
-  ;; case sandboxing won't touch it, so we need to override that case.
+   ;; case sandboxing won't touch it, so we need to override that case.
   (unless (symbolp fcn)
     (error "Defun symbols only! :P"))
-
+  
   (erbn-readonly-check fcn)
-
+  
   (erbn-write-sexps-to-file
    erbn-pf-file
    (erbn-create-defun-overwrite
@@ -283,6 +284,9 @@ to query using PROMPT, or just return t."
   (fsi-pf-load)
   `(quote ,fcn))
 
+
+
+     
 
 (defun fsi-defalias (sym1 sym2)
   (eval `(fsi-defun 
