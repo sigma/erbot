@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2004-10-27 11:49:02 deego>
+;; Time-stamp: <2004-10-27 11:55:06 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -693,9 +693,12 @@ not, try to reconnect. "
    (string-match "^[0-9a-zA-Z]" reply)
    ;;(not (string-match "^/" reply)) -- this is bad.. since, control
    ;;characters are bad... beginnning ^A for example, will send CTCP requests..
+   
+   ;; Allow /me commands.. but only when the rest of the text has noAA
+   ;; control characters..A
    (and (equal 0 (string-match "^/me " reply)) 
 	(let ((rlist (string-to-list reply)))
-	  (not (member-if (lambda (a) (<= a 32)) rlist))))))
+	  (not (member-if (lambda (a) (< a 32)) rlist))))))
 
 
 
