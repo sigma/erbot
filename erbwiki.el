@@ -1,5 +1,5 @@
 ;;; erbwiki.el ---
-;; Time-stamp: <2003-06-20 07:00:43 deego>
+;; Time-stamp: <2003-06-20 10:40:31 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -270,8 +270,8 @@ to query using PROMPT, or just return t."
      ;;)
 
     ("so"
-     "http://www.gnufans.net/cgi-bin/octave.pl?"
-     "http://www.gnufans.net/cgi-bin/octave.pl?action=index"
+     "http://wiki.octave.org/wiki.pl?"
+     "http://wiki.octave.org/wiki.pl?action=index"
      nil
      "ScBot: "
      )

@@ -161,10 +161,10 @@ when using this command.
 \\(bot\\|emacs\\|deego\\|goel\\|deepak\\|alex\\|bpt\\|oddmuse\\|iam\\)
 .. for example..
 "
-  (interactive "sRegex to forget: ")
   (let* 
       ((lenterms
-	(fs-search-basic "" nil nil 'describe))
+	(fs-search-basic (regexp-quote from)
+			 nil nil 'describe))
        (len (first lenterms))
        (terms (second lenterms)))
     (cond
