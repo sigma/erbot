@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-01-06 17:19:18 deego>
+;; Time-stamp: <2005-01-08 00:16:38 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1252,7 +1252,27 @@ anything useful. ")))
 
 (defalias 'fs-fuck 'fs-love)
 
+
+
 (defun fs-flame (&rest args)
+  "Doesn't really flame right now..
+Optional argument ARGS ."
+  (let ((target
+	 (if (first args)
+	     (format "%s" (first args))
+	   erbot-end-user-nick))
+	(flames (ignore-errors (fs-notes "flames"))))
+    (if (string= (format "%s" target) "me")
+	(setq target erbot-end-user-nick))
+    ;; Check for flame.el support
+    (cond
+     ((and (consp flames) (> (length flames) 0))
+      (concat target ": " (fs-random-choose flames)))
+     (t (fs-flame-mild target)))))
+
+
+
+(defun fs-flame-mild (&rest args)
   "Doesn't really flame right now..
 Optional argument ARGS ."
   (let ((target
@@ -4244,7 +4264,13 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fsi-and 'and)
 (defalias 'fsi-or 'or)
 (defalias 'fs-lart 'fs-flame)
+
 (defalias 'fsi-null 'null)
+(defalias 'fsi-atom 'null)
+(defalias 'fsi-stringp 'null)
+(defalias 'fsi-consp 'null)
+
+
 
 (defalias 'fsi-equal 'equal)
 (defalias 'fsi-equalp 'equalp)
