@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-06-19 13:36:30 deego>
+;; Time-stamp: <2003-06-25 12:52:40 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -594,7 +594,8 @@ Optional argument FOO ."
 	      (string-match "^," (second msg))
 	      (string-match "^:" (second msg)))
 	   (setq fs-internal-addressedatlast t))
-	 (setq msg (cdr msg))
+	 (when (> (length msg) 1)
+	   (setq msg (cdr msg)))
 	 (setq leave-alone-p nil)))
      ((and (first (last msg)) (string-match erbot-nick (first (last msg))))
       ;; don't want this any more.. since no sense in removing the
