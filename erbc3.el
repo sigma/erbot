@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2004-03-28 11:44:25 deego>
+;; Time-stamp: <2004-04-19 10:32:13 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -263,6 +263,14 @@ to query using PROMPT, or just return t."
 
 
 (defmacro fs-defun (fcn &rest body)
+  
+  ;; the given fcn icould be a number or string, in which
+  ;; case sandboxing won't touch it, so we need to override that case.
+  (unless (symbolp fcn)
+    (error "Defun symbols only, Einstein! :P"))
+
+  
+
   (erbnoc-write-sexps-to-file
    erbnoc-pf-file
    (erbnoc-create-defun-overwrite

@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2004-03-23 12:18:17 deego>
+;; Time-stamp: <2004-04-06 13:58:49 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4520,7 +4520,7 @@ setq fs-t to nil :-) ")
 
 (erbutils-defalias '(macroexpand))
 (defun fs-kick (&optional reason &rest ignore)
-  (erc-cmd-KICK erbnoc-nick nil (when reason (format "%s" reason))))
+  (erc-cmd-KICK erbnoc-nick (when reason (format "%s" reason))))
 
 
 ;;"/usr/share/emacs/21.2/lisp/emacs-lisp/pp.el" 
