@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2003-08-04 17:12:41 deego>
+;; Time-stamp: <2003-08-07 11:48:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -232,7 +232,8 @@ If no such function, return the symbol 'unbound. "
 			(cons key morekeys) " "))))
 
 
-(defun fs-describe-key (&optional key &rest args)
+(defun fs-describe-key-one-line (&optional key &rest args)
+  "Key, and just one line of function"
   (unless key (error "Syntax: , dk \"Key...\""))
   (let* ((fcn (apply 'fs-describe-key-briefly key args))
 	 (fcns (format "%s" fcn))
@@ -241,6 +242,10 @@ If no such function, return the symbol 'unbound. "
     (concat (format "%s -- %s"
 		    fcns
 		    apr))))
+
+(defalias 'fs-dko 'fs-describe-key-one-line)
+
+(defalias 'fs-describe-key 'fs-describe-key-and-function)
 
 (defun fs-lookup-key-from-map-internal (&optional map key &rest morekeys) 
   (unless key (error "No key supplied. "))
