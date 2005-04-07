@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-06 15:32:16 deego>
+;; Time-stamp: <2005-04-07 10:06:50 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3586,10 +3586,15 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defalias 'fs-go 'fs-google-octave)
 
+(defun fs-google-wikipedia-english (&rest args)
+  "Google on the emacswiki site."
+  (fs-google-with-options "site:en.wikipedia.org" args))
+
+
+
 (defun fs-google-wikipedia (&rest args)
   "Google on the emacswiki site."
   (fs-google-with-options "site:wikipedia.org" args))
-
 
 (defun fs-google-gnufans-net (&rest args)
   "Google on gnufans.net."
@@ -4630,6 +4635,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fs-gs 'fs-google-sl4)
 
 (defalias 'fs-gw 'fs-google-wikipedia)
+(defalias 'fs-gwe 'fs-google-wikipedia-english)
 (defalias 'fs-gh 'fs-google-hurdwiki)
 (defalias 'fs-gm 'fs-google-meatball)
 (defalias 'fs-gnufans 'fs-google-gnufans-net)
