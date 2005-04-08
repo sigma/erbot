@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-07 10:06:50 deego>
+;; Time-stamp: <2005-04-08 11:22:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3686,7 +3686,7 @@ author know.."
      (fs-forget name "all"))
     (when erbn-merge-redirect-p
       (erbot-working 
-       (fsi-set-term name (format "is redirect %s" dest))))
+       (fsi-set-term name (format "redirect %s" dest))))
     (erbbdb-save)
     (if erbn-merge-redirect-p
 	(format "Merged %S into %S, redirected %S to %S" name dest
