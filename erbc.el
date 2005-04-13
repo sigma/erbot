@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-08 11:22:33 deego>
+;; Time-stamp: <2005-04-13 15:44:50 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -942,13 +942,13 @@ local, because the parent function calling this function should have
 	    ;; already in lisp form...  just need to sandbox..
 	    ((and lispmsg 
 		  (or
-		   (listp lispmsg)
+		   (consp lispmsg)
 		   (and fs-internal-max-lisp-p (numberp lispmsg))
 		   (and fs-internal-max-lisp-p (stringp lispmsg))
 		   (and (symbolp lispmsg)
 			(let ((newsym
-			       (intern (format "fs-%S" lispmsg))))
-			  
+			       ;;(intern (format "fs-%S" lispmsg))
+			       (erblisp-sandbox lispmsg)))
 			  (or
 			   (equal 0
 				  (string-match "fs-" 
@@ -970,7 +970,8 @@ local, because the parent function calling this function should have
 	    ;; resolves properly..
 	    ((or 
 	      ;; fboundp ==> allowing macros as well..
-	      (fboundp (intern (concat "fs-" (first msg))))
+	      ;;(fboundp (intern (concat "fs-" (first msg))))
+	      (fboundp (erblisp-sandbox (intern (first msg))))
 	      ;;(functionp (intern (concat "fs-" (first msg))))
 	      (equal 0 (string-match "fs-" (first msg))))
 	     ;; this works great, except that we would like to quote the
