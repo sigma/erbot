@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <2005-04-13 15:44:50 deego>
+;; Time-stamp: <15/04/2005 21:08:32 Yann Hodique>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -7,30 +7,30 @@
 ;; Author: D. Goel <deego@gnufans.org>
 ;; Version: NA
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-;; Other files: 
-;;; erball.el --- Functions on all files. 
-;;; erbbdb.el --- 
+;; Other files:
+;;; erball.el --- Functions on all files.
+;;; erbbdb.el ---
 ;;; erbc.el --- Erbot user-interface commands.
 ;;; erbc2.el --- mostly: special functions for erbc.el
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;;; erbc4.el --- Russian Roulette 
+;;; erbc4.el --- Russian Roulette
 ;;; erbc5.el --- continuation of erbc.el
 ;;; erbc6.el --- fsbot functions contributed by freenode users,
 ;;; esp. #emacsers.
 ;;; erbcompat.el --- Erbot GNU Emacs/XEmacs compatibility issues
 ;;; erbcountry.el
 ;;; erbc-special.el --- Special/dangerous implementation functions.
-;;; erbdata.el --- 
+;;; erbdata.el ---
 ;;; erbedit.el --- quicker operator editing of bots' bbdb
-;;; erbeng.el ---  english 
-;;; erbforget.el --- Help make the bots forget some TERMS. 
+;;; erbeng.el ---  english
+;;; erbforget.el --- Help make the bots forget some TERMS.
 ;;; erbkarma.el ---
-;;; erblisp.el --- 
-;;; erblog.el --- 
+;;; erblisp.el ---
+;;; erblog.el ---
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
 ;;; erbot.el --- Another robot for ERC.
 ;;; erbp.el --- NOT FUNCTIONAL personal erbot-interface, stolen from dunnet.el
-;;; erbtrain.el --- Train erbot (erbot).. 
+;;; erbtrain.el --- Train erbot (erbot)..
 ;;; erbutils.el ---  utils
 ;;; erbwiki.el ---
 
@@ -38,14 +38,14 @@
   "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
- 
+
 ;; This file is NOT (yet) part of GNU Emacs.
- 
+
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
- 
+
 ;; This is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -55,7 +55,7 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;; Boston, MA 02111-1307, USA.
- 
+
 
 ;; See also:
 
@@ -93,9 +93,9 @@
 in addition to directly addressing it.
 
 may be different for
-different bots. 
+different bots.
 
-Is really a string, but the length of the string should be 1,. 
+Is really a string, but the length of the string should be 1,.
 ")
 (defcustom erbn-char-double (concat erbn-char erbn-char)
   "The string which calls the bot from midsentence
@@ -123,34 +123,34 @@ this string should have a length of EXACTLY 2.
 
 (defvar erbn-buffer "")
 
-(defcustom fs-internal-parse-error-p 
+(defcustom fs-internal-parse-error-p
   nil
   "Whether to show lispy errors in term descriptions.
 
 When nil, an error in a  lispy description of a term makes to bot
-go to an english mode for the term. 
+go to an english mode for the term.
 When non-nil, we will just display the error.  On a channel full of
 lisp hackers, we will want to make this t for users' convenience.")
 
 
-(defcustom erbn-shell-command-p nil 
+(defcustom erbn-shell-command-p nil
   "Whether to allow commands that use shell-commands...
 Some fsbot commands use shell-commands... shell-commands always mean
-possibility of exploits.  andn are disabled by default. 
+possibility of exploits.  andn are disabled by default.
 
 Make this t at your own risk. ")
 
 
 (defcustom fs-internal-questions
-  '("what" "where" "who" 
-    ;; no please: 
-    ;;"why" 
+  '("what" "where" "who"
+    ;; no please:
+    ;;"why"
     ;;"how"
     )
   ""
   :group 'erbc)
-		  
-(defcustom erbn-google-defaults 
+
+(defcustom erbn-google-defaults
   '(("#emacs" ("emacs"))
     ("#fsbot" ("fsbot")))
   "" :group 'erbc)
@@ -211,13 +211,13 @@ list is non-nil"
   "This check is triggerred only when the users' original request didnot
 succeed and so we have gone into an english-mode and are searching.
 If the number of matches results in 1000, then most likely, the word
-was something like i or you and the user was not intending a search. 
+was something like i or you and the user was not intending a search.
 "
 
 :group 'erbc)
 
 (defcustom fs-internal-questions-all
-  '("what" "where" "who" "why" "how" 
+  '("what" "where" "who" "why" "how"
     "whose" "which"
     )
   ""
@@ -238,7 +238,7 @@ the few social channels erbot hangs out on. "
 
 (defcustom fs-internal-query-target-regexp
   "^$"
-  "Targets where erbot will respond to queries like: 
+  "Targets where erbot will respond to queries like:
 Foo ? "
   :group 'erbc)
 
@@ -248,7 +248,7 @@ Foo ? "
     )
   ""
   :group 'erbc)
-  
+
 
 (defun fsi-correct-entry (name &rest fubar)
   "Assumes that name is a string... this downcases strings.  Rendering
@@ -257,7 +257,7 @@ it fit for database-entry. "
   ;;(downcase
   (let ((newname
 	 (mapconcat 'identity (split-string name) "-")))
-    (or (erbbdb-get-exact-name newname) 
+    (or (erbbdb-get-exact-name newname)
 	newname)))
 
 
@@ -265,7 +265,7 @@ it fit for database-entry. "
   "Return the function on key..building block for other erbc's..
 If no such function, return the symbol 'unbound. "
 
-  (unless key 
+  (unless key
     (error
      "Syntax:  , dkb key"))
   (when (and (null key) (null args))
@@ -305,7 +305,7 @@ If no such function, return the symbol 'unbound. "
 
 
 (defun fsi-keyize (key morekeys)
-  (setq key (read-kbd-macro 
+  (setq key (read-kbd-macro
 	     (mapconcat '(lambda (arg) (format "%s" arg))
 			(cons key morekeys) " "))))
 
@@ -325,10 +325,10 @@ If no such function, return the symbol 'unbound. "
 
 (defalias 'fsi-describe-key 'fs-describe-key-and-function)
 
-(defun fsi-lookup-key-from-map-internal (&optional map key &rest morekeys) 
+(defun fsi-lookup-key-from-map-internal (&optional map key &rest morekeys)
   (unless key (error "No key supplied. "))
   (unless (stringp key)
-    (setq key (read-kbd-macro 
+    (setq key (read-kbd-macro
 	       (mapconcat '(lambda (arg) (format "%s" arg))
 			  (cons key morekeys) " "))))
   (unless (arrayp key) (setq key (format "%s" key)))
@@ -352,7 +352,7 @@ If no such function, return the symbol 'unbound. "
   (unless key (error "Syntax: , lkgg \"Key...\""))
   (require 'gnus)
   (require 'message)
-  (apply 
+  (apply
    'fs-lookup-key-from-map-internal gnus-message-mode-map key args))
 
 
@@ -365,17 +365,17 @@ If no such function, return the symbol 'unbound. "
 		       :test
 		       (lambda (a b)
 			 (string= (format "%s" a) (format "%s" b)))))
-	 
+
 	 (val (second asso)))
     (if val (format "%s" val)
       nil)))
-  
+
 (defun fsi-describe-key-long (k &rest args)
   (let ((f (apply 'fs-describe-key-briefly k args)))
     (fs-describe-function-long f)))
 
 (defun fsi-describe-key-and-function (key &rest args)
-  "Describe the key KEY.  
+  "Describe the key KEY.
 Optional argument ARGS .  If the input arguments are not strings, it
 kbds's them first... , so that , df C-x C-c works"
   (when (and (null key) (null args))
@@ -388,10 +388,10 @@ kbds's them first... , so that , df C-x C-c works"
   (let ((b (key-binding key)))
     (cond
      ((symbolp b)
-      (or 
+      (or
        (ignore-errors (fs-describe-function b))
        (format "Bound to: %s" b)))
-     (t 
+     (t
       (format "Bound to: %s" b)))))
 
 
@@ -401,8 +401,8 @@ kbds's them first... , so that , df C-x C-c works"
 Also tries an fs- prefix for the function..
 nolimitp has to be eq 'nolimit for the nolimit effect to take place..
 "
-  (unless function 
-    (error 
+  (unless function
+    (error
      "Syntax: (describe-function 'name-of-function) or , df 'name"))
   (let* ((f function)
 	 g
@@ -423,14 +423,14 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
 	  (ignore-errors
 	    (if (equal 'autoload (car-safe def))
 		(load (second def))))
-	  ;; this check does nothing now.. need ro 
+	  ;; this check does nothing now.. need ro
 	  (if (equal nolimitp 'nolimit)
 
 	      ;;(let ((fs-limit-lines 8))
 	      ;;(fs-limit-lines (describe-function g)))
 	      (describe-function g)
 	    (describe-function g))
-	  
+
 	  )))
      ;; if list, DO NOT wanna eval it-->
      (t
@@ -450,12 +450,12 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
     (cond
      ((stringp function) (setq function (read function)))
      (t nil))
-    (cond 
-     ((null function)  (format "Sorry, %s is not a symbol" function))    
+    (cond
+     ((null function)  (format "Sorry, %s is not a symbol" function))
      ((symbolp function)
       (unless (fboundp function) (setq str0 "Either unbound or.. "))
       (setq str2
-	    (with-temp-buffer 
+	    (with-temp-buffer
 	      (where-is function t)
 	      (buffer-string)))
       (concat str0 str1 str2 str3))
@@ -478,9 +478,9 @@ Use with caution only in privmsgs please, for may produce long outputs. "
     (if (stringp f)
 	(setq f (read f)))
     (cond
-     ((symbolp f) 
+     ((symbolp f)
       (erbutils-describe-variable f))
-     
+
      ;; if list, DO NOT wanna eval it-->
      (t
       "NO variable specified"))))
@@ -504,7 +504,7 @@ automatically."
 
 
 (defvar fs-found-query-p nil
-  "internal..  should be normally set to nil. 
+  "internal..  should be normally set to nil.
 When non nil, means that the msg was not meant to the bot, so the
 reply please be abbreviated. ")
 
@@ -546,7 +546,7 @@ When string, will be matched against target. "
   (let ((len (length msg)))
     (when (and
 	   (> len 0)
-	   (member (aref msg (- len 1)) 
+	   (member (aref msg (- len 1))
 		   fs-internal-parse-preprocess-message-remove-end-chars)
 	   (setq msg (subseq msg 0 -1)))))
   msg)
@@ -559,7 +559,7 @@ sometimes doesn't.")
 
 (defun fsi-lispify (&optional msg proc nick tgt localp
 				 userinfo &rest foo)
-  "Parse the english MSG into a lisp command. 
+  "Parse the english MSG into a lisp command.
 
 If it is an 'is', it should always be the second word ..
 viz: we had better use hyphens in the first word..
@@ -584,7 +584,7 @@ anywhere in the code, or the user-defined parts of the code...
 
 In the grand scheme of things, these bindings should turn out to be
 local, because the parent function calling this function should have
-'letted these variables. 
+'letted these variables.
 
 "
   ;;(when (stringp msg)
@@ -598,7 +598,7 @@ local, because the parent function calling this function should have
   (setq msg (fs-parse-preprocess-message msg))
   (setq fs-msg msg)
   (setq fs-msgsansbot msg)
-  (let* 
+  (let*
       (
 
 
@@ -617,33 +617,33 @@ local, because the parent function calling this function should have
        )
     (unless (stringp origmsg)
       (setq origmsg (format "%s" origmsg)))
-    (unless msg 
+    (unless msg
       (error "Format: %s (parse \"your-english-message\")" erbn-char))
     (unless (stringp msg)
       (setq msg (format "%s" msg)))
     ;; remove leading spaces..
     (while
 	(and (> (length msg) 0)
-	     (equal (aref msg 
+	     (equal (aref msg
 			  0) 32))
       (setq msg (substring msg 1)))
 
     ;; remove trailing spaces..
-    (while 
+    (while
 	(and (> (length msg) 0)
 	     (equal (aref msg (- (length msg) 1)) 32))
       (setq msg (substring msg 0 (- (length msg) 1))))
-    
-    (when (and tgt proc) 
+
+    (when (and tgt proc)
       (set-buffer (erc-get-buffer tgt proc)))
-    
-    (when 
+
+    (when
 	(and (stringp msg)
 	     (string-match "\\(++\\|--\\)$" msg)
 	     (<= (length (split-string msg)) 2))
       (setq foundkarma t))
     ;; 2003-11-14 T15:36:38-0500 (Friday)    D. Goel
-    ;; requested by elf: 
+    ;; requested by elf:
     ;; if double ??, then make it a call to m8b
     (when (and
 	   fs-m8b-p
@@ -658,7 +658,7 @@ local, because the parent function calling this function should have
 		   (string= "??"
 			    (substring msg (- len 2) len))
 		   ;;(or
-		   ;;(string-match 
+		   ;;(string-match
 		   ;;erbot-nick msg)
 		   ;;(string-match (concat "^" erbn-char) msg)
 		   ;;(string-match erbn-char-double  msg))
@@ -673,7 +673,7 @@ local, because the parent function calling this function should have
       (progn
 	(setq foundquery t)
 	(setq msg (substring msg 0 (- (length msg) 1)))))
-    
+
     (setq leave-alone-p t)
     (setq bluemoon
 	  (or
@@ -690,18 +690,18 @@ local, because the parent function calling this function should have
     (unless (stringp msg)
       (setq msg ""))
 
-    
+
     ;; convert midsentence ,, to parsable sentence.
     (let (pos)
-      (when 
+      (when
 	  (and (not (equal 0
 			   (string-match erbn-char msg)))
-	       (not 
+	       (not
 		(let ((nickpos (string-match erbot-nick msg)))
 		  (and nickpos
 		       (< nickpos 3))))
 	       ;; part of and
-	       (setq pos 
+	       (setq pos
 		     (string-match erbn-char-double msg)))
 	(setq msg (substring msg (+ pos 1)))
 	(when (setq pos (string-match erbn-char-double msg))
@@ -721,8 +721,8 @@ local, because the parent function calling this function should have
     (setq fs-msglist msg)
     (setq fs-msglistsansbot msg)
     (cond
-     ( (and (first msg) 
-	    (let ((pos 
+     ( (and (first msg)
+	    (let ((pos
 		   (string-match erbot-nick (first msg))))
 	      (and pos (< pos 1))))
        ;;(or
@@ -731,7 +731,7 @@ local, because the parent function calling this function should have
 					;(erbutils-string= (first msg) (concat erbot-nick
 					;":")))
        (progn
-	 (unless 
+	 (unless
 	     (or
 	      (string-match (concat erbot-nick ":") (first msg))
 	      (string-match (concat erbot-nick ",") (first msg))
@@ -743,7 +743,7 @@ local, because the parent function calling this function should have
 	   (setq msg (cdr msg)))
 	 (setq leave-alone-p nil)))
 
-     
+
      ;; if it is a short sentence ending in fsbot..
      ((and (first (last msg)) (string-match erbot-nick (first (last
 							       msg)))
@@ -755,8 +755,8 @@ local, because the parent function calling this function should have
       (when leave-alone-p
 	(setq fs-internal-addressedatlast t))
       (setq leave-alone-p nil))
-     
-     
+
+
 
      ;; this might be dangerous if nick is a small word like "apt"..
      ;; this also means :( thagt erbot will intervene when users are
@@ -764,14 +764,14 @@ local, because the parent function calling this function should have
      ;; nah, leave this one out..
      ;;((member erbot-nick msg)
      ;; (setq leave-alone-p nil))
-     
+
      (bluemoon
       (setq leave-alone-p nil)))
-    
-    (setq fs-internal-message-sans-bot-name 
+
+    (setq fs-internal-message-sans-bot-name
 	  (mapconcat 'identity msg " "))
 
-    (when (and 
+    (when (and
 	   foundquery
 	   ;; if tgt is nil, we are being asked to parse
 	   ;; something.. so cool
@@ -783,47 +783,47 @@ local, because the parent function calling this function should have
       (let ((goonp nil) (newmsg msg))
 	(cond
 	 ((equal (length msg) 1)
-	  (setq goonp 
+	  (setq goonp
 		;; setq to t only if the content of the msg represents
-		;; something the user might be interested in. 
+		;; something the user might be interested in.
 		(fs-respond-to-query-p (first msg))
-		
+
 		))
 	 (t
 	  (setq goonp t)
 	  ;; convert what's to what is
 	  (when (stringp (first newmsg))
-	    (setq newmsg 
+	    (setq newmsg
 		  (append
 		   (split-string (first newmsg) "'")
 		   (cdr newmsg))))
 	  (if  (and goonp
-		    (member 
+		    (member
 		     (erbutils-downcase (first newmsg))
 		     fs-internal-questions))
 	      (setq newmsg (cdr newmsg))
 	    (setq goonp nil))
 	  (if  (and goonp
-		    (member 
-		     (erbutils-downcase (first newmsg)) 
-		     '("s" "is" "are" 
+		    (member
+		     (erbutils-downcase (first newmsg))
+		     '("s" "is" "are"
 		       ;;"am"
 		       )))
 	      (setq newmsg (cdr newmsg))
 	    (setq goonp nil))
-	  
+
 	  ;; remove articles
 	  (if  (and goonp
-		    (member 
-		     (erbutils-downcase (first newmsg)) 
+		    (member
+		     (erbutils-downcase (first newmsg))
 		     fs-internal-articles))
 	      (setq newmsg (cdr newmsg)))
-	  (unless (equal (length newmsg) 1) 
+	  (unless (equal (length newmsg) 1)
 	    (setq goonp nil))))
 	(when goonp
 	  (when leave-alone-p (setq fs-found-query-p t))
 	  (setq leave-alone-p nil)
-	  (setq msg (list "(" "describe" 
+	  (setq msg (list "(" "describe"
 			  (format "%S" (first newmsg))
 			  "0" ")"
 			  ))
@@ -838,7 +838,7 @@ local, because the parent function calling this function should have
     (when (and leave-alone-p
                fs-web-page-title-p
                (if (stringp fs-web-page-title-p)
-                   (and (stringp tgt) 
+                   (and (stringp tgt)
                         (string-match fs-web-page-title-p tgt))
                  t))
       (let* ((case-fold-search t)
@@ -846,10 +846,10 @@ local, because the parent function calling this function should have
         (when url
           (setq leave-alone-p nil)
           (setq msg (list "(" "web-page-title" (format "%S" url) ")")))))
-    
+
     ;;       (cond
     ;;        ((equal (length msg) 1)
-    ;; 	(when leave-alone-p 
+    ;; 	(when leave-alone-p
     ;; 	  (setq fs-found-query-p t))
     ;; 	(setq msg (cons "describe" msg))
     ;; 	(setq leave-alone-p nil))
@@ -860,7 +860,7 @@ local, because the parent function calling this function should have
     ;; 	 (member (erbutils-downcase (second msg))
     ;; 		 '("is" "are")))
     ;; 	(setq msg (cons "describe" (cddr msg)))
-    ;; 	(when leave-alone-p 
+    ;; 	(when leave-alone-p
     ;; 	  (setq fs-found-query-p t))
     ;; 	(setq leave-alone-p nil))
     ;;        ((and
@@ -870,16 +870,16 @@ local, because the parent function calling this function should have
     ;; 	 (member (erbutils-downcase (second msg))
     ;; 		 '("is" "are")))
     ;; 	(setq msg (cons "describe" (cddr msg)))
-    ;; 	(when leave-alone-p 
+    ;; 	(when leave-alone-p
     ;; 	  (setq fs-found-query-p t))
     ;; 	(setq leave-alone-p nil))
-       
+
 
     ;;))
 
     ;; finally, ignore bots/fools..
     (let ((ui (format "%S" userinfo)))
-      (when 
+      (when
 	  (or
            (and erbot-use-whitelist
                 (stringp nick)
@@ -888,11 +888,11 @@ local, because the parent function calling this function should have
                         (string-match arg nick))
                       erbot-whitelist-nicks)))
 	   (and (stringp nick)
-		(member-if 
+		(member-if
 		 (lambda (arg)
 		   (string-match arg nick))
 		 erbot-ignore-nicks))
-	   
+
 	   (some
 	    'identity
 	    (mapcar
@@ -916,11 +916,7 @@ local, because the parent function calling this function should have
 	       (newmsglist nil)
 	       (msgstr (erbutils-stringify msg))
 					;(newstrmsg nil)
-	       (lispmsg
-		(and (stringp msgstr)
-		     (read
-		      msgstr
-		      ))
+	       (lispmsg (read msgstr)
 		))
 
 
@@ -928,47 +924,46 @@ local, because the parent function calling this function should have
 	  (when erbn-dead-check-p (and (not foundquery)
 				       (erbn-dead-check)))
 
-	  
+
 	  (setq
 	   newmsglist
 	   (cond
-	    
+
 	    ;; are in a read mode..
 	    (erbn-read-mode
-	     (fs-botread-feed-internal msgstr))	    
+	     (fs-botread-feed-internal msgstr))
 
 
 
-	    ;; already in lisp form...  just need to sandbox..
-	    ((and lispmsg 
-		  (or
-		   (consp lispmsg)
-		   (and fs-internal-max-lisp-p (numberp lispmsg))
-		   (and fs-internal-max-lisp-p (stringp lispmsg))
-		   (and (symbolp lispmsg)
-			(let ((newsym
-			       ;;(intern (format "fs-%S" lispmsg))
-			       (erblisp-sandbox lispmsg)))
-			  (or
-			   (equal 0
-				  (string-match "fs-" 
-						(format "%S" lispmsg)))
-			   (and
-			    (boundp newsym)
-			    (not (fboundp newsym))))))))
+	    ;; look for a valid lisp form, then it just needs to be sandboxed
+	    ((or
+              (consp lispmsg)
+              (and fs-internal-max-lisp-p (numberp lispmsg))
+              (and fs-internal-max-lisp-p (stringp lispmsg))
+              (and (symbolp lispmsg)
+                   (let ((newsym
+                          ;;(intern (format "fs-%S" lispmsg))
+                          (erblisp-sandbox lispmsg)))
+                     (or
+                      (equal 0
+                             (string-match "fs-"
+                                           (format "%S" lispmsg)))
+                      (and
+                       (boundp newsym)
+                       (not (fboundp newsym)))))))
 	     ;;(erblisp-sandbox-fuzzy lispmsg)
 	     (erblisp-sandbox lispmsg)
 	     )
 
-	    
+
 	    (fs-dunnet-mode
 	     (fs-dunnet-command msgstr))
 
-	    
+
 	    ;; call to arbitrary function without parens
 	    ;; prefer this before is etc. so that "how is it going"
 	    ;; resolves properly..
-	    ((or 
+	    ((or
 	      ;; fboundp ==> allowing macros as well..
 	      ;;(fboundp (intern (concat "fs-" (first msg))))
 	      (fboundp (erblisp-sandbox (intern (first msg))))
@@ -984,7 +979,7 @@ local, because the parent function calling this function should have
 	      ;;(read (cons (intern (first msg))
 	      ;;	  (read (list (erbutils-stringify (cdr msg))))))
 	      (read (concat "( "(erbutils-stringify msg) " )"))))
-	    
+
 	    ((equal 0
 		    (string-match "\\(s\\|r\\)/" (first msg)))
 	     (fs-replace-string-from-english-internal
@@ -993,44 +988,44 @@ local, because the parent function calling this function should have
 		    (string-match "[0-9]+->" (first msg)))
 	     (fs-rearrange-from-english-internal msg))
 	    (
-	     (and 
-	      
-	      
+	     (and
+
+
 	      (or (erbutils-string= (second msg) "is" t)
 		  (erbutils-string= (second msg) "are" t)
 		  ;;(erbutils-string= (second msg) "am" t)
-		  
+
 		  )
 	      (member (erbutils-downcase (first msg))
 		      fs-internal-questions-all
 		      ))
-	     
+
 
 	     ;;`(apply 'fs-describe ',(cddr msg))
-	     `(funcall 'fs-describe 
+	     `(funcall 'fs-describe
 		       ',(third msg)
 		       nil nil nil ,"origmsg"
 		       )
-	     
+
 	     )
-	    
+
 	    ;; some english constructs first...
-	    
+
 	    ;; search removed---because: is a functionp...
 	    ;;((erbutils-string= (first msg) "search")
 	    ;; (setq newmsglist
 	    ;;	     `("(" "search" ,@(cdr msg) ")")))
-	    ((and 
+	    ((and
 
 	      ;; do not want to take such cases, 100% are annoying
 	      ;; false matches.
 	      (not fs-internal-addressedatlast)
 
-	      (or 
+	      (or
 	       (erbutils-string= (second msg) "is" t)
 	       (erbutils-string= (second msg) "are" t))
 	      ;;(erbutils-string= (third msg) "also" t)
-	      (member-ignore-case (third msg) 
+	      (member-ignore-case (third msg)
 				  (list "also" "also,"))
 	      )
 	     (erblisp-sandbox-fuzzy
@@ -1047,13 +1042,13 @@ local, because the parent function calling this function should have
 			(second
 			 msg))
 	       ))
-	    
+
 	    (
-	     (and 
+	     (and
 	      ;; do not want to take such cases, 100% are annoying
 	      ;; false matches.
 	      (not fs-internal-addressedatlast)
-	      
+
 	      (or (erbutils-string= (second msg) "is")
 		  (erbutils-string= (second msg) "are")))
 	     (erblisp-sandbox-fuzzy
@@ -1064,8 +1059,8 @@ local, because the parent function calling this function should have
 		,(erbutils-stringify (cddr msg)))))
 
 
-	    
-	    ((and 
+
+	    ((and
 	      (not fs-internal-addressedatlast)
 	      (or
 	       (erbutils-string= (first msg) "no" t)
@@ -1081,7 +1076,7 @@ local, because the parent function calling this function should have
 				 ;;,@(erbutils-quote-list (cdddr msg))))
 				 ,(erbutils-stringify (cdddr msg))))
 	     )
-	    
+
 	    ((let ((foo (first msg)))
 	       (and
 		(not fs-internal-addressedatlast)
@@ -1102,7 +1097,7 @@ local, because the parent function calling this function should have
 
 	    (t
 	     ;;`(apply 'fs-describe ',msg)
-	     
+
 	     ;;`(funcall 'fs-describe ',(first msg)
 	     ;;	       ',(second msg)
 	     ;;	       ',(third msg)
@@ -1112,9 +1107,9 @@ local, because the parent function calling this function should have
 	     `(funcall 'fs-describe-from-english
 		       ,origmsg
 		       ',msg)
-	     
 
-	     
+
+
 
 
 	     )
@@ -1125,17 +1120,17 @@ local, because the parent function calling this function should have
 
 
 (defun fsi-describe-from-english (&optional origmsg msg)
-  "Call fs-describe appropriately. 
-ORIGMSG is in english. 
+  "Call fs-describe appropriately.
+ORIGMSG is in english.
 MSG is a list..
 
 Plan
 
 For multiple words, commence a search foo.*bar.*baz IF WE KNOW THAT
 SEARCH or SEARCH--WIDE WILL SUCCEED, which will then, of course, go to
-search-wide if it fails. 
+search-wide if it fails.
 
-Else, of course, do the usual thing: viz. call describe... 
+Else, of course, do the usual thing: viz. call describe...
 
 
 "
@@ -1156,7 +1151,7 @@ Else, of course, do the usual thing: viz. call describe...
       (setq firstterm mainterm)
       (setq remainder (cdr msg))
       (while
-	  (and 
+	  (and
 	   remainder
 	   (progn
 	     (setq tmpv (first remainder))
@@ -1166,42 +1161,42 @@ Else, of course, do the usual thing: viz. call describe...
 							      tmpv)))
 		    (not (integerp (ignore-errors (read tmpv))))))))
 	;;(setq searchp t)
-	(setq mainterm 
+	(setq mainterm
 	      (concat mainterm ".*" tmpv))
 	(setq multitermp t)
 	(pop remainder))
       ;; why is this true only for multitermp???
       ;; Ah, because we say: if you end up searching and there are
       ;; multiple terms, you might as well include a result from
-      ;; google among the search results. 
-      (when multitermp 
+      ;; google among the search results.
+      (when multitermp
 	(setq fs-internal-google-level (+ fs-internal-google-level 25)))
-      
+
       (when (and multitermp
 		 ;; viz. if it will work
-		 (second (fs-search-basic 
+		 (second (fs-search-basic
 			  mainterm nil nil 'describe)))
 	(setq searchp t))
-      
-      
-      (if searchp 
-	  (fs-search 
-	   mainterm (first remainder) (second remainder) 
+
+
+      (if searchp
+	  (fs-search
+	   mainterm (first remainder) (second remainder)
 	   "Try: " origmsg)
-	(fs-describe 
+	(fs-describe
 	 firstterm (first remainder) (second remainder)
 	 (third remainder) origmsg))))))
-  
+
 ;; (defalias 'fs-hello 'fs-hi)
 ;; (defalias 'fs-hey 'fs-hi)
 
 (defalias 'fs-thanks 'fs-thank)
 (defun fs-thank (&rest args)
   (let ((aa (erbutils-random '("no problem" "you are welcome"
-			       
+
 			       ))))
-    (eval 
-     (erbutils-random    
+    (eval
+     (erbutils-random
       '(
 	(concat aa erbn-char " " fs-nick)
 	(concat fs-nick erbn-char " " aa))))))
@@ -1211,7 +1206,7 @@ Else, of course, do the usual thing: viz. call describe...
  Optional argument NICK .
  Optional argument ARGS ."
   (if (and nick (not (string-match erbot-nick (format "%s" nick))))
-       (format "hi %s !!" 
+       (format "hi %s !!"
 	       (let ((foo (split-string (format "%s" nick )
 					"[^a-bA-Z0-0]")))
 		 (or (first foo) nick))
@@ -1223,7 +1218,7 @@ Else, of course, do the usual thing: viz. call describe...
 ;;; Optional argument NICK .
 ;;; Optional argument ARGS ."
 ;;;   (if (and nick (not (string-match erbot-nick (format "%s" nick))))
-;;;       (format "NI %s !!" 
+;;;       (format "NI %s !!"
 ;;; 	      (let ((foo (split-string (format "%s" nick )
 ;;; 				       "[^a-bA-Z0-0]")))
 ;;; 		(or (first foo) nick))
@@ -1241,12 +1236,12 @@ Optional argument NICK ."
   (setq nick (format "%s" (or nick "itself")))
   (cond
    ((member nick (list erbot-nick "yourself" "self"))
-    (eval 
+    (eval
      (erbutils-random
       '("I'd rather kiss you"
         "Kiss myself? Why?"))))
    (t
-    (eval 
+    (eval
      (erbutils-random
       '((format "/me kisses %s" nick)
         (format "/me gives %s a big smooch" nick)
@@ -1257,27 +1252,27 @@ Optional argument NICK ."
   (setq nick (format "%s" nick))
   (cond
    ((member nick (list erbot-nick "yourself" "self"))
-    (eval 
+    (eval
      (erbutils-random
       '("But i do that all the time. "
 	"Hug myself? Why?"))))
    (t
-    (eval 
+    (eval
      (erbutils-random
       '((format "/me gives %s a tight hug" nick)
 	(format "/me clings to %s" nick)
 	(format "/me runs in the other direction, shouting NEVER!!")
 	(format "/me grabs hold of %s and vows to never let go" nick)
 	(format "/me grabs hold of %s and vows to never let go" nick)))))))
-	
-	
+
+
 
 
 (defun fs-love (&optional nick &rest bar)
   ".
 Optional argument NICK ."
-  
-  
+
+
   (let ((nonep nil))
     (unless nick (setq nick "someone sexy") (setq nonep t))
     (setq nick (format "%s" nick))
@@ -1311,7 +1306,7 @@ anything useful. ")))
   (let ((aa (when (stringp str)
 	      (ignore-errors (read str)))))
     (cond
-     ((consp aa) 
+     ((consp aa)
       (unless fs-victim (setq fs-victim fs-nick))
       (fsi-eval aa))
      (fs-victim
@@ -1322,7 +1317,7 @@ anything useful. ")))
 
 
 
-    
+
 
 (defun fs-flame (&rest args)
   ""
@@ -1337,7 +1332,7 @@ anything useful. ")))
     ;; Check for flame.el support
     (cond
      ((and (consp flames) (> (length flames) 0))
-      (fsi-eval-or-say 
+      (fsi-eval-or-say
        (if (numberp num)
 	   (nth num flames)
 	 (fs-random-choose flames))
@@ -1397,7 +1392,7 @@ Optional argument ARGS ."
 ;;; 	(setq fir (intern fir)))
 ;;;     (unless (symbolp fir) (setq fir 'dummy-no-help))
 ;;;     (if (null fir)
-;;; 	"I try to understand English, though lisp is the real way to go. Here are some interesting topics: quickstart, example, future-features, help about, help commands, help data, help english, help name, help homepage, 
+;;; 	"I try to understand English, though lisp is the real way to go. Here are some interesting topics: quickstart, example, future-features, help about, help commands, help data, help english, help name, help homepage,
 ;;; help owner, help specs, help parse \(for lisp stuff\), describe help, describe suggest , help parse-web , help functionality
 ;;; "
 ;;;       (cond
@@ -1426,7 +1421,7 @@ Optional argument ARGS ."
 ;;;        ((equal fir 'suggestions)
 ;;; 	"Add stuff to keyword suggest, also see help homepage")
 ;;;        ((equal fir 'english)
-;;; 	"Some common syntaxes: , foo is bar; , foo is also bar; 
+;;; 	"Some common syntaxes: , foo is bar; , foo is also bar;
 ;;; , no foo is bar; , forget foo ; , flame nick;  , doctor ; etc.")
 ;;;        ((equal fir 'parse)
 ;;; 	"Try the command , parse \", <english-message>\" to see the
@@ -1442,7 +1437,7 @@ Optional argument ARGS ."
 ;;;        ((equal fir 'commands)
 ;;; 	" You can use both lisp and english to communicate..
 ;;; Type , (commands) to get a list of commands..")
-       
+
 ;;;        ((equal fir 'suggest)
 ;;; 	"Add your suggestions to the field \"suggestions\", or contact the author")
 
@@ -1494,7 +1489,7 @@ matches starting at N and ending at M. "
 	       all-commands)
 	    all-commands))
 	 (len (length pruned-commands))
-	 final-commands 
+	 final-commands
 	 (str0 "")
 	 (str1 "")
 	 (str2 "")
@@ -1510,11 +1505,11 @@ matches starting at N and ending at M. "
     (when (> M len) (setq M len))
     (if (> N 0) (setq str2 (format "Matches starting at %s -->" N)))
     (setq final-commands (subseq pruned-commands N M))
-    (setq str3 
+    (setq str3
 	  (format "%s" final-commands))
     (concat str0 str1 str2 str3)))
 
-      
+
 
 (defun fsi-describe-commands (&rest foo)
   "Just a help command. Describes how to run commands. "
@@ -1536,9 +1531,9 @@ Future commands:  info-search, hurd-info-search etc. etc.
 
 (defun fsi-search (&optional regexp N M prestring expr &rest rest)
   "Search for the REGEXP from among all the terms (and their
-descriptions).  See also fs-search-wide. 
+descriptions).  See also fs-search-wide.
 EXPR (optional) is the full initial expression.. "
-  (unless regexp 
+  (unless regexp
     (error "Syntax: , s REGEXP &optional N M"))
   (let* ((len-results (apply 'fs-search-basic regexp N M nil
 			     rest))
@@ -1559,29 +1554,29 @@ EXPR (optional) is the full initial expression.. "
     (if (and (integerp N) (> N 0) (not prestring))
 	(setq str2 (format "Matches starting at %s\n" N)))
     (unless prestring (setq str3 "--> "))
-    (setq str4 
-	  (mapconcat 'identity 
+    (setq str4
+	  (mapconcat 'identity
 		     results " "
 		     )
-	  
+
 	  )
     (when (and (> fs-internal-google-level 80) (> len 1))
-      (setq str5 
+      (setq str5
 	    (let ((foo (fs-google-lucky-raw
 			fs-internal-message-sans-bot-name)))
 	      (if foo (concat " " foo) str5))))
     (cond
      ((and prestring (= len 1))
       (fs-describe (first results)))
-     ((and (> len 0) 
+     ((and (> len 0)
 	   (or
 	    (not prestring)
 	    (< len fs-internal-english-max-matches)))
       (unless (stringp prestring)
 	(setq prestring ""))
       (concat prestring str0 str1 str2 str3 str4 str5))
-     (t (apply 'fs-search-wide regexp N M 
-	       "Try: " 
+     (t (apply 'fs-search-wide regexp N M
+	       "Try: "
 	       (or expr fs-internal-original-message)
 	       rest)))))
 
@@ -1601,7 +1596,7 @@ EXPR (optional) is the full initial expression.. "
 
 (defun fsi-search-wide (&optional regexp N M prestring expr &rest rest)
   "Search for the REGEXP from among all the terms (and their
-descriptions).  See also fs-search-wide. 
+descriptions).  See also fs-search-wide.
 EXPR is the full initial expression, well, mostly..
 "
   (let* ((len-results (apply 'fs-search-basic regexp N M 'describe
@@ -1621,22 +1616,22 @@ EXPR is the full initial expression, well, mostly..
     (if (and (integerp N) (> N 0) (not prestring))
 	(setq str2 (format "Matches starting at %s\n" N)))
     (unless prestring (setq str3 "--> "))
-    (setq str4  
+    (setq str4
 	  ;;(format "%s" results)
 	  (mapconcat 'identity results " ")
 	  )
     (when (and (> fs-internal-google-level 80) (> len 1))
-      (setq str5 
+      (setq str5
 	    (let ((foo (apply 'fs-google-lucky-raw
 			      fs-internal-message-sans-bot-name
 			      (fs-get-google-defaults)
 			      )))
-			
+
 	      (if foo (concat " " foo) str5))))
-    
-    ;; why does this not work as expeecteD?  adding a nil for now: 
+
+    ;; why does this not work as expeecteD?  adding a nil for now:
     (when (and prestring (>= len fs-internal-english-max-matches))
-      (setq fs-prestring 
+      (setq fs-prestring
 	    (concat fs-prestring
 		    "[Too many DB matches] ")))
     (cond
@@ -1648,7 +1643,7 @@ EXPR is the full initial expression, well, mostly..
       (unless (stringp prestring)
 	(setq prestring ""))
       (concat prestring str0 str1 str2 str3 str4 str5))
-     (t 
+     (t
       (fs-english-only (or expr fs-internal-original-message)
 			   nil
 			   )))))
@@ -1666,7 +1661,7 @@ it was addressed at last. "
   (setq expr (erbutils-downcase (erbutils-stringify expr
 
 						    )))
-  (let ((exprlist (split-string expr 
+  (let ((exprlist (split-string expr
 				;;"[ \f\t\n\r\v]+"
 				"[^a-zA-Z0-9]"
 				))
@@ -1677,7 +1672,7 @@ it was addressed at last. "
     (setq len (length exprlist))
     (cond
      ((or
-       
+
        (and (= len 1)
 	    (string-match erbot-nick (first exprlist))))
       (setq gotit t
@@ -1688,19 +1683,19 @@ it was addressed at last. "
 	(member "hi" exprlist)
 	(member "hello" exprlist)
 	(member "yo" exprlist))
-       (setq 
-	gotit 
-	t 
+       (setq
+	gotit
+	t
 	ans
 	(concat
 	 (erbutils-random
 	  '("hi " "hello " "hey " "hei "))
 	 (erbutils-random
 	  '("sexy! " "!!" "there" "")))))
-      
+
       ((member "bye" exprlist)
-       (setq gotit t 
-	     ans 
+       (setq gotit t
+	     ans
 	     (erbutils-random
 	      '("Later" "See ya" "Bye then" "Bye"))))
       ((or
@@ -1709,35 +1704,35 @@ it was addressed at last. "
        (setq gotit t
 	     ans
 	     (erbutils-random
-	      '(":-)" "How goes?" "Hello!" 
+	      '(":-)" "How goes?" "Hello!"
 		"Greetings!"
 		"How is it going?"
-		"This is my favorite channel!" 
+		"This is my favorite channel!"
 		"I love this place. "
 		"Thanks.  I love it here."))))
-      
-      ((or 
+
+      ((or
 	(member "tnx" exprlist)
 	(member "tnks" exprlist)
 	(member "thanks" exprlist)
 	(member "thanku" exprlist)
 	(member "thankyou" exprlist)
 	(and (string-match "thank" expr)
-	     (or 
+	     (or
 	      (string-match "you" expr)
 	      (string-match erbot-nick expr))
 	     (string-match "thank you" expr)))
        (setq gotit t
 	     ans
 	     (erbutils-random
-	      '("No problem" "Welcome!" "You're welcome" 
-		"no problemo" 
+	      '("No problem" "Welcome!" "You're welcome"
+		"no problemo"
 		"Sure!"
 		"(:"
 		"Cool."
-		
+
 		))))
-      
+
       ((or (member "thx" exprlist)
 	   (member "thankx" exprlist)
 	   (member "thanx" exprlist)
@@ -1752,36 +1747,36 @@ it was addressed at last. "
 	     ans
 	     (concat
 	      (erbutils-random
-	       '("Nothing much. " "Just, you know. "  
+	       '("Nothing much. " "Just, you know. "
 		 "Just the usual.."))
 	      (erbutils-random
-	       '("And you? " "How about you? " 
+	       '("And you? " "How about you? "
 		 "How goes with you? "
 		 "What have you been up to?")))))
       (
-       (or 
+       (or
 	(string-match "love" expr)
 	(string-match "like" expr))
        (setq gotit t
 	     ans
 	     (format "%s loves you!" erbot-nick)))
       (
-       (or 
+       (or
 	(string-match "hate" expr)
 	(string-match "dislike" expr)
 	(string-match "don't like" expr))
        (setq gotit t
 	     ans
 	     (format "%s only has love for you!" erbot-nick)))
-      
+
       ((string-match "help" expr)
        (setq gotit t
 	     ans (format "Type , help")))
       ((or (member  "bot" exprlist)
 	   (member "robot" exprlist))
        (setq gotit t
-	     ans 
-	     (concat 
+	     ans
+	     (concat
 	      (erbutils-random
 	       '(
 		 "I am just an ordinary human"
@@ -1798,12 +1793,12 @@ it was addressed at last. "
 		 "YEAH!! I AM A GIANT ROBOT!"))
 	      (erbutils-random
 	       '("" "!"))
-	      (erbutils-random 
+	      (erbutils-random
 	       '("" " :)" " :(" " ;)" " :D" " heh")))))
-		
-      
+
+
       )
-    
+
     (if gotit ans
       (if (and addressedatlast (not fs-internal-botito-mode))
 	  'noreply
@@ -1830,7 +1825,7 @@ it was addressed at last. "
 ;;;     (error "unquoted list"))
 ;;;    ((and (symbolp msymbol)
 ;;; 	 (not (equal 0
-;;; 		     (string-match "fs-" 
+;;; 		     (string-match "fs-"
 ;;; 				   (format "%s" msymbol)))))
 ;;;     (setq msymbol (intern (format "fs-%s" msymbol))))
 ;;;    (t "Funcalling foo is really bar!"))
@@ -1845,11 +1840,11 @@ it was addressed at last. "
 ;;;    (t
 ;;;     (let ((erbnocmd-tmpvar (length mexprs)))
 ;;;       `(fs-funcall
-;;; 	,msymbol 
+;;; 	,msymbol
 ;;; 	,@(subseq mexprs 0 (- erbnocmd-tmpvar 1))
 ;;; 	,@(erblisp-sandbox-quoted (first (last mexprs))))))
 ;;;    ))
-      
+
 
 ;;; (defmacro fs-funcall (&optional msymbol &rest mexprs)
 ;;;   "This makes sure that if the first argument to fs- was a
@@ -1857,17 +1852,17 @@ it was addressed at last. "
 ;;; unless it begins in fs-, or that variable gets converted to fs-."
 ;;;   (when
 ;;;       (listp msymbol)
-;;;     (setq msymbol 
+;;;     (setq msymbol
 ;;; 	  (erblisp-sandbox-quoted msymbol))
 ;;;     (when (equal (first msymbol) 'quote)
 ;;;       (setq msymbol (cdr msymbol))))
 ;;;   (when
 ;;;       (and (symbolp msymbol)
 ;;; 	   (not (equal 0
-;;; 		       (string-match "fs-" 
+;;; 		       (string-match "fs-"
 ;;; 				     (format "%s" msymbol)))))
 ;;;     (setq msymbol (intern (format "fs-%s" msymbol))))
-;;;   (unless 
+;;;   (unless
 ;;;       (or (listp msymbol) (symbolp msymbol))
 ;;;     (error "Macros confuse this bot!"))
 ;;;   `(erbnocmd-funcall ,msymbol ,@mexprs))
@@ -1875,7 +1870,7 @@ it was addressed at last. "
 
 ;;; (defun erbnocmd-funcall (&optional symbol &rest exprs)
 ;;;   (let (erbnocmd-ss )
-;;;     (unless 
+;;;     (unless
 ;;; 	(or (symbolp symbol)
 ;;; 	    (listp symbol))
 ;;;       (error "Syntax: (funcall SYMBOL &rest arguments)"))
@@ -1904,7 +1899,7 @@ it was addressed at last. "
 ;;; 	 (append
 ;;; 	  (subseq exprs 0 (- len 1))
 ;;; 	  (first (last exprs)))))))))
-  
+
 
 
 ;;; (defun erbnocmd-apply-basic (fcn &rest args)
@@ -1924,18 +1919,18 @@ it was addressed at last. "
 ;;; ;;;  	   (fir (first rev))
 ;;; ;;;  	   (args1 (reverse (rest rev))))
 ;;; ;;;       (apply
-;;; ;;;        'erbnocmd-funcall 
-;;; ;;;        symbol 
+;;; ;;;        'erbnocmd-funcall
+;;; ;;;        symbol
 ;;; ;;;        (append
 ;;; ;;; 	(mapcar 'erblisp-sandbox-fuzzy
 ;;; ;;; 		args1)
 ;;; ;;; 	(mapcar 'erblisp-sandbox-fuzzy
 ;;; ;;; 		fir))))))
-   
+
 
 
 (defun fsi-search-basic (&optional regexp N M describep &rest rest)
-   "Don't call directly.. meant as a building block for other functions. 
+   "Don't call directly.. meant as a building block for other functions.
  Search for the REGEXP from among all the terms (and their
    descriptions).  See also fs-search-wide. That function actually
  calls this function with describep set to 'describe.
@@ -1947,7 +1942,7 @@ it was addressed at last. "
        (unless regexp
      (error "Syntax: , sw regexp &optional N M"))
    (let* ((bar (cons regexp (cons N rest)))
- 	 (foo (if (stringp regexp) regexp 
+ 	 (foo (if (stringp regexp) regexp
  		(if regexp (format "%s" regexp)
  		  "^$")))
  	 (barbar
@@ -1962,7 +1957,7 @@ it was addressed at last. "
  	      foo nil))
  	  records results
  	  )
-	 
+
      (if (stringp N)
  	(setq N (read N)))
      (unless (integerp N)
@@ -1971,18 +1966,18 @@ it was addressed at last. "
  	(setq M (read M)))
      (if (and (integerp M) (= M N))
  	(setq M (+ N 1)))
-     (setq records 
+     (setq records
  	  (if (equal describep 'describe)
  	      (bbdb-search (bbdb-records)
  			   foo nil nil foo)
  	    (bbdb-search (bbdb-records) foo)))
-    
+
      (setq results (mapcar '(lambda (arg) (aref arg 0)) records))
      (let ((len (length results)))
        (unless (and (integerp M) (< M len))
  	(setq M len))
        (list len (subseq results N M)))))
-		       
+
 
 (defvar fs-internal-describe-literally-p nil)
 
@@ -1997,7 +1992,7 @@ fs-msgsandbot instead.")
 invocation part removed.  ")
 
 (defvar fs-msglistsansbot nil
-  "Message broken into list, invocation parts removed.  
+  "Message broken into list, invocation parts removed.
 
 .. with the invokation parts, like ,, or , or fsbot:, removed.  Thus,
 if message taken from the middle of a sentence, then this is the list
@@ -2038,7 +2033,7 @@ from only that part. ")
 	(res (rest rest)))
     (cond
      (fir
-      (apply 'fs-describe 
+      (apply 'fs-describe
 	     (if (stringp fir) (regexp-quote fir)
 	       (regexp-quote (format "%s" fir)))
 	     res))
@@ -2050,9 +2045,9 @@ from only that part. ")
 (defun fsi-describe (&optional mainterm N M prestring expr &rest rest)
   "The general syntax is (fs-describe TERM [N] [M]).
 Looks for TERM, and shows its descriptions starting at description
-number N, and ending at M-1. The first record is numbered 0. 
+number N, and ending at M-1. The first record is numbered 0.
 "
-  (let 
+  (let
       ;;((fs-lispargs (append (list mainterm N M prestring expr) rest)))
       ;; nothing, just a let not used any more..
       ((fs-nothingsorry nil))
@@ -2061,12 +2056,12 @@ number N, and ending at M-1. The first record is numbered 0.
     ;; for fs-lispa , fs-lispb, fs-lispc...
 
     (setq fs-lispargs (mapcar 'fsi-read-or-orig (cdr fs-msglistsansbot)))
-    (when fs-found-query-p 
+    (when fs-found-query-p
       (setq N 0)
       (setq M 1))
     (unless prestring (setq prestring ""))
-    (unless mainterm 
-      (error 
+    (unless mainterm
+      (error
        "Format , (describe TERM &optional number1 number2)"))
     (let* ((bar (cons mainterm (cons N rest)))
 	   (foo (format "%s" mainterm))
@@ -2076,7 +2071,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	     (and N (list N))
 	     (and M (list M))
 	     rest))
-	   
+
 	   )
       (setq foo (fs-correct-entry foo))
       (if (stringp N)
@@ -2103,32 +2098,32 @@ number N, and ending at M-1. The first record is numbered 0.
 	     (shortenedp (or (< newM len)
 			     (> N 0)))
 	     )
-	
-	
+
+
 	(cond
 	 ;; in cond0
 	 (result1
 	  (let* (
-		 ;; notice the use of result1 here, not result. 
+		 ;; notice the use of result1 here, not result.
 		 (aa (first result1))
 		 (aarest (cdr result1))
 		 (bb (split-string aa))
-		 
+
 		 (cc (first bb))
 		 (dd (second bb))
 		 (ddd (or (and (stringp dd) (regexp-quote dd)) ""))
 		 (ee (cdr bb))
-		 (expandp 
-		  (and 
+		 (expandp
+		  (and
 		   (not fs-internal-describe-literally-p)
-		   
+
 		   ;;(equal len 1)
 		   ))
-		 
+
 		 )
-	    
-	    (if (and  
-		 (equal cc "directonly") 
+
+	    (if (and
+		 (equal cc "directonly")
 		 ;;(equal len 1)
 		 )
 		;; hmm this if part still doesn't take care of aa..
@@ -2151,25 +2146,25 @@ number N, and ending at M-1. The first record is numbered 0.
 		      (setq ddd (or (and (stringp dd)
 					 (regexp-quote dd)) ""))
 		      (setq ee (cdr bb))))
-		  
-		  
-		  
+
+
+
 		  ))
-	    (cond 
+	    (cond
 	     ((and expandp
 		   (erbutils-string= cc "redirect")
 		   dd)
 	      (apply 'fs-describe ddd
-		     N M 
-		     (format "[->] " 
+		     N M
+		     (format "[->] "
 			     )
 		     rest))
 	     ((and expandp (member cc '("unecho" "noecho"))
 		   dd)
 	      ;;dd)
-	      (erbutils-itemize 
+	      (erbutils-itemize
 	       (cons
-		(format "%s" 
+		(format "%s"
 			(mapconcat 'identity ee " "))
 		(cdr result))
 	       N
@@ -2184,7 +2179,7 @@ number N, and ending at M-1. The first record is numbered 0.
 		(setq fs-lispc (nth 2 fs-lispargs))
 		(setq fs-lispd (nth 3 fs-lispargs))
 		(setq fs-lispe (nth 4 fs-lispargs))
-		(erbeng-main 
+		(erbeng-main
 		 (concat erbn-char " (progn "
 			 (substring aa
 				    (with-temp-buffer
@@ -2192,15 +2187,15 @@ number N, and ending at M-1. The first record is numbered 0.
 				      (goto-char (point-min))
 				      (search-forward "lisp" nil t)))
 			 " )")
-		 
-		 erbeng-proc 
-		 erbeng-nick erbeng-tgt erbeng-localp 
+
+		 erbeng-proc
+		 erbeng-nick erbeng-tgt erbeng-localp
 		 erbeng-userinfo)))
-	     
-	     
-	     (t 
+
+
+	     (t
 	      (erbutils-add-nick-maybe
-	       (concat 
+	       (concat
 		prestring
 		(format
 		 (erbutils-random
@@ -2226,25 +2221,25 @@ number N, and ending at M-1. The first record is numbered 0.
 		    (erbutils-itemize result N shortenedp)
 		  (erbutils-itemize result1 0))
 		)))
-	     
-	     
-	     
+
+
+
 	     )))
-	 
+
 	 ;; in cond0
 	 ;; else
-	 (fs-found-query-p 
+	 (fs-found-query-p
 	  'noreply)
 	 ((not erbnocmd-describe-search-p)
 	  ;; most likely: redirected but the redirected stuff does not exist..
-	  (format 
-	   "Missing redirect. %s is now on fire.               (Try , dl) " 
+	  (format
+	   "Missing redirect. %s is now on fire.               (Try , dl) "
 	   erbot-nick mainterm))
 	 (t
-	  ;; prevent any further expansions on further loopbacks. 
+	  ;; prevent any further expansions on further loopbacks.
 	  (let ((erbnocmd-describe-search-p nil))
-	    (fs-search 
-	     mainterm nil nil 
+	    (fs-search
+	     mainterm nil nil
 	     (concat prestring "try: ")
 	     ;;barbar
 	     expr
@@ -2273,7 +2268,7 @@ Optional argument TERMS ."
     (cond
      ((< num 30)
       (concat none
-	      (format "Perhaps try:  , s %s or , sw %s  or , %s 0" term 
+	      (format "Perhaps try:  , s %s or , sw %s  or , %s 0" term
 		      term term)))
      ((< num 60)
       (concat none
@@ -2329,8 +2324,8 @@ Optional argument TERMS ."
    '(yow)))
 
 (defun fsi-rearrange (&optional from to term &rest dummy)
-  "Syntax: FROM->TO in TERM. 
-Move the FROMth entry to the TOth position in the given TERM.  
+  "Syntax: FROM->TO in TERM.
+Move the FROMth entry to the TOth position in the given TERM.
 Numbering of positions starts from 0. "
   (unless term (error "Syntax: , N->M in TERM (no term found)"))
   (when (stringp from)
@@ -2339,14 +2334,14 @@ Numbering of positions starts from 0. "
     (setq to (read to)))
   (unless (stringp term)
     (setq term (format "%s" term)))
-  (let* 
+  (let*
       ((exactnotes (erbbdb-get-exact-notes term))
        (realterm (erbbdb-get-exact-name term))
        (notes (and (stringp exactnotes ) (read exactnotes)))
        (len (length notes))
        (max (- len 1))
        (newnotes notes)
-       remlist 
+       remlist
        thisnote
        (tostring (downcase (format "%s" to)))
        )
@@ -2358,19 +2353,19 @@ Numbering of positions starts from 0. "
       (setq to max))
     (when (string= tostring "first")
       (setq to 0))
-    (unless (and (integerp from) 
+    (unless (and (integerp from)
 		 (<= from  max) (>= from 0))
-      (error "The from term %S should lie between %S and %S" 
+      (error "The from term %S should lie between %S and %S"
 	     from 0 max))
     (setq thisnote (nth from notes))
     (setq remlist
 	  (append (subseq notes 0 from)
 		  (subseq notes (+ from 1))))
-    (setq newnotes 
+    (setq newnotes
 	  (append (subseq remlist 0 to)
 		  (list thisnote)
 		  (subseq remlist to)))
-    (erbot-working 
+    (erbot-working
      (fs-forget term "all")
      (fs-set-term realterm newnotes))
     (erbbdb-save)
@@ -2379,15 +2374,15 @@ Numbering of positions starts from 0. "
 
 ;;; 2002-09-04 T01:51:08-0400 (Wednesday)    D. Goel
 (defun fsi-forget (&optional name number &rest dummy)
-  "Remove the entry correponding to NAME in the database.  
+  "Remove the entry correponding to NAME in the database.
 With NUMBER, forget only the NUMBERth entry of NAME. "
 
   ;; before we do the usual thing, let's see if we need to and can get
   ;; away with exchanging name and number.
-  (when 
-      (and 
+  (when
+      (and
        (numberp name)
-       (not (string= (format "%s" number) 
+       (not (string= (format "%s" number)
 		     "all"))
        )
     (let ((fstmp number))
@@ -2398,7 +2393,7 @@ With NUMBER, forget only the NUMBERth entry of NAME. "
   (unless name
     (error "Syntax: , forget TERM &optional NUMBER"))
   (setq name (fs-correct-entry name))
-  (let* 
+  (let*
       (numstring
        (entries0 (erbbdb-get-exact-notes name))
        (entries (and (stringp entries0 )
@@ -2413,7 +2408,7 @@ With NUMBER, forget only the NUMBERth entry of NAME. "
     (when (stringp number)
       (setq number (read number)))
     (unless (integerp number) (setq number nil))
-    (unless 
+    (unless
 	(or number
 	    (string= numstring "all"))
       (error "Syntax: , forget TERM [NUMBER or \"all\"]"))
@@ -2469,8 +2464,8 @@ train the bot.  The default is nil, which suggests the user to use
 \"is also\" instead. "
 
   (setq fs-set-add-all-p (not fs-set-add-all-p))
-  (format 
-   "All-is mode set to %S.  To toggle, type , (fs-set-add-all-toggle)" 
+  (format
+   "All-is mode set to %S.  To toggle, type , (fs-set-add-all-toggle)"
    fs-set-add-all-p))
 
 (defun fsi-set-term (&rest args)
@@ -2489,26 +2484,26 @@ lowercase, and all whitespace is converted to colons."
       (cond
        ((null records)
 	(error "Please specify a description for %s.. Type , df fs-set-term for more details" name))
-       
+
        ((and current (string= current ""))
 	(progn (erbbdb-create name records)
 	       (format "Added field to the currently empty %s " name)))
        (current
 	(if fs-set-add-all-p
 	    (apply 'fs-set-also args)
-	  (error 
+	  (error
 	   "%s is already something else.. Use 'is also'.. \n Currently: %s" name
 
 	   (let* ((notes (fs-notes name))
 		  (shortenedp (> (length notes) 1)))
-	     (erbutils-itemize 
+	     (erbutils-itemize
 	      (list (first notes))
 	      0 shortenedp))
 
 	   )))
        (t
 	(progn (erbbdb-create name records)
-	       (format "created." 
+	       (format "created."
 		       )))))))
 
 
@@ -2539,17 +2534,17 @@ Record should be a single entity here... a string..."
     (cond
      ((member record notes)
       (format "Not added. This entry already exists in the term %S" name))
-     (t 
+     (t
       (erbbdb-add name record)
       ;;(run-hook-with-args 'erbot-notify-add-functions nick channel
-      ;;name (length notes) 
+      ;;name (length notes)
       (format "Added entry to the term %S" name)))))
 
 
 (defun fsi-doctor (&rest foo)
   ""
-  (erbutils-add-nick 
-   (funcall 'erbot-doctor  
+  (erbutils-add-nick
+   (funcall 'erbot-doctor
 	    (erbutils-stringify foo))))
 
 
@@ -2557,7 +2552,7 @@ Record should be a single entity here... a string..."
   ;;(let ((fs-limit-lines 8))
   ;;(fs-limit-lines
   ;;(let ((dun-batch-mode t))
-  (funcall 'erbot-dunnet 
+  (funcall 'erbot-dunnet
 	   (erbutils-stringify foo)))
 
 
@@ -2566,7 +2561,7 @@ Record should be a single entity here... a string..."
 in manuals of HURD, tramp, eshell, elisp, gnus, message, emacs, ebrowse, calc,
 gdb, make sawfish, cl-emacs, bash, gnuplot, latex and others by demand...")
 
-;; NO! else fsbot responds to <nick> fsbot is cool! in a wrong way. 
+;; NO! else fsbot responds to <nick> fsbot is cool! in a wrong way.
 ;; (defalias 'fs-is 'erbutils-info-search)
 
 (defun fs-hurd-info-search (&rest foo)
@@ -2583,14 +2578,14 @@ gdb, make sawfish, cl-emacs, bash, gnuplot, latex and others by demand...")
   "Forget an entry and add new fields to it..
 Syntax: , no foo is bar."
   (progn
-    (let* ((fir (first args)) 
+    (let* ((fir (first args))
 	   (aa (erbbdb-get-exact-notes fir))
 	   (notes (and (stringp aa) (read aa)))
 	   (len (length notes)))
       (when (= len 0)
 	(error "There's no such term %s.  Use , %s is ..." fir fir))
       (unless (= len 1)
-	(error 
+	(error
 	 "Term has multiple entries. Examine them and ask me to forget them first"))
       (erbutils-ignore-errors (funcall 'fs-forget (first args) "all"))
       (apply 'fs-set-term args))))
@@ -2600,7 +2595,7 @@ Syntax: , no foo is bar."
   "This is true by default.. since (shell-command \"fortune\") is not
 risky.. ")
 
-  
+
 (defun erbn-fortune (arg)
   (unless arg (setq arg ""))
   (cond
@@ -2620,7 +2615,7 @@ risky.. ")
 
 
 (defalias 'fs-f 'fs-fortune)
- 
+
 (defun fs-fortunes-help (&rest args)
   (concat "Type ,fortune, or any of the commands beginning with f- : "
 	  (fs-commands "^f-")))
@@ -2905,12 +2900,12 @@ entire line.
   "")
 
 (make-variable-buffer-local 'fs-dunnet-mode)
- 
+
 (defvar fs-internal-fill-column 350
   "Default is to disable filling.  The receipient should be able to
-fill the way they like. 
+fill the way they like.
 should be <= fs-internal-limit-length, else we might set it to be during the
-code. 
+code.
 also, a good idea to keep it < erc's builtin flood protection length,
 else your lines will get broken during middle of words by ERC.
 Thus, keep it below, say 350."
@@ -2941,7 +2936,7 @@ Thus, keep it below, say 350."
       (setq str (format "%s" str)))
     ;; get rid of all the \n first..
     (setq str
-	  (mapconcat 'identity 
+	  (mapconcat 'identity
 		     (split-string str "\n")
 		     "  "))
     (when (> (length str) fs-internal-limit-length)
@@ -2955,8 +2950,8 @@ Thus, keep it below, say 350."
       (buffer-string)))
    (t "\n")))
 (defun fsi-dunnet-mode (&optional arg)
-  
-  (setq fs-dunnet-mode 
+
+  (setq fs-dunnet-mode
 	(cond
 	 ((or (not (numberp arg))
 	      (= arg 0))
@@ -2965,7 +2960,7 @@ Thus, keep it below, say 350."
 	  t)
 	 ((minusp arg) nil)))
 
-  (format "Dunnet mode set to %S.  To toggle, type , (dunnet-mode)" 
+  (format "Dunnet mode set to %S.  To toggle, type , (dunnet-mode)"
 	  fs-dunnet-mode))
 
 (defun fsi-limit-string-no-fill (&optional str limit-lines
@@ -2974,7 +2969,7 @@ Thus, keep it below, say 350."
 				      &rest ignored
 				      )
   "IS OLD. i think.  not used anywwhere...  certainly screws up more:
-is not compliant with fsbot paginator. 
+is not compliant with fsbot paginator.
 
 Limit string to reasonable length..
 Not more than fs-internal-limit-line-length characters per line, and
@@ -3033,7 +3028,7 @@ channel, else we get the more from the channel indicated by target. "
 (defun fsi-limit-lines (str0 &optional nomorep &rest ignored)
   "Limits the string, both, to a reasonable number of lines and a
 reasonable number of characters, trying not to break lines and not to
-break words, if possible. 
+break words, if possible.
 
 Thus, that becomes quite a complicated algorithm, and we do that
 here."
@@ -3047,8 +3042,8 @@ here."
 	 (limitedp nil)
 	 ptmx
 	 this-line
-	 this-point 
-	 new-point 
+	 this-point
+	 new-point
 	 )
     (with-temp-buffer
       (insert str)
@@ -3066,21 +3061,21 @@ here."
 	(goto-line fs-limit-lines)
 	(setq this-line fs-limit-lines)
 	)
-	
+
       (setq this-point (point) new-point this-point)
 
       (cond
-       ((and limitedp (> this-line 1)) 
-	(progn (beginning-of-line) 
+       ((and limitedp (> this-line 1))
+	(progn (beginning-of-line)
 	       (setq new-point (point))
 	       (backward-char) (setq this-point (point))
 	       ))
        ((and limitedp
-	     (progn (ignore-errors 
+	     (progn (ignore-errors
 		      ;; we want a backward-word 1 here, but only
 		      ;; whitespace is regarded as word-boundary for
-		      ;; us. 
-		      (when 
+		      ;; us.
+		      (when
 			  (search-backward-regexp "\\( \\|\n\\|\t\\)" nil t)
 			(forward-char 1))
 		      ;;(backward-word 1)
@@ -3088,21 +3083,21 @@ here."
 		    (> (point) (point-min))))
 	(setq new-point (point))
 	(setq this-point new-point))
-       
-       
+
+
        ;;(limitedp (setq this-point (point) new-point (point)))
 
-       ;; in the final case, this-point and new-point are already at 
+       ;; in the final case, this-point and new-point are already at
        ;;point-max...
        (t nil))
       (setq ans (buffer-substring (point-min) this-point))
-      (when 
+      (when
 	  ;;(< this-point (point-max))
 	  limitedp
 	(setq more (buffer-substring new-point (point-max)))
-	(if 
+	(if
 	    (string-match "[^ \t\n]" more )
-	    (setq ans (concat ans " ..[Type " erbn-char "more]"))	    
+	    (setq ans (concat ans " ..[Type " erbn-char "more]"))
 	  (when nomorep (setq more "")))
 	)
       )
@@ -3125,8 +3120,8 @@ here."
 		(setq ender "..+ more")
 		(subseq brstr 0 (- fs-limit-lines 1)))
 	    brstr)))
-    (if condp (fs-more-set 
-		      (mapconcat 'identity 
+    (if condp (fs-more-set
+		      (mapconcat 'identity
 				 (subseq brstr (- fs-limit-lines
 						  1))
 				 "\n"))
@@ -3141,11 +3136,11 @@ here."
 	str
       (fs-describe "more"))))
 
-;;   (if (and (stringp fs-more) 
+;;   (if (and (stringp fs-more)
 ;; 	   (not (string= fs-more "")))
 ;;       fs-more
 ;;     (fs-describe "more")))
-	
+
 
 (defun fsi-limit-lines-long (str &rest ignored)
   ""
@@ -3201,7 +3196,7 @@ here."
     (if (string-match ni reply)
 	reply
       (concat ni ": " reply))))
-    
+
 
 (defun fsi-apropos (&optional regexp N M &rest ignored)
   (fs-apropos-basic 'erbn-apropos regexp N M))
@@ -3229,7 +3224,7 @@ here."
 		    'functionp))
 
 (defun erbn-apropos-variable (reg)
-  (apropos-internal reg 
+  (apropos-internal reg
 		    (lambda (s)
 		      (or (boundp s)
 			  (user-variable-p s)))))
@@ -3246,7 +3241,7 @@ here."
 
 (defun fsi-apropos-basic (fcn &optional regexp N M &rest ignored)
   "Show the apropos-matches  of regexp starting at match number N"
-  (unless regexp 
+  (unless regexp
     (error "Syntax: , apropos REGEXP &optional N M"))
   (if (stringp N) (setq N (read N)))
   (unless (integerp N) (setq N 0))
@@ -3262,12 +3257,12 @@ here."
     (unless (and (integerp M) (< M len))
       (setq M len))
     (if (and (= N  0 ) (= M len) (> len 30))
-	(setq 
-	 str0 
+	(setq
+	 str0
 	 "Perhaps Try , df fs-apropos for general syntax.  "))
     (if (> len 1) (setq str1 (format "%s matches.  " len)))
     (if (> N 0) (setq str2 (format "Matches starting at %s->" N)))
-    (setq str3 (progn (format "%s" 
+    (setq str3 (progn (format "%s"
 					  (subseq results
 						  N M)
 					  )))
@@ -3290,7 +3285,7 @@ here."
 	   (save-excursion
 	     (find-function-do-it function t 'set-buffer)
 	     (buffer-substring (point)
-			       (save-excursion 
+			       (save-excursion
 				 (forward-sexp 1)
 				 (point))))))
       (if (equal nolimitp 'nolimit)
@@ -3305,8 +3300,8 @@ here."
 (defun fsi-find-function (&optional function &rest ignore)
   (unless function
     (error "Syntax: , find-function 'function-name"))
-  ;;fs-limit-lines-long 
-  (fs-find-function-internal 
+  ;;fs-limit-lines-long
+  (fs-find-function-internal
    function 'nolimit))
 
 
@@ -3336,13 +3331,13 @@ here."
 	    (setq function g))))
     (let* ((fstrbare
 	   (save-excursion
-	     
+
 	     ;; This has the problem that it is interactive.. asks to
-	     ;; reread file if has changed etc. 
+	     ;; reread file if has changed etc.
 	     ;;(find-function function)
 	     (find-function-do-it function nil 'set-buffer)
 	     (buffer-substring (point)
-			       (save-excursion 
+			       (save-excursion
 				 (forward-sexp 1)
 				 (point)))))
 	  (fstr (erbutils-function-minus-doc fstrbare)))
@@ -3359,9 +3354,9 @@ here."
 (defun fsi-say (&rest args)
   ;; let's make it safe, even though we know it will be made safe again...
   (let ((response
-	 (mapconcat 
+	 (mapconcat
 	  '(lambda (arg)
-	     (format "%s" arg))     
+	     (format "%s" arg))
 	  args " ")))
     (if (erbot-safep response) response
       (concat " " response))))
@@ -3370,7 +3365,7 @@ here."
 
 
 
-		
+
 
 
 
@@ -3383,7 +3378,7 @@ here."
 (defun fsi-concat (&rest sequences)
   (apply 'concat
 	 (mapcar
-	  'erbutils-convert-sequence 
+	  'erbutils-convert-sequence
 	  sequences)))
 
 
@@ -3391,7 +3386,7 @@ here."
 
 
 (defun fs-bunny (&rest arg)
-  (concat " " 
+  (concat " "
 	  (erbutils-random
 	   '(
 	     "Bunny is magical!"
@@ -3406,7 +3401,7 @@ here."
 	     "Bunny! Bunny! Bunny!"
 	     "Bunny! Bunny! Bunny! Bunny!"
 	     ;;"ERC in Emacs just rocks"
-	     
+
 	     ))))
 
 
@@ -3419,10 +3414,10 @@ here."
 (defun erbnocmd-user-fcn-definition  (&optional mainterm )
   "The general syntax is (fs-describe TERM [N] [M]).
 Looks for TERM, and shows its descriptions starting at description
-number N, and ending at M-1. The first record is numbered 0. 
+number N, and ending at M-1. The first record is numbered 0.
 "
-  (unless mainterm 
-    (error 
+  (unless mainterm
+    (error
      "Format , (describe TERM &optional number1 number2)"))
   (unless mainterm
     (setq mainterm (format "%s" mainterm)))
@@ -3438,14 +3433,14 @@ number N, and ending at M-1. The first record is numbered 0.
        ;; in cond0
        (result1
 	(let* (
-	       ;; notice the use of result1 here, not result. 
+	       ;; notice the use of result1 here, not result.
 	       (aa (first result1))
 	       (bb (split-string aa))
 	       (cc (first bb))
 	       (dd (second bb))
 	       (ee (cdr bb))
 	       )
-	  (cond 
+	  (cond
 	   (
 	    (erbutils-string= cc "redirect")
 	    dd)
@@ -3455,7 +3450,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defun fs-seen (&rest args)
   (concat "seen "
-	  (mapconcat 
+	  (mapconcat
 	   '(lambda (arg) (format "%s" arg))
 	   args
 	   " ")))
@@ -3480,30 +3475,30 @@ number N, and ending at M-1. The first record is numbered 0.
 	 (mapconcat '(lambda (a)
 		       (format "%s" a))
 		    args " ")))
-    (with-timeout 
-	(fs-internal-google-time 
+    (with-timeout
+	(fs-internal-google-time
 	 (list concatted (list "google---TimedOut")))
       (let* ((results
 	      ;; this ignore-errors is very important.
 	      ;; since the google stuff currently gives weird errors
 	      ;; when called from within a with-timeout loop, and a
-	      ;; timeout actually occurs. 
+	      ;; timeout actually occurs.
 	      (ignore-errors
-		(google-process-response 
-		 (google-search-internal 
+		(google-process-response
+		 (google-search-internal
 		  concatted
 		  google-start google-max-results
 		  google-filter-p google-safe-p))))
 	     (fir (first results))
-	     (revresults 
+	     (revresults
 	      (reverse results))
-	     (realresults 
-	      (mapcan 
-	       '(lambda (arg) 
+	     (realresults
+	      (mapcan
+	       '(lambda (arg)
 		  (if (>= (length arg) 3) (list arg) nil))
 	       (cdr results))))
 	(cons fir (reverse realresults))))))
-    
+
 (defvar fs-internal-google-redirect-p nil)
 
 
@@ -3518,11 +3513,11 @@ number N, and ending at M-1. The first record is numbered 0.
      ((or (not (null matches)) (not fs-internal-google-redirect-p))
       (format "[google]    %s"
 	      ;;terms
-	      (if matches 
+	      (if matches
 		  (mapconcat 'car matches "\n")
 		"No match. ")))
      (t
-      (fs-english-only 
+      (fs-english-only
        fs-internal-original-message
        fs-internal-addressedatlast
        'nogoogle
@@ -3534,7 +3529,7 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defun fsi-google-redirect-to-google-bot (&rest args)
   (concat "google: "
-	  (mapconcat 
+	  (mapconcat
 	   '(lambda (arg) (format "%s" arg))
 	   args " ")))
 
@@ -3546,12 +3541,12 @@ number N, and ending at M-1. The first record is numbered 0.
 
 (defun fsi-google (&rest args)
   (unless args (error "Syntax: , g[oogle] [NUMBER] WORD1 &rest MORE-WORDS "))
-  (let (num 
+  (let (num
 	(fir (first args))
 	)
     (when (> (length args) 1)
-      (setq num 
-	    (if (numberp fir) 
+      (setq num
+	    (if (numberp fir)
 		fir
 	      (ignore-errors (read fir)))))
     (if (numberp num)
@@ -3686,7 +3681,7 @@ author know.."
       notes)
      (fs-forget name "all"))
     (when erbn-merge-redirect-p
-      (erbot-working 
+      (erbot-working
        (fsi-set-term name (format "redirect %s" dest))))
     (erbbdb-save)
     (if erbn-merge-redirect-p
@@ -3709,7 +3704,7 @@ author know.."
 
 
 (defun fsi-mv (&optional name dest &rest args)
-  "Rename NAME to DEST. 
+  "Rename NAME to DEST.
 Do not confuse this function with fs-rearrange which rearranges the
 order of entries within a given term. "
   (when (or args (not (and name dest)))
@@ -3729,12 +3724,12 @@ order of entries within a given term. "
 (defalias 'fsi-rename 'fs-mv)
 
 (defun fsi-mv-change-case (name dest)
-  (when 
+  (when
       (let ((bbdb-case-fold-search nil))
 	(erbbdb-get-exact-name dest))
     (error "Destination %S already seems to exist" dest))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
-    (erbbdb-working 
+    (erbbdb-working
      (ignore-errors (fs-forget tmp))
      (fs-mv name tmp)
      (fs-mv tmp dest))
@@ -3755,7 +3750,7 @@ order of entries within a given term. "
   (when (string= (downcase name) (downcase dest))
     (error "Can't swap term with itself. "))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
-    (erbot-working 
+    (erbot-working
      (ignore-errors (fs-forget tmp))
      (fs-mv name tmp)
      (fs-mv dest name)
@@ -3767,7 +3762,7 @@ order of entries within a given term. "
 
 (defun fsi-rearrange-from-english-internal (msg)
   (catch 'erbnocmd-tag-foo
-    (unless (equal (length msg) 3) 
+    (unless (equal (length msg) 3)
       (throw 'erbnocmd-tag-foo
 	     `(fs-error (format "Syntax: %s N->M in TERM" erbn-char))))
   (unless (equal (downcase (format "%s" (second msg))) "in")
@@ -3778,7 +3773,7 @@ order of entries within a given term. "
 	lenfromto
 	)
     (setq term (third msg))
-    (setq fromto 
+    (setq fromto
 	  (split-string (first msg) "->"))
     (setq lenfromto (length fromto))
     (unless (= lenfromto 2)
@@ -3790,16 +3785,16 @@ order of entries within a given term. "
 
 
 (defun fsi-replace-string-from-english-internal (msg)
-  "Parse the input english message to return an elisp equivalent. 
+  "Parse the input english message to return an elisp equivalent.
 MSG here is a list which needs to be combined.  "
-  (let* 
+  (let*
       (
        ;; original length
        (leno (length msg))
        ;; remaining msg
        (remmsg msg)
        (remlen leno)
-       las 
+       las
        number
        remengmsg
        remenglen
@@ -3810,33 +3805,33 @@ MSG here is a list which needs to be combined.  "
        term
        (ans nil)
        (termcheckp nil)
-       fcn 
+       fcn
        sr
        )
     (catch 'erbnocmd-repl-error
-      
-      (unless (and (>= leno 3) 
+
+      (unless (and (>= leno 3)
 		   (equal 0 (string-match "\\(s\\|r\\)/" (first remmsg))))
 	(throw 'erbnocmd-repl-error
-	       `(fs-error 
+	       `(fs-error
 		 "Format: s/foo.../bar..../ in TERM &optional N")))
-      (setq sr       
+      (setq sr
 	    (if (equal 0 (string-match "s" (first remmsg))) "s" "r"))
       (setq las (first (last remmsg)))
       (setq number (and (stringp las) (read las)))
-      (if (or (numberp number) 
-	      (equal 0 (string-match 
-			"all" 
+      (if (or (numberp number)
+	      (equal 0 (string-match
+			"all"
 			(downcase (format "%s" number)))))
 	  (setq remmsg (subseq remmsg 0 (- remlen 1)))
 	(progn
 	  (setq termcheckp t number nil)))
-	
+
       ;; next comes the term
       (setq remlen (length remmsg))
       (setq term (first (last remmsg)))
       (setq remmsg (subseq remmsg 0 (- remlen 1)))
-      
+
       (when termcheckp
 	(let* ((exn (erbbdb-get-exact-notes term))
 	       (notes (and (stringp exn) (read exn)))
@@ -3846,25 +3841,25 @@ MSG here is a list which needs to be combined.  "
 		     `(fs-error "Which numbered entry? %s/foo/bar in TERM NUMBER" , sr
 ))
 	    (setq number 0))))
-      
-      ;; now the "in" 
+
+      ;; now the "in"
       (setq remlen (length remmsg))
       (setq las (first (last remmsg)))
-      (unless 
+      (unless
 	  (string= "in" (downcase (format "%s" las)))
 	(throw 'erbnocmd-repl-error
-	       `(fs-error 
+	       `(fs-error
 		 "missing \"in\"--- Format: %s/foo.../bar..../ in TERM &optional N"
 		 ,sr ))
 	)
-    
+
     (setq remmsg (subseq remmsg 0 (- remlen 1)))
     (setq remlen (length remmsg))
     (setq remengmsg (mapconcat 'identity remmsg " "))
 
     ;; remove trailing whitespace
     ;; no need to check for length since we know msg stars with s/
-    (while 
+    (while
 	(member
 	 (aref remengmsg (- (length remengmsg) 1))
 	 '(9 ;; tab
@@ -3875,16 +3870,16 @@ MSG here is a list which needs to be combined.  "
     ;; remove one trailing /
     ;; no need to check for length since we know msg stars with s/
     (setq remenglen (length remengmsg))
-    (when (equal 
-	   (aref 
+    (when (equal
+	   (aref
 	    remengmsg (- (length remengmsg) 1))
 	   47)
       (setq remengmsg (subseq remengmsg 0 (- (length remengmsg) 1))))
-    
+
     (setq remenglen (length remengmsg))
     (unless (> (length remengmsg) 2)
       (throw 'erbnocmd-repl-error
-	     `(fs-error 
+	     `(fs-error
 	       "Format: %s/foo.../bar..../ in TERM &optional N"
 	       ,sr
 	       ))
@@ -3892,7 +3887,7 @@ MSG here is a list which needs to be combined.  "
       )
     ;; this should take care of almost anything imaginable.
     ;; one can still construct "missing" cases but one should just use
-    ;; lisp for that.  
+    ;; lisp for that.
     ;; remove the s/
     (if (equal 0 (string-match "s" remengmsg))
 	(setq fcn 'fs-replace-string)
@@ -3902,11 +3897,11 @@ MSG here is a list which needs to be combined.  "
     (with-temp-buffer
       (insert remengmsg)
       (goto-char (point-max))
-      (setq splitloc 
+      (setq splitloc
 	    (search-backward-regexp  "[^/]/\\([^/]\\|$\\)" nil t)))
     (unless splitloc
       (throw 'erbnocmd-repl-error
-	     `(fs-error 
+	     `(fs-error
 	       "Format: %s/foo.../bar..../ in TERM &optional N"
 	       ,sr
 	       )))
@@ -3915,40 +3910,40 @@ MSG here is a list which needs to be combined.  "
     (when (string= from "")
       (throw 'erbnocmd-repl-error
       `(fs-error "Replacement string must have nonzero size..")))
-    ;; singlify the double /'s. 
+    ;; singlify the double /'s.
     (setq from
 	  (replace-regexp-in-string "//" "/" from))
     (setq to
 	  (replace-regexp-in-string "//" "/" to))
     `(,fcn ,from ,to ,term ,(format "%s" number)))))
-    
-			
+
+
 
 (defun fsi-replace-string (&optional from to term number)
   (unless (and from to term)
-    (error 
+    (error
      (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbn-char)))
   (erbot-working
-   (erbnocmd-iterate-internal 
+   (erbnocmd-iterate-internal
     (or (erbbdb-get-exact-name term ) term)
-    number 'erbutils-replace-string-in-string 
+    number 'erbutils-replace-string-in-string
     from to nil))
   (erbbdb-save)
   (format "Replaced string %S with %S." from to))
 
 (defun erbnocmd-iterate-internal (term number function
 				       &rest arglist)
-  
-  " Perform FUNCTION on the NUMBERth entry of TERM. 
+
+  " Perform FUNCTION on the NUMBERth entry of TERM.
 If NUMBER is not nil, the replacement is done for each entry in
-the TERM. The function uses the term as its third argument. 
-Meant for use by fs-replace-regexp etc. 
+the TERM. The function uses the term as its third argument.
+Meant for use by fs-replace-regexp etc.
 
 The last entry of ARGLIST is assumed to be itself a list of arguments,
 let's call it lastlist.  Let the other entries of arglist be called
 initargs.  Then the function is applied as (function @initargs string
 @arglist).  Where the string is the string gotten from the TERM. "
-  
+
   (setq number (format "%s" number))
   (let*
       ((exactnotes (erbbdb-get-exact-notes term))
@@ -3966,7 +3961,7 @@ initargs.  Then the function is applied as (function @initargs string
     (cond
      ((string= "all" (downcase number))
       (setq newnotes
-	    (mapcar 
+	    (mapcar
 	     (lambda (thisentry)
 	       (apply function (append initargs (list thisentry)
 				       finargs)))
@@ -3976,12 +3971,12 @@ initargs.  Then the function is applied as (function @initargs string
 	  (>= numnum len))
       (error "Number should be \"all\" or within %s and %s, given was: %s"
 	     0 (- len 1) numnum))
-     (t 
+     (t
       (setq newnotes
 	    (append
 	     (subseq notes 0 numnum)
-	     (list 
-	      (apply function (append initargs 
+	     (list
+	      (apply function (append initargs
 				      (list (nth numnum notes))
 				      finargs)))
 	     (subseq notes (+ numnum  1) len)))))
@@ -4015,24 +4010,24 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 (defun fsi-info-file (&optional infofile regexp)
-  (unless regexp 
+  (unless regexp
     (error (format "Syntax: %s info-node nodename REGEXP" erbn-char)))
   (unless (stringp regexp) (setq regexp (format "%s" regexp)))
 
 
-  (unless infofile (error (format "Syntax: %s info info-file REGEXP" 
+  (unless infofile (error (format "Syntax: %s info info-file REGEXP"
 			      erbn-char)))
   (unless (stringp infofile) (setq infofile (format "%s" infofile)))
 
   (cond
-   ((ignore-errors (Info-goto-node 
+   ((ignore-errors (Info-goto-node
 		    (concat "(" infofile ")" regexp)))
     (concat "Press C-x C-e after: (info \"("
 	    infofile ")" Info-current-node
 	    "\")")
     )
    ((progn
-      (ignore-errors 
+      (ignore-errors
 	(Info-goto-node (concat "(" infofile ")"))
 	(Info-top-node)
 	(Info-search regexp)))
@@ -4054,7 +4049,7 @@ initargs.  Then the function is applied as (function @initargs string
 (defun fsi-avg (&rest numbers)
   (cond
    ((null numbers) 'NaN)
-   (t (fs-// (apply '+ numbers) 
+   (t (fs-// (apply '+ numbers)
 	       (length numbers)))))
 
 
@@ -4065,12 +4060,12 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defalias 'fsi-dictionary 'fs-dict)
 
-(defun fsi-dictionary-search (word) 
+(defun fsi-dictionary-search (word)
   "lispy.. not for interface. "
   (ignore-errors (kill-buffer "*Dictionary buffer*"))
   (unless (stringp word)
     (setq word (format "%s" word)))
-  (with-timeout 
+  (with-timeout
       (fs-internal-dictionary-time "Dictionary--TimedOut")
     (dictionary-search word)
     (save-window-excursion
@@ -4096,15 +4091,15 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-channel-members-all ()
   (cond
-   ;; for earlier ERC. 
+   ;; for earlier ERC.
    ((boundp 'channel-members) channel-members)
    ;; for later CVS versions of ERC.
    (t nil)))
 
 (defun fsi-channel-members (&optional n m &rest args)
-  (when (stringp n) 
+  (when (stringp n)
     (setq n (ignore-errors (read n))))
-  (when (stringp m) 
+  (when (stringp m)
     (setq m (ignore-errors (read m))))
   (unless (integerp n) (setq n 0))
   (unless (integerp m) (setq m nil))
@@ -4131,11 +4126,11 @@ last time i checked , equalp seemed to work as well.. "
 	   '("+" " " "\t") '("%2B" "%20" "%20") page)))
     (format "%s%s"
 	    pg1 pg3)))
-	      
+
 
 ;;; (defun fs-karma (&rest args)
 ;;;   (let ((fir (first args)))
-;;;     (unless 
+;;;     (unless
 ;;; 	(and
 ;;; 	 args
 ;;; 	 fir)
@@ -4144,7 +4139,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;;     (let ((result (erbkarma fir)))
 ;;;       (if result
 ;;; 	  (format "%s's karma is %s" fir result)
-;;; 	(format 
+;;; 	(format
 ;;; 	 "No karma defined for %s, use ,ENTITY++ or ,karma-create" fir
 ;;; 	 )))))
 
@@ -4154,7 +4149,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;;   (unless arg (error "Syntax: foo++ [&optional NUMBER]"))
 ;;;   (when (stringp points)
 ;;;     (setq points (ignore-errors (read points))))
-;;;   (unless (and (integerp points) 
+;;;   (unless (and (integerp points)
 ;;; 	       (<= (abs points) erbn-karma-pt))
 ;;;     (setq points erbn-karma-pt))
 ;;;   (setq arg (downcase (format "%s" arg)))
@@ -4162,17 +4157,17 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-karma-increase (&rest args)
   (if (car args)
-      (progn 
-	
+      (progn
+
 	(ignore-errors (incf (gethash (intern (format "%s" (car args))) erbn-money) 1000))
 
 
 	(format
-	 "Noted, %s.  One %s-point for %s!"					
+	 "Noted, %s.  One %s-point for %s!"
 	 nick
 	 (erbutils-random '("brownie" "karma" "wiki" "rms" "lispy"))
 	 (car args))
-	
+
 
 	     )
     ;;(error "Karma system is currently being reworked. ")
@@ -4187,7 +4182,7 @@ last time i checked , equalp seemed to work as well.. "
 ;;;   (unless arg (error "Syntax: foo++ [&optional NUMBER]"))
 ;;;   (when (stringp points)
 ;;;     (setq points (ignore-errors (read points))))
-;;;   (unless (and (integerp points) 
+;;;   (unless (and (integerp points)
 ;;; 	       (<= (abs points) erbn-karma-pt))
 ;;;     (setq points erbn-karma-pt))
 ;;;   (setq arg (downcase (format "%s" arg)))
@@ -4223,7 +4218,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun fsi-country-search (&rest names)
-  (unless names (error 
+  (unless names (error
 	      (format "Syntax: %s country-search NM (example , country japa)" erbn-char)))
   (erbcountry-search
    (mapconcat (lambda (arg) (format "%s" arg)) names " ")))
@@ -4242,9 +4237,9 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fs-explode (&rest args)
   (let ((pieces
-	 (erbutils-random '("a thousand" "a million" "a gazillion" 
+	 (erbutils-random '("a thousand" "a million" "a gazillion"
 			    "aleph_2")))
-	(watch 
+	(watch
 	 (erbutils-random '("" "you watch as "
 			    "you run for cover as "
 			    ))))
@@ -4252,7 +4247,7 @@ last time i checked , equalp seemed to work as well.. "
    (erbutils-random
     '((format "%s%s explodes into %s pieces!"
 	      watch erbot-nick pieces)
-      (format "%s, with botheart broken into %s pieces, has left: \"Goodbye\"" 
+      (format "%s, with botheart broken into %s pieces, has left: \"Goodbye\""
 	      erbot-nick pieces))))))
 
 
@@ -4282,14 +4277,14 @@ last time i checked , equalp seemed to work as well.. "
     (cond
      ((= (length str) 1)
       (setq st (format "%s" (first str))))
-     (t (setq st (mapconcat 
+     (t (setq st (mapconcat
 		  (lambda (a) (format "%s" a)) str " "))))
     (erbutils-rot13 st)))
 
 (defun fsi-studlify (&rest s)
-  (apply 'erbutils-region-to-string 
+  (apply 'erbutils-region-to-string
    (lambda (&rest args)
-     (ignore-errors (apply 
+     (ignore-errors (apply
 		     'studlify-region args)))
    s))
 
@@ -4298,7 +4293,7 @@ last time i checked , equalp seemed to work as well.. "
   (require 'h4x0r)
   (funcall
    'h4x0r-string
-   (mapconcat 
+   (mapconcat
     (lambda (a) (format "%s" a))
     s " ")))
 
@@ -4319,7 +4314,7 @@ last time i checked , equalp seemed to work as well.. "
   :group 'erbc)
 
 (defun fsi-studlify-maybe (&rest args)
-  (eval 
+  (eval
    (erbutils-random
     '((erbutils-stringify args)
       (apply 'fs-studlify args))
@@ -4337,7 +4332,7 @@ last time i checked , equalp seemed to work as well.. "
        ((aa (erbutils-stringify args))
        (bb
 	(ignore-errors
-	  (eval 
+	  (eval
 	   (erbutils-random
 	    '(aa
 	      (apply 'fs-h4x0r args))
@@ -4373,11 +4368,11 @@ last time i checked , equalp seemed to work as well.. "
 			       featurep functionp integerp keywordp
 			       keymapp listp markerp minusp natnump
 			       nlistp numberp overlayp plusp rationalp
-			       sequencep subrp tailp timerp 
+			       sequencep subrp tailp timerp
 			       typep vectorp windowp xemacsp zerop))
 
-			      
-(erbutils-defalias-i 
+
+(erbutils-defalias-i
  '(char-to-string string-to-char string-to-int
 		  string-to-number string-to-list
 		  string-to-number-with-radix number-to-string
@@ -4388,7 +4383,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 
-			       
+
 (defun erbn-shell-test (string &optional substrings)
   "Return t if any of the substrings matches string..  Used to weed
 out harmful shell code..
@@ -4436,7 +4431,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
            (end (search-forward "</title>" nil t)))
       (concat "That page title is "
               (if (and beg end)
-                  (erbutils-cleanup-whitespace 
+                  (erbutils-cleanup-whitespace
                    (buffer-substring beg (- end 8)))
                 "not available")))))
 
@@ -4444,7 +4439,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
   (unless site (error (format "Syntax: %s wserver SITE" erbn-char)))
   (setq site (format "%s" site))
   (erbn-with-web-page-buffer site
-    (buffer-substring (point-min) 
+    (buffer-substring (point-min)
                       (or (search-forward "\n\n" nil t)
                           (point-max)))))
 
@@ -4464,13 +4459,13 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 ;;;###autoload
 (defun fsi-length-load-history ()
   (interactive)
-  (message "%s%s%S" 
+  (message "%s%s%S"
 	   (length load-history)
 	   " ..." (mapcar 'car load-history)))
 
-    
+
 ;(defun fsi-load-history ()
-;  load-history)    
+;  load-history)
 ;(defun fsi-load-history ()
 ;  load-history)
 
@@ -4689,8 +4684,8 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fsi-acos 'acos)
 (defalias 'fsi-tanh 'tanh)
 
-(erbutils-defalias-i 
- '(timezone-world-timezones 
+(erbutils-defalias-i
+ '(timezone-world-timezones
    timezone-months-assoc
    timezone-make-date-arpa-standard timezone-make-date-sortable
    timezone-make-arpa-date timezone-make-sortable-date
@@ -4699,7 +4694,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
    timezone-time-zone-from-absolute timezone-fix-time
    timezone-last-day-of-month timezone-leap-year-p timezone-day-number
    timezone-absolute-from-gregorian))
-   
+
 
 (defalias 'fsi-truncate 'truncate)
 
@@ -4734,50 +4729,50 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 ;; cl-extra.el
 
 (defalias 'fsi-equalp 'equalp)
-;; done gcd 
-;; done lcm 
+;; done gcd
+;; done lcm
 (defalias 'fsi-isqrt 'isqrt)
-(defalias 'fsi-floor* 
+(defalias 'fsi-floor*
   'floor* )
 
-(defalias 'fsi-ceiling* 
+(defalias 'fsi-ceiling*
 'ceiling* )
 
-(defalias 'fsi-truncate* 
+(defalias 'fsi-truncate*
 'truncate*)
 
-;; done round* 
+;; done round*
 
-(defalias 'fsi-mod* 
+(defalias 'fsi-mod*
   'mod* )
 
 (when (ignore-errors
 	(require 'geek))
   (erbutils-defalias-i '(geek-code)))
 
-(defalias 'fsi-rem* 
+(defalias 'fsi-rem*
   'rem* )
 
-(erbutils-defalias-i 
- '(signum 
-   random* 
+(erbutils-defalias-i
+ '(signum
+   random*
    ;; yes?
    make-random-state
-   random-state-p 
+   random-state-p
 
    most-positive-float most-negative-float
    least-positive-float least-negative-float
    least-positive-normalized-float least-negative-normalized-float
    float-epsilon float-negative-epsilon cl-float-limits ;; done subseq
-   concatenate revappend nreconc list-length tailp cl-copy-tree 
+   concatenate revappend nreconc list-length tailp cl-copy-tree
    copy-tree
-   ;;get* getf 
-   ;;cl-set-getf cl-do-remf cl-remprop remprop 
+   ;;get* getf
+   ;;cl-set-getf cl-do-remf cl-remprop remprop
    cl-make-hash-table
    cl-hash-table-p cl-not-hash-table cl-hash-lookup cl-builtin-gethash
    cl-builtin-remhash cl-builtin-clrhash cl-builtin-maphash cl-gethash
-   ;;cl-puthash cl-remhash cl-clrhash 
-   ;;cl-maphash 
+   ;;cl-puthash cl-remhash cl-clrhash
+   ;;cl-maphash
    cl-hash-table-count
    cl-prettyprint cl-do-prettyprint cl-macroexpand-cmacs cl-closure-vars
    cl-macroexpand-all cl-macroexpand-body cl-prettyexpand))
@@ -4788,13 +4783,13 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (ignore-errors (require 'oct))
 
-(erbutils-defalias-i 
+(erbutils-defalias-i
 
 
  '(
    oct-zeros oct-ones oct-sum oct-size
-   oct-rows oct-columns oct-\.* 
-   oct-add 
+   oct-rows oct-columns oct-\.*
+   oct-add
    oct-corr oct-complement oct-sumsq oct-mean
    oct-sqrt oct-std oct-tanh oct-atanh)
  "" "oct-")
@@ -4805,7 +4800,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 
 ;; files.el
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(auto-mode-alist interpreter-mode-alist
 		   directory-abbrev-alist))
 
@@ -4823,7 +4818,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 ;;(erbutils-defalias-i '(buffer-string))
 
 ;; We define it to be no-properties, else people can (setq foo
-;; (buffer-string)).. and cause a huge uservariables file.. 
+;; (buffer-string)).. and cause a huge uservariables file..
 
 (defun fsi-buffer-string (&rest args)
   (buffer-string-no-properties (point-min) (point-max)))
@@ -4831,16 +4826,16 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fsi-buffer-substring 'buffer-substring-no-properties)
 
 
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(featurep feature-symbols feature-file features
-	    
+
 		     ))
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(minor-mode-alist minor-mode-map-alist
 		    minor-mode-overriding-map-alist))
 (erbutils-defalias-vars '(major-mode))
 
-;; from gnus-group.el 
+;; from gnus-group.el
 
 (erbutils-defalias-vars '(gnus-group-mode-map))
 (erbutils-defalias-vars '(gnus-summary-mode-map))
@@ -4887,7 +4882,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (defun erbn-dead-check (&rest ignore)
   (when (fsi-dead-p erbn-nick)
-    (error "I see dead people! 
+    (error "I see dead people!
                      .... (but I don't talk to them!)")))
 
 (defalias 'fsi-dead-check 'erbn-dead-check)
@@ -4907,15 +4902,15 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
   (unless stuff (setq stuff '("a" "beer")))
   (format "/me gives %s %s"
 	  nini
-	  (mapconcat 
+	  (mapconcat
 	   (lambda (arg) (format "%s" arg))
 	   stuff " ")))
-	
-	
+
+
 (defalias 'fs-hand 'fs-give)
 
-(erbutils-defalias-i 
- '(backward-kill-sentence 
+(erbutils-defalias-i
+ '(backward-kill-sentence
    backward-sentence
    flame-sentence flame-sentence-ify
    flame-sentence-loop forward-sentence kill-sentence
@@ -4928,13 +4923,13 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 
 (erbutils-defalias-i '(log))
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(most-positive-fixnum
    most-negative-fixnum))
 
 
 
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(
    regexp-opt
    regexp-opt-depth
@@ -4942,14 +4937,14 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (erbutils-defalias-i '(window-system))
 
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(kbd read-kbd-macro))
 
 (defconst fs-t t
   "As such, when we sandbox a lisp expression, t remains t, so this is
-not needed. 
+not needed.
 However, inside macros like (cond (t....)), t becomes fs-t because
-it occurs in an unusual place.  this const should take care of it.. 
+it occurs in an unusual place.  this const should take care of it..
 Of course, this also opens the bot to some FUN user abuse, when they
 setq fs-t to nil :-) ")
 
@@ -4962,9 +4957,9 @@ setq fs-t to nil :-) ")
   (unless name (error "no one to revive"))
   (setq name (format "%s" name))
   (let (ansstr)
-    (setq ansstr 
+    (setq ansstr
 	  (cond
-	   ((string= name nick) 
+	   ((string= name nick)
 	    (concat "Thou idiot, " nick ", thou canst not revive thyself!"))
 	   (t (concat
 	       "/me sprinkles some "
@@ -4984,7 +4979,7 @@ setq fs-t to nil :-) ")
       (erbn-unmark-dead name))
     ansstr))
 
-;; this may be unsafe, remove it:     
+;; this may be unsafe, remove it:
 ;; (defalias 'fs-sandbox-quoted 'erblisp-sandbox-quoted)
 ;; (defalias 'fs-sandbox-quoted-maybe 'erblisp-sandbox-quoted-maybe)
 ;; (defalias 'fs-sandbox 'erblisp-sandbox)
@@ -4992,11 +4987,11 @@ setq fs-t to nil :-) ")
 (erbutils-defalias-i '(macroexpand))
 
 
-;;"/usr/share/emacs/21.2/lisp/emacs-lisp/pp.el" 
+;;"/usr/share/emacs/21.2/lisp/emacs-lisp/pp.el"
 (erbutils-defalias
  '(pp-escape-newlines
-   pp-to-string 
-   ;; pp pp-eval-expression 
+   pp-to-string
+   ;; pp pp-eval-expression
    ;;pp-eval-last-sexp))
    ))
 
@@ -5019,7 +5014,7 @@ query to another user. "
     ((null erbn-nick)
      (progn ,@args))
     (t
-     (progn 
+     (progn
        (setq erbn-tgt erbn-nick)
        ;; If there isn't already a buffer, create one..
        (erbn-query erbn-nick)
@@ -5029,9 +5024,9 @@ query to another user. "
   (save-excursion (erc-query qnick erbn-buffer)))
 
 
-    
+
 (defun fsi-read-or-orig (arg)
-  "  If string and can read, read, else return the arg. 
+  "  If string and can read, read, else return the arg.
 Note: Used by fs-describe"
   (cond
    ((stringp arg)
@@ -5049,21 +5044,21 @@ Note: Used by fs-describe"
 
 
 
-(erbutils-defalias-i 
+(erbutils-defalias-i
  '(substring subr-arity subrp subseq
-	     subst-char-in-string 
+	     subst-char-in-string
 	     subtract-time
-	     time-subtract 
-	     time-add 
-	     date-to-time 
-	     time-to-seconds 
+	     time-subtract
+	     time-add
+	     date-to-time
+	     time-to-seconds
 	     time-less-p
 	     seconds-to-time
-	     days-to-time 
-	     time-since 
+	     days-to-time
+	     time-since
 	     subtract-time
-	     date-to-day 
-	     days-between 
+	     date-to-day
+	     days-between
 	     date-leap-year-p
 	     time-to-day-in-year time-to-days time-to-number-of-days
 	     safe-date-to-time))
