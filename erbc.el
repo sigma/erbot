@@ -1,5 +1,5 @@
-;;; erbc.el --- Erbot user-interface commands.
-;; Time-stamp: <15/04/2005 21:08:32 Yann Hodique>
+;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
+;; Time-stamp: <2005-04-28 12:09:23 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -200,7 +200,7 @@ list is non-nil"
 (defun fsi-get-google-defaults ()
   (cadr (assoc fs-tgt erbn-google-defaults)))
 
-(defvar fs-prestring  "")
+(defvar fsi-prestring  "")
 ;; (make-variable-buffer-local 'fs-prestring)
 
 

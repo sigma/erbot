@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-03-29 14:31:26 deego>
+;; Time-stamp: <2005-04-28 12:10:32 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -569,7 +569,8 @@ those things..
   (message "erbot-reply-p set to %S" erbot-reply-p)
   )
 (defun erbot-reply (main-reply proc from tgt msg locally-generated)
-  "Robot worker.  Should do nothing when main-reply is nil.
+  "Robot worker.  Should do nothing when main-reply is nil or 'noreply
+or \"noreply\"
 
 "
   (unless (stringp main-reply)

@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-03-28 10:05:16 deego>
+;; Time-stamp: <2005-04-28 12:00:09 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -180,8 +180,11 @@ to query using PROMPT, or just return t."
   (fsi-pv-load))
 
 (defun fsi-pf-load ()
-  (when (file-exists-p erbn-pf-file)
-	 (ignore-errors (load erbn-pf-file))))
+  (if (file-exists-p erbn-pf-file)
+      (fsi-ignore-errors-else-string (load erbn-pf-file))
+    (message "File does not exist: %s" erbn-pf-file)))
+
+
 
 (defun fsi-pv-load ()
   (when (file-exists-p erbn-pv-file)
@@ -276,7 +279,7 @@ to query using PROMPT, or just return t."
 	(and (listp body)
 	     (> (length body) 0))
       (error "Function body should have a length of 1 or more"))
-    (unless (symbolp fcn)
+    (unless (and (symbolp fcn) (not (fsi-constant-object-p fcn)))
       (error "Defun symbols only! :P"))
     ;; doc string exists, and is followed by more stuff..
     (when (and (> (length body) 1)
@@ -372,6 +375,14 @@ to query using PROMPT, or just return t."
      erbn-tmpsetq))
 
 
+
+(defun fsi-constant-object-p (object)
+  "If the object is a symbol like nil or t, a symbol that cannot be
+redefunned, return true. "
+  (member object (list nil t)))
+
+
+(erbutils-defalias-i '(type-of))
 
 (provide 'erbc3)
 (run-hooks 'erbc3-after-load-hook)

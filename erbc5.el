@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2005-01-08 12:52:25 deego>
+;; Time-stamp: <2005-04-28 11:37:51 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -222,6 +222,23 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
     (apply 'sregex args))
    (t
     (error "sregexp is disabled in this bot. "))))
+
+
+
+(defmacro fsi-ignore-errors-else-string (&rest body)
+  "Like ignore-errors, but tells and returns the erros.
+\(Improved for me by Kalle on 7/3/01:)"
+  (let ((err (gensym)))
+    `(condition-case ,err (progn ,@body)
+       (error
+	(let 
+	    ((str 	
+	      (message "IGNORED ERROR: %s" (error-message-string ,err))))
+	  (ding t)
+	  (ding t)
+	  (ding t)
+  	  (sit-for 1)
+	  str)))))
 
 
 

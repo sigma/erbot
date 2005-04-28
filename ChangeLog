@@ -1,3 +1,9 @@
+2005-04-28  D Goel  <deego@gnufans.org>
+
+	* erbc3.el (fsi-pf-load): Make this error msg more informative. 
+
+	* erbc5.el (fsi-ignore-errors-else-string): new. 
+
 2005-04-01  D Goel  <deego@gnufans.org>
 
 	* erbc4.el (fsi-kick): Move from erbc.el to here. 
