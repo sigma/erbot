@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-04-28 12:00:09 deego>
+;; Time-stamp: <2005-04-29 11:56:55 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -379,7 +379,9 @@ to query using PROMPT, or just return t."
 (defun fsi-constant-object-p (object)
   "If the object is a symbol like nil or t, a symbol that cannot be
 redefunned, return true. "
-  (member object (list nil t)))
+  (or (member object (list nil t))
+      (keywordp object)))
+
 
 
 (erbutils-defalias-i '(type-of))
