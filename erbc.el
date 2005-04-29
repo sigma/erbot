@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-04-28 12:28:55 deego>
+;; Time-stamp: <2005-04-29 11:25:20 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -201,7 +201,7 @@ list is non-nil"
   (cadr (assoc fs-tgt erbn-google-defaults)))
 
 (defvar fsi-prestring  "")
-;; (make-variable-buffer-local 'fs-prestring)
+;; (make-variable-buffer-local 'fsi-prestring)
 
 
 (defcustom fs-internal-google-level 0
@@ -1631,8 +1631,8 @@ EXPR is the full initial expression, well, mostly..
 
     ;; why does this not work as expeecteD?  adding a nil for now:
     (when (and prestring (>= len fs-internal-english-max-matches))
-      (setq fs-prestring
-	    (concat fs-prestring
+      (setq fsi-prestring
+	    (concat fsi-prestring
 		    "[Too many DB matches] ")))
     (cond
      ((and prestring (= len 1))

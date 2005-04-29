@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2005-04-28 12:26:26 deego>
+;; Time-stamp: <2005-04-29 11:25:19 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -122,7 +122,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
        (fs-found-query-p nil)
        (fs-internal-addressedatlast nil)
        (fs-internal-message-sans-bot-name fs-internal-message-sans-bot-name)
-       (fs-prestring fs-prestring)
+       (fsi-prestring fsi-prestring)
        tmpvar
        parsed-msg rep
        (fs-msg fs-msg)
@@ -180,7 +180,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 	   (t 
 	    (cond
 	     (erbot-show-type-p
-	      (format "%s%S  (%s)" fsi-prestring rep (type-of rep)))
+	      (format "%s%S  ..(%s)" fsi-prestring rep (type-of rep)))
 	     ((equal "" rep) "EMPTY STRING RETURNED")
 	     (t (format "%s%S" fsi-prestring rep))))))
       
