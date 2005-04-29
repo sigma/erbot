@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2005-04-28 11:37:51 deego>
+;; Time-stamp: <2005-04-29 11:31:53 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -171,6 +171,8 @@ to query using PROMPT, or just return t."
 ;;; Real Code:
 
 (defalias 'fs-listp-proper 'erbutils-listp-proper)
+(erbutils-defalias-i '(upcase downcase capitalize upcase-initials))
+
 
 
 (ignore-errors (require 'calc))
