@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-04-29 11:25:20 deego>
+;; Time-stamp: <2005-05-07 16:48:21 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2153,6 +2153,9 @@ number N, and ending at M-1. The first record is numbered 0.
 	    (cond
 	     ((and expandp
 		   (erbutils-string= cc "redirect")
+		   ;; do not redirect, when term had multiple
+		   ;; entries: 
+		   (not aarest)
 		   dd)
 	      (apply 'fs-describe ddd
 		     N M
@@ -2512,7 +2515,12 @@ lowercase, and all whitespace is converted to colons."
   (let* ((notes (fs-notes name))
 	 (fir (first notes)))
     (when (and (stringp fir)
-	       (equal 0 (string-match "redirect" fir)))
+	       ;; do not chase redirects if a term has a second
+	       ;; entry...
+	       ;; In that case, the first entry should not have been a
+	       ;; redirect in any case. 
+	       (= (length notes) 1)
+	       (equal 0 (string-match "redirect\\b" fir)))
       (let* ((foo (split-string fir))
 	     (sec (second foo)))
 	(if (stringp sec) sec
