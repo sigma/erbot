@@ -1,0 +1,29 @@
+;; 2005-06-04 T15:04:23-0400 (Saturday)    D. Goel
+Michael Olson provides function to train acronyms: 
+
+M-x load-file ~/emacs-wiki-wtf.el
+
+M-:
+(setq erbtrain-list
+      (mapcar (lambda (ref)
+                (concat "plugbot: " (car ref)
+                        " is " (upcase-initials (cdr ref))))
+              emacs-wiki-wtf-alist))
+
+M-x erbtrain-resume
+M-x idledo-start
+
+
+or see M-x erbtrain-utils-teach-acronyms
+
+;;; 2005-06-04 T15:05:15-0400 (Saturday)    D. Goel
+Previous history here: 
+Summary in reverse order, IIRC: 
+
+
+<Please add here>
+
+erbot-lispy 
+
+erc-robot (David Edmunston)-> erbot, 
+
