@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-01-01 21:17:53 deego>
+;; Time-stamp: <2005-06-04 15:14:15 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -8,6 +8,7 @@
 ;; Keywords:
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
+;; Thanks: Michael Olson
 
 
 (defconst erbtrain-home-page
@@ -376,7 +377,25 @@ advantage of being much faster. "
   (message "Started erbtrain-keep-alive. "))
 
 
+;;;====================================================
 
+(defun erbtrain-utils-teach-acronyms (&optional botstring)
+  "Due mostly to Michael Olson.  you will need emacs-wiki-wtf.el for
+this function to work.  We are not sure about the license of that
+file, if any.  Don't forget to connect to irc before running this
+function.  "
+  (interactive)
+  (idledo-nullify)
+  (require 'emacs-wiki)
+  (require 'emacs-wiki-wtf)
+  (unless botstring (setq botstring ", "))
+  (setq erbtrain-list
+	(mapcar (lambda (ref)
+		  (concat botstring (car ref)
+			  " is short for " (upcase-initials (cdr ref))))
+		emacs-wiki-wtf-alist))
+  (erbtrain-resume)
+  (ignore-errors (idledo-start)))
 
 
 
