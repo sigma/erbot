@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-06-04 15:14:15 deego>
+;; Time-stamp: <2005-06-04 15:18:31 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -380,7 +380,7 @@ advantage of being much faster. "
 ;;;====================================================
 
 (defun erbtrain-utils-teach-acronyms (&optional botstring)
-  "Due mostly to Michael Olson.  you will need emacs-wiki-wtf.el for
+  "This code comes from  Michael Olson.  you will need emacs-wiki-wtf.el for
 this function to work.  We are not sure about the license of that
 file, if any.  Don't forget to connect to irc before running this
 function.  "
