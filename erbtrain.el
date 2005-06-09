@@ -380,30 +380,23 @@ advantage of being much faster. "
 ;;;====================================================
 
 (defun erbtrain-utils-teach-acronyms (&optional botstring)
-  "This code comes from  Michael Olson.  you will need emacs-wiki-wtf.el for
-this function to work.  We are not sure about the license of that
-file, if any.  Don't forget to connect to irc before running this
-function.  "
+  "Teach the the bot from BOTSTRING some acronyms.
+You will need wtf.el (from the contrib directory) for this
+function to work.
+
+Don't forget to connect to irc before running this function."
   (interactive)
   (idledo-nullify)
-  (require 'emacs-wiki)
-  (require 'emacs-wiki-wtf)
+  (require 'wtf)
   (unless botstring (setq botstring ", "))
   (setq erbtrain-list
-	(mapcar (lambda (ref)
-		  (concat botstring (car ref)
-			  " is short for " (upcase-initials (cdr ref))))
-		emacs-wiki-wtf-alist))
+        (mapcar #'(lambda (ref)
+                    (concat botstring (car ref)
+                            " is short for "
+                            (upcase-initials (cdr ref))))
+                wtf-alist))
   (erbtrain-resume)
   (ignore-errors (idledo-start)))
-
-
-
-
-
-
-
-
 
 
 (provide 'erbtrain)

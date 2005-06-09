@@ -1,3 +1,11 @@
+2005-06-09  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/wtf.el: New file that contains a list of acronyms in
+	`wtf-alist' and the `wtf-is' command to look up a definition.
+
+	* erbtrain.el (erbtrain-utils-teach-acronyms): Use `wtf.el' to
+	teach the given bot some common acronyms.
+
 2005-04-28  D Goel  <deego@gnufans.org>
 
 	* erbc3.el (fsi-pf-load): Make this error msg more informative. 
