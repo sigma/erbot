@@ -605,6 +605,7 @@
     ("XT" . "extended technology")
     ("ZFOD" . "zero-filled on demand")
     ;; Additional terms go here
+    ("GAFC" . "get a fucking clue")
     ("NIFOC" . "naked in front of computer")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
