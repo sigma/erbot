@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-07-01 14:12:27 deego>
+;; Time-stamp: <2005-07-01 14:18:15 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -661,7 +661,7 @@ or \"noreply\"
 		   (string-make-unibyte 
 		    (encode-coding-string linen 'utf-8)))
 
-	     (erc-process-input-line (concat line3 "\n") t multiline-p))
+	     (erc-process-input-line line3  t multiline-p))
 	   lines))))))
 
 
