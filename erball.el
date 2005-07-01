@@ -13,6 +13,58 @@
 ;; not all of these may be required depending on how you use erbot..
 (require 'cl)
 
+;; Compilation
+
+(defvar erball-compilation-paths-rel-to
+  (let (args ret)
+    (while command-line-args-left
+      (if (string= "--paths-rel-to" (car command-line-args-left))
+          (progn
+            (setq ret (cadr command-line-args-left))
+            (setq command-line-args-left (cddr command-line-args-left)))
+        (add-to-list 'args (car command-line-args-left) t)
+        (setq command-line-args-left (cdr command-line-args-left))))
+    (setq command-line-args-left args)
+    ret)
+  "Text to be prepended to each element in `erball-compilation-paths'.
+Can be specified by passing \"--paths-rel-to ARG\" on the emacs
+command line.
+This value is also added to the load-path.
+A trailing backslash is required.")
+
+(defvar erball-compiling-p
+  (if (assoc-string "--compile-erbot" command-line-args-left)
+      (progn
+        (message (concat "\nCompiling source in "
+                         (file-name-nondirectory (expand-file-name "."))
+                         " ...\n"))
+        (setq command-line-args-left
+              (delete "--compile-erbot" command-line-args-left))
+        t)
+    nil)
+  "Determine whether erbot is currently being compiled.")
+
+(defcustom erball-compilation-paths
+  '("contrib"
+    ".."
+    "../erc")
+  "Elements to add to the load path during compilation.
+If `erball-compilation-paths-rel-to' is specified, it is
+prepended to each element and also added verbatim to the path.
+The current directory is automatically added to the path."
+  :group 'erball
+  )
+
+(when erball-compiling-p
+  (add-to-list 'load-path ".")
+  (when erball-compilation-paths-rel-to
+    (add-to-list 'load-path erball-compilation-paths-rel-to))
+  (dolist (dir erball-compilation-paths)
+    (add-to-list 'load-path
+                 (concat erball-compilation-paths-rel-to dir))))
+
+;; Load all erbot files
+
 (defmacro erball-ignore-errors-loudly (&rest body)
   "Like ignore-errors, but tells the error..
 
@@ -71,27 +123,29 @@ to: Kalle on 7/3/01:
 
 ;; the rest of the commands here are useful to the author when editing erbot. 
 
-(defcustom erball-files 
-  '("erbot.el"
-    "erbutils.el"
-    "erblog.el"
-    "erbeng.el"
-    "erbcountry.el"
-    "erbdata.el"
-    "erbedit.el"
-    "erbforget.el"
-    "erbkarma.el"
-    "erblisp.el"
-    "erbunlisp.el"
-    "erbtrain.el"
-    "erbwiki.el"
-    "erbc.el"
-    "erbc2.el"
-    "erbc3.el"
-    "erbc4.el"
-    "erbc5.el"
-    "erbc6.el"
-    )
+(defcustom erball-files
+  (if erball-compiling-p
+      (directory-files "." nil "\.el$")
+    '("erbot.el"
+      "erbutils.el"
+      "erblog.el"
+      "erbeng.el"
+      "erbcountry.el"
+      "erbdata.el"
+      "erbedit.el"
+      "erbforget.el"
+      "erbkarma.el"
+      "erblisp.el"
+      "erbunlisp.el"
+      "erbtrain.el"
+      "erbwiki.el"
+      "erbc.el"
+      "erbc2.el"
+      "erbc3.el"
+      "erbc4.el"
+      "erbc5.el"
+      "erbc6.el"
+      ))
 
     ""
     :group 'erball
@@ -99,13 +153,13 @@ to: Kalle on 7/3/01:
 
 (defun erball-reload ()
   (interactive)
-  (mapcar 
+  (mapcar
    'load
    erball-files))
 
 (defun erball-visit ()
   (interactive)
-  (mapcar 
+  (mapcar
    (lambda (a)
      (find-file (locate-library a))
      (auto-revert-mode 1))
@@ -114,28 +168,26 @@ to: Kalle on 7/3/01:
 ;;;###autoload
 (defun erball-compile ()
   (interactive)
-  (ignore-errors (kill-buffer "*Compile-Log*"))
-  (erball-visit)
-  (erball-reload)
-  (mapcar
-   (lambda (arg)
-     (byte-compile-file (locate-library arg)))
-   erball-files)
-  (switch-to-buffer "*Compile-Log*")
-  (delete-other-windows)
-  (goto-char (point-min)))
-
-
-
-
-
-
-
-
-
-
+  (if erball-compiling-p
+      (progn
+        (ignore-errors (erball-reload))
+        (mapcar
+         (lambda (arg)
+           (erball-ignore-errors-loudly
+            (byte-compile-file arg)))
+         erball-files)
+        (message "\nCompilation complete!\n"))
+    (ignore-errors (kill-buffer "*Compile-Log*"))
+    (erball-visit)
+    (erball-reload)
+    (mapcar
+     (lambda (arg)
+       (erball-ignore-errors-loudly
+        (byte-compile-file (locate-library arg))))
+     erball-files)
+    (switch-to-buffer "*Compile-Log*")
+    (delete-other-windows)
+    (goto-char (point-min))))
 
 
 (provide 'erball)
-
-
