@@ -7,12 +7,13 @@ Maintainers:
 
 Authors and Contributors: 
 
-D. Goel <deego@gnufans.org> 
+D. Goel <deego@gnufans.org>  (deego)
 David Edmunston <dme@dme.org>
-Sebastian Freundt <freundt@math.TU-Berlin.DE>
+Sebastian Freundt <freundt@math.TU-Berlin.DE> (hroptatyr)
+Michael Olson <mwolson@gnu.org> (mwolson)
 Yann Hodique 
-Taylor Campbell 
-Pete Kazmier
+Taylor Campbell (Riastradh)
+Pete Kazmier 
 
 
 Alphabetically:
@@ -26,7 +27,6 @@ Damien Elmes (resolve)
 Luis Fernandes  (e1f)
 Mario Lang (delYsid)
 Lawrence Mitchell (lawrence)
-Michael Olson (mwolson)
 Jorgen Schaefer (forcer)
 Alex Schroeder (kensanata)
 Brian Templeton (bpt)
