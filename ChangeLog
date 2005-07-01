@@ -1,3 +1,25 @@
+2005-07-01  Michael Olson  <mwolson@gnu.org>
+
+	* erball.el (erball-compilation-paths-rel-to): New variable
+	populated by `--paths-rel-to ARG' on the emacs command line,
+	taking the value of ARG.
+	(erball-compiling-p): New variable that is non-nil when
+	`--compile-erbot' is included on the emacs command line.  This is
+	used to indicate that we want to compile erbot from a Makefile.
+	(erball-compilation-paths): Elements to add to load-path when the
+	compilation flag, erball-compiling-p, is set.
+	(erball-files): Automatically populate this if erball-compiling-p
+	is set.
+	(erball-compile): If erball-compiling-p is set, use a simpler
+	routine.
+
+	* Makefile: New file that allows erbot to be compiled and
+	installed.  Edit the top of the file to indicate where to find
+	emacs and where to install the files.
+
+	* README.txt (URL): Add brief mention of how to compile and
+	install erbot.
+
 2005-06-09  Michael Olson  <mwolson@gnu.org>
 
 	* contrib/wtf.el: New file that contains a list of acronyms in
