@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-04-28 12:10:32 deego>
+;; Time-stamp: <2005-07-01 14:12:27 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -575,7 +575,9 @@ or \"noreply\"
 "
   (unless (stringp main-reply)
     (setq main-reply (format "%S" main-reply)))
-  (let ((me (or (erc-current-nick) erbot-nick))
+  (let (
+	linen line3
+	(me (or (erc-current-nick) erbot-nick))
 	;;(if (and erbot-commands
 	;;	     (string-match (concat "^" (regexp-quote me)
 	;;				   ": !\\([^ ]+\\) ?\\(.*\\)") msg))
@@ -630,6 +632,7 @@ or \"noreply\"
 	    (ding t)
 	    (message "WTF? no rep-buffer? "))
 	  )
+	       
 	(let* ((inhibit-read-only t)
 	       (lines (split-string reply "\n"))
 	       (multiline-p (< 1 (length lines)))
@@ -653,8 +656,12 @@ or \"noreply\"
 	     (set-marker (process-mark erc-process) (point))
 	     (set-marker erc-insert-marker (point))
 	     (goto-char (point-max))
+	     (setq linen (concat line "\n"))
+	     (setq line3
+		   (string-make-unibyte 
+		    (encode-coding-string linen 'utf-8)))
 
-	     (erc-process-input-line (concat line "\n") t multiline-p))
+	     (erc-process-input-line (concat line3 "\n") t multiline-p))
 	   lines))))))
 
 
