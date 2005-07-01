@@ -10,6 +10,10 @@ also the versions known to work with erbot, but you might want to
 fetch their latest versions from their respective authors' websites.
 
 
+To compile the erbot source, edit Makefile and run "make".  To install
+it, edit Makefile and run "make install".
+
+
 ====================================================
 
 For developers: 
