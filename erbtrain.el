@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-06-04 15:18:31 deego>
+;; Time-stamp: <2005-07-01 12:36:32 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -383,7 +383,7 @@ advantage of being much faster. "
   "Teach the the bot from BOTSTRING some acronyms.
 You will need wtf.el (from the contrib directory) for this
 function to work.
-
+See also the new function fs-wtf. 
 Don't forget to connect to irc before running this function."
   (interactive)
   (idledo-nullify)

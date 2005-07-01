@@ -1,5 +1,5 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2004-12-31 22:40:24 deego>
+;; Time-stamp: <2005-07-01 12:59:50 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
@@ -62,6 +62,18 @@ Coded by bojohann on #emacs."
      (apply 'fs-dw thing))
     ((eq sym 'v)
      (apply 'fs-dv thing))))
+
+
+(defun fsi-wtf-is (&optional term &rest args)
+  (unless term 
+    (error "Syntax: wtf TERM"))
+  (require 'wtf)
+  (funcall 'wtf-is (format "%s" term)))
+
+
+
+(defalias 'fsi-wtf 'fsi-wtf-is)
+
 
 (provide 'erbc6)
 (run-hooks 'erbc6-after-load-hook)
