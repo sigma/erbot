@@ -33,7 +33,14 @@ This value is also added to the load-path.
 A trailing backslash is required.")
 
 (defvar erball-compiling-p
-  (if (assoc "--compile-erbot" command-line-args-left)
+  ;; For some reason, (assoc "--compile-erbot" command-line-args-left)
+  ;; doesn't seem to work with Emacs 22.  Maybe there's a stray space?
+  (if (save-match-data
+        (catch 'found
+          (dolist (arg command-line-args-left)
+            (when (string-match "\\b--compile-erbot\\b" arg)
+              (throw 'found t)))
+          nil))
       (progn
         (message (concat "\nCompiling source in "
                          (file-name-nondirectory (expand-file-name "."))

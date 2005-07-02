@@ -1,3 +1,9 @@
+2005-07-02  Michael Olson  <mwolson@gnu.org>
+
+	* erball.el (erball-compiling-p): Use a custom routine instead of
+	`assoc' to detect "--compile-erbot" since the latter does not seem
+	to work on Emacs 22.
+
 2005-07-01  Michael Olson  <mwolson@gnu.org>
 
 	* erball.el (erball-compilation-paths-rel-to): New variable
