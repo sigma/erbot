@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-07-05 11:04:18 deego>
+;; Time-stamp: <2005-07-06 10:30:48 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -530,13 +530,15 @@ should start at the beginning of b."
 (run-hooks 'erbutils-after-load-hooks)
 
 
-(defun erbutils-remove-text-properties (str)
+(defun erbutils-remove-text-properties (str1)
 ;;;   (with-temp-buffer
 ;;;     (insert text)
 ;;;     (buffer-substring-no-properties (point-min) (point-max))))
   ;; fledermaus' code: avoid with-temp-buffer becuse of i8n problems.
-  (set-text-properties 0 (length str) nil str) 
-  str)
+  (let ((str (copy-sequence str1)))
+    (set-text-properties 0 (length str) nil str) 
+    str))
+
 
 
 (defun erbutils-defalias-i (ls &optional prefix prefix-rm
