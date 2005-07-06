@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-05-07 16:48:21 deego>
+;; Time-stamp: <2005-07-06 10:26:43 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3737,7 +3737,7 @@ order of entries within a given term. "
 	(erbbdb-get-exact-name dest))
     (error "Destination %S already seems to exist" dest))
   (let ((tmp (format "TMPMV-%S" (random 1000))))
-    (erbbdb-working
+    (erbot-working
      (ignore-errors (fs-forget tmp))
      (fs-mv name tmp)
      (fs-mv tmp dest))
