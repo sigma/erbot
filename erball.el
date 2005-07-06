@@ -32,15 +32,17 @@ command line.
 This value is also added to the load-path.
 A trailing backslash is required.")
 
+(defun erball-assoc-string (key list)
+  "Like `assoc' but specifically for strings."
+  (if (fboundp 'assoc-string)
+      (assoc-string key list)
+    (catch 'found
+      (dolist (el list)
+        (when (string= key el)
+          (throw 'found el))))))
+
 (defvar erball-compiling-p
-  ;; For some reason, (assoc "--compile-erbot" command-line-args-left)
-  ;; doesn't seem to work with Emacs 22.  Maybe there's a stray space?
-  (if (save-match-data
-        (catch 'found
-          (dolist (arg command-line-args-left)
-            (when (string-match "\\b--compile-erbot\\b" arg)
-              (throw 'found t)))
-          nil))
+  (if (erball-assoc-string "--compile-erbot" command-line-args-left)
       (progn
         (message (concat "\nCompiling source in "
                          (file-name-nondirectory (expand-file-name "."))
