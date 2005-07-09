@@ -605,6 +605,7 @@
     ("XT" . "extended technology")
     ("ZFOD" . "zero-filled on demand")
     ;; Additional terms go here
+    ("BTDTBTTS" . "been there, done that, bought the t-shirt")
     ("GAFC" . "get a fucking clue")
     ("IDS" . "intrusion detection system")
     ("NIFOC" . "naked in front of computer")
