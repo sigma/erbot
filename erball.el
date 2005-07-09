@@ -56,7 +56,8 @@ A trailing backslash is required.")
 (defcustom erball-compilation-paths
   '("contrib"
     ".."
-    "../erc")
+    "../erc"
+    "../bbdb/lisp")
   "Elements to add to the load path during compilation.
 If `erball-compilation-paths-rel-to' is specified, it is
 prepended to each element and also added verbatim to the path.
@@ -94,6 +95,7 @@ to: Kalle on 7/3/01:
 
 
 
+(erball-ignore-errors-loudly (require 'bbdb))
 (erball-ignore-errors-loudly (require 'doctor))
 (erball-ignore-errors-loudly (require 'erc))
 (erball-ignore-errors-loudly (require 'erc-stamp))

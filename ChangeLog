@@ -1,3 +1,9 @@
+2005-07-09  Michael Olson  <mwolson@gnu.org>
+
+	* erball.el: Make sure that the user knows if bbdb cannot be
+	found.  Otherwise they will get a non-working bot!
+	(erball-compilation-paths): Add path to BBDB.
+
 2005-07-02  Michael Olson  <mwolson@gnu.org>
 
 	* erball.el (erball-compiling-p): Use a custom routine instead of
