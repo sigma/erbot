@@ -629,7 +629,7 @@ DEF refers to the definition associated with TERM in `wtf-alist'."
   (when (stringp term)
     (let ((def (upcase-initials (cdr (assoc (upcase term)
                                             wtf-alist)))))
-      (if (interactive-p)
+      (if (and def (interactive-p))
           (message (concat term " is " def))
         def))))
 
