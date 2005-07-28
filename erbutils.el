@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-07-06 10:30:48 deego>
+;; Time-stamp: <2005-07-28 15:00:04 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -191,23 +191,24 @@ as many times as it returns a...
     (nth (random (length list)) list))
    (t
     (let* ((len (length list))
-     (revw (reverse weights))
-     (fir (car revw))
-     )
+	   (revw (reverse weights))
+	   (fir (car revw))
+	   )
+      ;; If weights are partially specified, fill in missing entries. 
       (while (< (length revw) len)
-  (setq revw (cons fir revw)))
+	(setq revw (cons fir revw)))
       (setq weights (reverse revw))
       (let* ((total (apply '+ weights))
-       (choice (random total))
-       (curw weights)
-       (ctr 0)
-       (num 0))
-  
-  (while (>= choice (+ ctr (car curw)))
-    (setq ctr (+ ctr (car curw)))
-    (incf num)
-    (setq curw (cdr curw)))
-  (nth num list))))))
+	     (choice (random total))
+	     (curw weights)
+	     (ctr 0)
+	     (num 0))
+	
+	(while (>= choice (+ ctr (car curw)))
+	  (setq ctr (+ ctr (car curw)))
+	  (incf num)
+	  (setq curw (cdr curw)))
+	(nth num list))))))
 
 
 
