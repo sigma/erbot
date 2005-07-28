@@ -1,6 +1,6 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-07-28 15:00:04 deego>
-;; Copyright (C) 2002 D. Goel
+;; Time-stamp: <2005-07-28 15:11:37 deego>
+;; Copyright (C) 2002,2003,2004,2005  D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
 ;; Package: erbutils
