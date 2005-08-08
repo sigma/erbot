@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2005-04-29 11:31:53 deego>
+;; Time-stamp: <2005-08-08 13:51:12 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -170,7 +170,7 @@ to query using PROMPT, or just return t."
 
 ;;; Real Code:
 
-(defalias 'fs-listp-proper 'erbutils-listp-proper)
+(defalias 'fsi-listp-proper 'erbutils-listp-proper)
 (erbutils-defalias-i '(upcase downcase capitalize upcase-initials))
 
 
@@ -241,6 +241,13 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
 	  (ding t)
   	  (sit-for 1)
 	  str)))))
+
+
+;; more math functions
+(erbutils-defalias-i '(mod))
+;; these from cl-extra
+(erbutils-defalias-i '(isqrt floor* ceiling* round* mod* rem* signum
+			     random*))
 
 
 
