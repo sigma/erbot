@@ -1,3 +1,9 @@
+;; 2005-08-11 T19:49:47-0400 (Thursday)    D. Goel	
+
+Michael Olson creates a Makefile, thus, for the first time, making the
+notion of erbot becoming an installable package, look possible..
+
+
 ;; 2005-06-04 T15:04:23-0400 (Saturday)    D. Goel
 Michael Olson provides function to train acronyms: 
 
