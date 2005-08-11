@@ -615,6 +615,24 @@
     )
   "Mapping of acronyms to expansions.")
 
+(defun wtf-match-string-no-properties (num &optional string)
+  "Return NUMth match of STRING sans text properties."
+  (if (fboundp 'match-string-no-properties)
+      (match-string-no-properties num string)
+    (match-string num string)))
+
+(defun wtf-get-term-at-point ()
+  "Return the term at point."
+  (interactive)
+  (save-excursion
+    (if (re-search-backward "\\W" (point-min) t)
+        (goto-char (1+ (point)))
+      (beginning-of-line))
+    (when (looking-at "\\w+")
+      (let ((term (downcase (wtf-match-string-no-properties 0))))
+        (when (assoc (upcase term) wtf-alist)
+          term)))))
+
 (defun wtf-is (term)
   "Provide the definition for TERM.
 When called interactively, print the message \"TERM is DEF\".
@@ -625,7 +643,8 @@ DEF refers to the definition associated with TERM in `wtf-alist'."
    (list (completing-read "Term: "
                           (mapcar #'(lambda (term)
                                       (downcase (car term)))
-                                  wtf-alist))))
+                                  wtf-alist)
+                          nil t (wtf-get-term-at-point))))
   (when (stringp term)
     (let ((def (cdr (assoc (upcase term) wtf-alist))))
       (when def
