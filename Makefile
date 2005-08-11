@@ -28,7 +28,7 @@ contrib:
 		--paths-rel-to '../' --compile-erbot)
 
 clean realclean distclean fullclean:
-	-rm -f *.elc contrib/*.elc *~
+	-rm -f *.elc contrib/*.elc *~ contrib/*~
 
 install:
 	install -d $(ELISPDIR)
