@@ -1,3 +1,15 @@
+2005-08-11  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/wtf.el (wtf-match-string-no-properties): New function
+	that is like match-string-no-properties, but works when that
+	function is not defined.
+	(wtf-get-term-at-point): New function that looks for term at
+	point.
+	(wtf-is): Make use of `wtf-get-term-at-point'.
+
+	* Makefile (clean realclean distclean fullclean): Remove *~ files
+	in contrib directory.
+
 2005-07-09  Michael Olson  <mwolson@gnu.org>
 
 	* erball.el: Make sure that the user knows if bbdb cannot be
