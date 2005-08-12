@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2005-02-11 11:10:00 deego>
+;; Time-stamp: <2005-08-11 20:29:00 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -42,66 +42,8 @@
 
 ;; See also:
 
+(defconst erbwiki-version "0.0dev")
 
-;; Quick start:
-(defconst erbwiki-quick-start
-  "Help..."
-)
-
-(defun erbwiki-quick-start ()
-  "Provides electric help from variable `erbwiki-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbwiki-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbwiki-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbwiki-introduction ()
-  "Provides electric help from variable `erbwiki-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbwiki-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbwiki-commentary
-  "Help..."
-)
-
-(defun erbwiki-commentary ()
-  "Provides electric help from variable `erbwiki-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbwiki-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbwiki-new-features
-  "Help..."
-)
-
-(defun erbwiki-new-features ()
-  "Provides electric help from variable `erbwiki-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbwiki-new-features) nil) "*doc*"))
-
-(defconst erbwiki-version "NA")
-(defun erbwiki-version (&optional arg)
-   "Display erbwiki's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbwiki version %s" erbwiki-version))
-    (message "erbwiki version %s" erbwiki-version)))
 
 ;;==========================================
 ;;; Requires:
@@ -119,50 +61,6 @@ With prefix ARG, insert version string into current buffer at point."
   "Hooks to run after loading erbwiki."
   :group 'erbwiki)
 (run-hooks 'erbwiki-before-load-hooks)
-
-(defcustom erbwiki-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbwiki)
-(defcustom erbwiki-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbwiki)
-(defcustom erbwiki-y-or-n-p-function 'erbwiki-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbwiki-y-or-n-p'."
-  :type 'function
-  :group 'erbwiki)
-(defcustom erbwiki-n-or-y-p-function 'erbwiki-y-or-n-p
-  "Function to use for interactivity-dependent n-or-y--p.
-Format same as that of `erbwiki-n-or-y-p'."
-  :type 'function
-  :group 'erbwiki)
-(defun erbwiki-message (points &rest args)
-  "Signal message, depending on POINTS anderbwiki-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbwiki-verbosity))
-    (apply #'message args)))
-(defun erbwiki-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbwiki-interactivity'.
-ADD is added to `erbwiki-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbwiki-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbwiki-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbwiki-interactivity'.
-ADD is added to `erbwiki-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbwiki-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 

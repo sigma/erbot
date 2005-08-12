@@ -1,17 +1,13 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2004-12-31 21:46:57 deego>
+;; Time-stamp: <2005-08-11 20:33:12 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
 ;; Package: erblisp
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
-
-(defvar erblisp-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
-
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -35,20 +31,7 @@
 ;; See also:
 
 
-;; Quick start:
-(defvar erblisp-quick-start
-  "Help..."
-)
-
-(defun erblisp-quick-start ()
-  "Provides electric help regarding variable `erblisp-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblisp-quick-start) nil) "*doc*"))
-
-
-
-(defvar erblisp-version "99.99")
+(defvar erblisp-version "0.0dev")
 
 ;;==========================================
 ;;; Code:

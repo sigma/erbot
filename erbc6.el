@@ -1,5 +1,5 @@
 ;;; erbc6.el --- fsbot functions contributed by freenode users, esp. #emacsers.
-;; Time-stamp: <2005-07-01 12:59:50 deego>
+;; Time-stamp: <2005-08-11 20:31:16 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc6.el
@@ -9,12 +9,6 @@
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
-
-(defconst erbc6-home-page
-  "http://gnufans.net/~deego")
-
-
- 
 ;; This file is NOT (yet) part of GNU Emacs.
  
 ;; This is free software; you can redistribute it and/or modify
@@ -42,8 +36,6 @@
    '("Yes" "No" "Definitely" "Of course not!" "Highly likely." 
      "Ask yourself, d\o you really want to know?" 
      "I'm telling you, you don't want to know." "mu!")))
-
-
 
 
 

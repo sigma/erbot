@@ -1,11 +1,11 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-07-06 10:26:43 deego>
+;; Time-stamp: <2005-08-11 20:29:52 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: NA
+;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; Other files:
 ;;; erball.el --- Functions on all files.
@@ -62,8 +62,8 @@
 
 
 
-(defvar erbc-version "NA")
-(defvar fs-version "dev")
+(defvar erbc-version "0.0dev")
+(defvar fs-version "0.0dev")
 
 
 ;;==========================================

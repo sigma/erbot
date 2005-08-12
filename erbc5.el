@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2005-08-08 13:51:12 deego>
+;; Time-stamp: <2005-08-11 20:30:59 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -36,77 +36,7 @@
 ;; See also:
 
 
-;; Quick start:
-(defconst erbc5-quick-start
-  "Help..."
-)
-
-(defun erbc5-quick-start ()
-  "Provides electric help from variable `erbc5-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc5-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbc5-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbc5-introduction ()
-  "Provides electric help from variable `erbc5-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc5-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbc5-commentary
-  "Help..."
-)
-
-(defun erbc5-commentary ()
-  "Provides electric help from variable `erbc5-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc5-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbc5-new-features
-  "Help..."
-)
-
-(defun erbc5-new-features ()
-  "Provides electric help from variable `erbc5-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc5-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbc5-todo
-  "Help..."
-)
-
-(defun erbc5-todo ()
-  "Provides electric help from variable `erbc5-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc5-todo) nil) "*doc*"))
-
-(defconst erbc5-version "0.0-DUMMY")
-(defun erbc5-version (&optional arg)
-   "Display erbc5's version string. 
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbc5 version %s" erbc5-version))
-    (message "erbc5 version %s" erbc5-version)))
-
+(defconst erbc5-version "0.0dev")
 ;;==========================================
 ;;; Requires:
 (eval-when-compile (require 'cl))

@@ -1,11 +1,11 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-07-28 15:11:37 deego>
+;; Time-stamp: <2005-08-11 20:27:57 deego>
 ;; Copyright (C) 2002,2003,2004,2005  D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
 ;; Package: erbutils
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0dev
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
 
@@ -31,22 +31,7 @@
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;; Boston, MA 02111-1307, USA.
  
-
-;; See also:
-
-
-;; Quick start:
-(defvar erbutils-quick-start
-  "Help..."
-)
-
-(defun erbutils-quick-start ()
-  "Provides electric help regarding variable `erbutils-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbutils-quick-start) nil) "*doc*"))
-
-(defvar erbutils-version "99.99")
+(defvar erbutils-version "0.0dev")
 
 ;;==========================================
 ;;; Code:

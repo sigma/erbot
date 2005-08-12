@@ -1,19 +1,14 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2005-01-02 16:59:42 deego>
+;; Time-stamp: <2005-08-11 20:31:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
 ;; Package: erbbdb
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0dev
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
 
-(defvar erbbdb-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
-
-
- 
 ;; This file is NOT (yet) part of GNU Emacs.
  
 ;; This is free software; you can redistribute it and/or modify
@@ -35,18 +30,9 @@
 ;; See also:
 
 
-;; Quick start:
-(defvar erbbdb-quick-start
-  "Help..."
-)
 
-(defun erbbdb-quick-start ()
-  "Provides electric help regarding variable `erbbdb-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbbdb-quick-start) nil) "*doc*"))
 
-(defvar erbbdb-version "99.99")
+(defvar erbbdb-version "0.0dev")
 
 ;;==========================================
 ;;; Code:

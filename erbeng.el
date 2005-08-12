@@ -1,11 +1,11 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2005-04-29 11:25:19 deego>
+;; Time-stamp: <2005-08-11 20:32:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
 ;; Package: erbeng
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
 
@@ -35,19 +35,7 @@
 ;; See also:
 
 
-;; Quick start:
-(defvar erbeng-quick-start
-  "Help..."
-)
-
-(defun erbeng-quick-start ()
-  "Provides electric help regarding variable `erbeng-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbeng-quick-start) nil) "*doc*"))
-
-
-(defvar erbeng-version "99.99")
+(defvar erbeng-version "0.0dev")
 
 ;;==========================================
 ;;; Code:
@@ -68,12 +56,12 @@
 
 
 
-(defvar erbeng-msg )
-(defvar erbeng-proc)
-(defvar erbeng-nick)
-(defvar erbeng-tgt)
-(defvar erbeng-localp)
-(defvar erbeng-userinfo)
+(defvar erbeng-msg nil )
+(defvar erbeng-proc nil)
+(defvar erbeng-nick nil)
+(defvar erbeng-tgt nil)
+(defvar erbeng-localp nil)
+(defvar erbeng-userinfo nil)
 
 
 (defvar erbot-show-type-p t

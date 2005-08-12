@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2005-01-08 12:52:26 deego>
+;; Time-stamp: <2005-08-11 20:30:03 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -36,7 +36,7 @@
 ;; here shall tend to be "specially defined" ones.
 
 
-(defconst erbc2-version "NA")
+(defconst erbc2-version "0.0dev")
 ;;==========================================
 ;;; Requires:
 (eval-when-compile (require 'cl))

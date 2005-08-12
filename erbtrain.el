@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-07-01 12:36:32 deego>
+;; Time-stamp: <2005-08-11 20:35:09 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -51,61 +51,12 @@ Then, M-x erbtrain to set up erbtrain which will then feed the strings
 to the bot in that channel slowly. 
 "
 )
-
 (defun erbtrain-quick-start ()
   "Provides electric help from variable `erbtrain-quick-start'."
   (interactive)
   (with-electric-help
    '(lambda () (insert erbtrain-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbtrain-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbtrain-introduction ()
-  "Provides electric help from variable `erbtrain-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbtrain-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbtrain-commentary
-  "Help..."
-)
-
-(defun erbtrain-commentary ()
-  "Provides electric help from variable `erbtrain-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbtrain-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbtrain-new-features
-  "Help..."
-)
-
-(defun erbtrain-new-features ()
-  "Provides electric help from variable `erbtrain-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbtrain-new-features) nil) "*doc*"))
-
-(defconst erbtrain-version "0.0-DUMMY")
-(defun erbtrain-version (&optional arg)
-   "Display erbtrain's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbtrain version %s" erbtrain-version))
-    (message "erbtrain version %s" erbtrain-version)))
+(defconst erbtrain-version "NA")
 
 ;;==========================================
 ;;; Requires: 
@@ -124,49 +75,6 @@ With prefix ARG, insert version string into current buffer at point."
   :group 'erbtrain)
 (run-hooks 'erbtrain-before-load-hooks)
 
-(defcustom erbtrain-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbtrain)
-(defcustom erbtrain-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbtrain)
-(defcustom erbtrain-y-or-n-p-function 'erbtrain-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbtrain-y-or-n-p'."
-  :type 'function
-  :group 'erbtrain)
-(defcustom erbtrain-n-or-y-p-function 'erbtrain-y-or-n-p
-  "Function to use for interactivity-dependent n-or-y--p.
-Format same as that of `erbtrain-n-or-y-p'."
-  :type 'function
-  :group 'erbtrain)
-(defun erbtrain-message (points &rest args)
-  "Signal message, depending on POINTS anderbtrain-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbtrain-verbosity))
-    (apply #'message args)))
-(defun erbtrain-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbtrain-interactivity'.
-ADD is added to `erbtrain-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbtrain-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbtrain-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbtrain-interactivity'.
-ADD is added to `erbtrain-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbtrain-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 

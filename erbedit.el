@@ -1,5 +1,5 @@
 ;;; erbedit.el --- quicker operator editing of bots' bbdb
-;; Time-stamp: <2004-12-17 00:13:59 deego>
+;; Time-stamp: <2005-08-11 20:32:27 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbedit.el
@@ -34,53 +34,7 @@
  
 
 
-;; See also:
-
-(defconst erbedit-commentary
-  "This file permits mass-editing of the bbdb, to be used by the bot
-operators.
-")
-
-(defun erbedit-commentary ()
-  "Provides electric help from variable `erbedit-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbedit-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbedit-new-features
-  "Help..."
-)
-
-(defun erbedit-new-features ()
-  "Provides electric help from variable `erbedit-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbedit-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbedit-todo
-  "Help..."
-)
-
-(defun erbedit-todo ()
-  "Provides electric help from variable `erbedit-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbedit-todo) nil) "*doc*"))
-
-(defconst erbedit-version "0.0-DUMMY")
-(defun erbedit-version (&optional arg)
-   "Display erbedit's version string. 
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbedit version %s" erbedit-version))
-    (message "erbedit version %s" erbedit-version)))
+(defconst erbedit-version "0.0dev")
 
 ;;==========================================
 ;;; Requires:

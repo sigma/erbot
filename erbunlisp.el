@@ -1,5 +1,5 @@
 ;;; erbunlisp.el --- Help Simplify functions for nonlisp channels. 
-;; Time-stamp: <2003-06-19 12:25:56 deego>
+;; Time-stamp: <2005-08-11 20:26:45 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbunlisp.el
@@ -33,68 +33,7 @@
 ;; Boston, MA 02111-1307, USA.
  
 
-;; See also:
-
-
-;; Quick start:
-(defconst erbunlisp-quick-start
-  "Help..."
-)
-
-(defun erbunlisp-quick-start ()
-  "Provides electric help from variable `erbunlisp-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbunlisp-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbunlisp-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbunlisp-introduction ()
-  "Provides electric help from variable `erbunlisp-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbunlisp-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbunlisp-commentary
-  "Help..."
-)
-
-(defun erbunlisp-commentary ()
-  "Provides electric help from variable `erbunlisp-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbunlisp-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbunlisp-new-features
-  "Help..."
-)
-
-(defun erbunlisp-new-features ()
-  "Provides electric help from variable `erbunlisp-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbunlisp-new-features) nil) "*doc*"))
-
-(defconst erbunlisp-version "0.0-DUMMY")
-(defun erbunlisp-version (&optional arg)
-   "Display erbunlisp's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbunlisp version %s" erbunlisp-version))
-    (message "erbunlisp version %s" erbunlisp-version)))
+(defconst erbunlisp-version "0.0dev")
 
 ;;==========================================
 ;;; Requires:
@@ -113,49 +52,7 @@ With prefix ARG, insert version string into current buffer at point."
   :group 'erbunlisp)
 (run-hooks 'erbunlisp-before-load-hooks)
 
-(defcustom erbunlisp-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbunlisp)
-(defcustom erbunlisp-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbunlisp)
-(defcustom erbunlisp-y-or-n-p-function 'erbunlisp-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbunlisp-y-or-n-p'."
-  :type 'function
-  :group 'erbunlisp)
-(defcustom erbunlisp-n-or-y-p-function 'erbunlisp-y-or-n-p
-  "Function to use for interactivity-dependent `n-or-y-p'.
-Format same as that of `erbunlisp-n-or-y-p'."
-  :type 'function
-  :group 'erbunlisp)
-(defun erbunlisp-message (points &rest args)
-  "Signal message, depending on POINTS anderbunlisp-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbunlisp-verbosity))
-    (apply #'message args)))
-(defun erbunlisp-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbunlisp-interactivity'.
-ADD is added to `erbunlisp-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbunlisp-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbunlisp-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbunlisp-interactivity'.
-ADD is added to `erbunlisp-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbunlisp-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
+
 
 ;;; Real Code:
 

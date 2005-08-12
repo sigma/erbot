@@ -1,11 +1,11 @@
 ;;; erbdata.el --- 
-;; Time-stamp: <2003-05-29 09:03:36 deego>
+;; Time-stamp: <2005-08-11 20:32:20 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbdata.el
 ;; Package: erbdata
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
 
@@ -34,20 +34,7 @@
 
 ;; See also:
 
-
-;; Quick start:
-(defvar erbdata-quick-start
-  "Help..."
-)
-
-(defun erbdata-quick-start ()
-  "Provides electric help regarding variable `erbdata-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbdata-quick-start) nil) "*doc*"))
-
-
-(defvar erbdata-version "99.99")
+(defvar erbdata-version "0.0dev")
 
 ;;==========================================
 ;;; Code:

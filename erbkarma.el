@@ -1,5 +1,5 @@
-;;; erbkarma.el ---
-;; Time-stamp: <2004-12-31 22:47:00 deego>
+;;; erbkarma.el --- karma is not currently functional, we think..
+;; Time-stamp: <2005-08-11 20:32:54 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbkarma.el
@@ -8,10 +8,6 @@
 ;; Keywords:
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-
-
-(defconst erbkarma-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -44,31 +40,6 @@
 ;;             important thing is that we can say b0ef++ and fsbot responds with
 ;;             "Noted, kensanata.  One (brownie|karma|wiki|rms|lispy)-point for
 ;;             b0ef!"
-[06:56]
-
-;; See also:
-
-
-;; Quick start:
-(defconst erbkarma-quick-start
-  "Help..."
-)
-
-(defun erbkarma-quick-start ()
-  "Provides electric help from variable `erbkarma-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbkarma-quick-start) nil) "*doc*"))
-
-
-(defconst erbkarma-version "0.0-DUMMY")
-(defun erbkarma-version (&optional arg)
-   "Display erbkarma's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbkarma version %s" erbkarma-version))
-    (message "erbkarma version %s" erbkarma-version)))
 
 ;;==========================================
 ;;; Requires:
@@ -87,50 +58,6 @@ With prefix ARG, insert version string into current buffer at point."
   "Hooks to run after loading erbkarma."
   :group 'erbkarma)
 (run-hooks 'erbkarma-before-load-hooks)
-
-(defcustom erbkarma-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbkarma)
-(defcustom erbkarma-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbkarma)
-(defcustom erbkarma-y-or-n-p-function 'erbkarma-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbkarma-y-or-n-p'."
-  :type 'function
-  :group 'erbkarma)
-(defcustom erbkarma-n-or-y-p-function 'erbkarma-y-or-n-p
-  "Function to use for interactivity-dependent n-or-y--p.
-Format same as that of `erbkarma-n-or-y-p'."
-  :type 'function
-  :group 'erbkarma)
-(defun erbkarma-message (points &rest args)
-  "Signal message, depending on POINTS anderbkarma-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbkarma-verbosity))
-    (apply #'message args)))
-(defun erbkarma-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbkarma-interactivity'.
-ADD is added to `erbkarma-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbkarma-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbkarma-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbkarma-interactivity'.
-ADD is added to `erbkarma-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbkarma-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 

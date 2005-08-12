@@ -1,17 +1,13 @@
 ;;; erblog.el --- 
-;; Time-stamp: <2003-05-29 09:03:34 deego>
+;; Time-stamp: <2005-08-11 20:33:23 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblog.el
 ;; Package: erblog
 ;; Author: D. Goel <deego@gnufans.org>
-;; Version: 99.99
+;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
  
-
-(defvar erblog-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
-
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -34,19 +30,7 @@
 
 ;; See also:
 
-
-;; Quick start:
-(defvar erblog-quick-start
-  "Help..."
-)
-
-(defun erblog-quick-start ()
-  "Provides electric help regarding variable `erblog-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erblog-quick-start) nil) "*doc*"))
-
-(defvar erblog-version "99.99")
+(defvar erblog-version "0.0dev")
 
 ;;==========================================
 ;;; Code:

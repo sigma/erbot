@@ -33,67 +33,6 @@
 
 ;; See also:
 
-
-;; Quick start:
-(defconst erbjavadoc-quick-start
-  "Help..."
-)
-
-(defun erbjavadoc-quick-start ()
-  "Provides electric help from variable `erbjavadoc-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbjavadoc-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbjavadoc-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbjavadoc-introduction ()
-  "Provides electric help from variable `erbjavadoc-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbjavadoc-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbjavadoc-commentary
-  "Help..."
-)
-
-(defun erbjavadoc-commentary ()
-  "Provides electric help from variable `erbjavadoc-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbjavadoc-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbjavadoc-new-features
-  "Help..."
-)
-
-(defun erbjavadoc-new-features ()
-  "Provides electric help from variable `erbjavadoc-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbjavadoc-new-features) nil) "*doc*"))
-
-(defconst erbjavadoc-version "0.0-DUMMY")
-(defun erbjavadoc-version (&optional arg)
-   "Display erbjavadoc's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbjavadoc version %s" erbjavadoc-version))
-    (message "erbjavadoc version %s" erbjavadoc-version)))
-
 ;;==========================================
 ;;; Requires: 
 (require 'cl)
@@ -114,56 +53,6 @@ With prefix ARG, insert version string into current buffer at point."
   :group 'erbjavadoc)
 
 (run-hooks 'erbjavadoc-before-load-hooks)
-
-(defcustom erbjavadoc-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbjavadoc)
-
-(defcustom erbjavadoc-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbjavadoc)
-
-(defcustom erbjavadoc-y-or-n-p-function 'erbjavadoc-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbjavadoc-y-or-n-p'."
-  :type 'function
-  :group 'erbjavadoc)
-
-(defcustom erbjavadoc-n-or-y-p-function 'erbjavadoc-n-or-y-p
-  "Function to use for interactivity-dependent n-or-y--p.
-Format same as that of `erbjavadoc-n-or-y-p'."
-  :type 'function
-  :group 'erbjavadoc)
-
-(defun erbjavadoc-message (points &rest args)
-  "Signal message, depending on POINTS anderbjavadoc-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbjavadoc-verbosity))
-    (apply #'message args)))
-
-(defun erbjavadoc-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbjavadoc-interactivity'.
-ADD is added to `erbjavadoc-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbjavadoc-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-
-(defun erbjavadoc-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbjavadoc-interactivity'.
-ADD is added to `erbjavadoc-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbjavadoc-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 
@@ -213,7 +102,8 @@ It should be noted that this command can only be executed via a user
 in IRC because in relies on various vars that are in scope when
 erbot.el invokes this function."
   (unless (stringp url) (setq url (format "%s" url)))
-  (let ((base (erbjavadoc-base-url url)))
+  (let (proc tgt
+	(base (erbjavadoc-base-url url)))
     (if (member base erbjavadoc-scraped-urls)
 	"That set of javadocs has already been learned."
       (dolist (page erbjavadoc-pages)

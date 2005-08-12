@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-04-29 11:56:55 deego>
+;; Time-stamp: <2005-08-11 20:30:32 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -33,72 +33,7 @@
 ;; Boston, MA 02111-1307, USA.
  
 
-;; See also:
-
-
-;; Quick start:
-(defconst erbc3-quick-start
-  "Help..."
-)
-
-(defun erbc3-quick-start ()
-  "Provides electric help from variable `erbc3-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc3-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erbc3-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbc3-introduction ()
-  "Provides electric help from variable `erbc3-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc3-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erbc3-commentary
-  "Help..."
-)
-
-(defun erbc3-commentary ()
-  "Provides electric help from variable `erbc3-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc3-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erbc3-new-features
-  "Help..."
-)
-
-(defun erbc3-new-features ()
-  "Provides electric help from variable `erbc3-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc3-new-features) nil) "*doc*"))
-
-;;; TO DO:
-(defconst erbc3-todo
-  "Help..."
-)
-
-(defun erbc3-todo ()
-  "Provides electric help from variable `erbc3-todo'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbc3-todo) nil) "*doc*"))
-
-(defconst erbc3-version "0.0-DUMMY")
+(defconst erbc3-version "0.dev")
 (defun erbc3-version (&optional arg)
    "Display erbc3's version string.
 With prefix ARG, insert version string into current buffer at point."
@@ -124,49 +59,6 @@ With prefix ARG, insert version string into current buffer at point."
   :group 'erbc3)
 (run-hooks 'erbc3-before-load-hook)
 
-(defcustom erbc3-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbc3)
-(defcustom erbc3-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbc3)
-(defcustom erbc3-y-or-n-p-function 'erbc3-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbc3-y-or-n-p'."
-  :type 'function
-  :group 'erbc3)
-(defcustom erbc3-n-or-y-p-function 'erbc3-y-or-n-p
-  "Function to use for interactivity-dependent `n-or-y-p'.
-Format same as that of `erbc3-n-or-y-p'."
-  :type 'function
-  :group 'erbc3)
-(defun erbc3-message (points &rest args)
-  "Signal message, depending on POINTS anderbc3-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbc3-verbosity))
-    (apply #'message args)))
-(defun erbc3-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbc3-interactivity'.
-ADD is added to `erbc3-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbc3-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbc3-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbc3-interactivity'.
-ADD is added to `erbc3-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbc3-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 ;; pf stands for persistent functions.

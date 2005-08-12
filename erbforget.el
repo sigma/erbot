@@ -1,5 +1,5 @@
 ;;; erbforget.el --- Help make the bots forget some TERMS. 
-;; Time-stamp: <2005-01-02 22:32:01 deego>
+;; Time-stamp: <2005-08-11 20:32:42 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbforget.el
@@ -8,10 +8,6 @@
 ;; Keywords:
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-
-
-(defconst erbforget-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot")
 
 
  
@@ -33,29 +29,6 @@
 ;; Boston, MA 02111-1307, USA.
  
 
-;; See also:
-
-
-;; Quick start:
-(defconst erbforget-quick-start
-  "Help..."
-)
-
-(defun erbforget-quick-start ()
-  "Provides electric help from variable `erbforget-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbforget-quick-start) nil) "*doc*"))
-
-(defconst erbforget-version "0.0-DUMMY")
-(defun erbforget-version (&optional arg)
-   "Display erbforget's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbforget version %s" erbforget-version))
-    (message "erbforget version %s" erbforget-version)))
-
 ;;==========================================
 ;;; Requires:
 (eval-when-compile (require 'cl))
@@ -72,50 +45,6 @@ With prefix ARG, insert version string into current buffer at point."
   "Hooks to run after loading erbforget."
   :group 'erbforget)
 (run-hooks 'erbforget-before-load-hooks)
-
-(defcustom erbforget-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erbforget)
-(defcustom erbforget-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erbforget)
-(defcustom erbforget-y-or-n-p-function 'erbforget-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erbforget-y-or-n-p'."
-  :type 'function
-  :group 'erbforget)
-(defcustom erbforget-n-or-y-p-function 'erbforget-n-or-y-p
-  "Function to use for interactivity-dependent `n-or-y-p'.
-Format same as that of `erbforget-n-or-y-p'."
-  :type 'function
-  :group 'erbforget)
-(defun erbforget-message (points &rest args)
-  "Signal message, depending on POINTS anderbforget-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erbforget-verbosity))
-    (apply #'message args)))
-(defun erbforget-y-or-n-p (add prompt)
-  "Query or assume t, based on `erbforget-interactivity'.
-ADD is added to `erbforget-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbforget-interactivity))
-        t
-      (funcall 'y-or-n-p prompt)))
-(defun erbforget-n-or-y-p (add prompt)
-  "Query or assume t, based on `erbforget-interactivity'.
-ADD is added to `erbforget-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erbforget-interactivity))
-        nil
-      (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 

@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-07-01 14:18:15 deego>
+;; Time-stamp: <2005-08-11 20:34:10 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -11,7 +11,7 @@
 
 
 (defvar erbot-home-page
-  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot/pub/emacspub/lisp-mine/erbot/")
+  "http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot/")
 
 ;; Version:
 ;; Keywords: ERC, IRC, chat, robot, bot
@@ -41,9 +41,9 @@
 
 
 
+;; See http://www.emacswiki.org/cgi-bin/wiki/ErBot
 
-
-
+;; OLD DOCS:
 ;; Thanks for erbot's/erbot's behavior and their data go to a lot
 ;; of people on #emacs, like:
 ;; kensanata (Alex Schroeder)
@@ -62,49 +62,6 @@
 
 
 
-
-
-;; Quick start:
-(defvar erbot-quick-start
-  "Add (erbot-install) to .emacs.. and join channels..
-for a more detailed example, look at fsbot's .emacs here:
-http://deego.gnufans.org/~fsbot/dotemacs-fsbot ..
-
-If you want to join channels automatically, have a look at the
-function M-x erbot-join-servers ...  viz. start emacs and type M-x
-erbot-join-servers..
-
-Note that bbdb-case-fold-search should be t <-- this one is quite
-important, as should erc-auto-query be, for this bot to function
-properly.
-
-"
-)
-
-(defun erbot-quick-start ()
-  "Provides electric help regarding variable `erbot-quick-start'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbot-quick-start) nil) "*doc*"))
-
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defvar erbot-introduction
-  "Help..."
-)
-
-;;;###autoload
-(defun erbot-introduction ()
-  "Provides electric help regarding variable `erbot-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erbot-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defvar erbot-commentary
-  "Help..."
-)
 
 
 

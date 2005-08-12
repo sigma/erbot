@@ -78,54 +78,7 @@ permit users to add javadoc entries from a set of javadoc pages.
   (with-electric-help
    '(lambda () (insert erburl-quick-start) nil) "*doc*"))
 
-;;; Introduction:
-;; Stuff that gets posted to gnu.emacs.sources
-;; as introduction
-(defconst erburl-introduction
-  "Help..."
-  )
-
-;;;###autoload
-(defun erburl-introduction ()
-  "Provides electric help from variable `erburl-introduction'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erburl-introduction) nil) "*doc*"))
-
-;;; Commentary:
-(defconst erburl-commentary
-  "Help..."
-  )
-
-(defun erburl-commentary ()
-  "Provides electric help from variable `erburl-commentary'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erburl-commentary) nil) "*doc*"))
-
-;;; History:
-
-;;; Bugs:
-
-;;; New features:
-(defconst erburl-new-features
-  "Help..."
-  )
-
-(defun erburl-new-features ()
-  "Provides electric help from variable `erburl-new-features'."
-  (interactive)
-  (with-electric-help
-   '(lambda () (insert erburl-new-features) nil) "*doc*"))
-
-(defconst erburl-version "0.0-DUMMY")
-(defun erburl-version (&optional arg)
-  "Display erburl's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erburl version %s" erburl-version))
-    (message "erburl version %s" erburl-version)))
+(defconst erburl-version "0.0dev")
 
 ;;==========================================
 ;;; Requires: 
@@ -147,56 +100,6 @@ With prefix ARG, insert version string into current buffer at point."
   :group 'erburl)
 
 (run-hooks 'erburl-before-load-hooks)
-
-(defcustom erburl-verbosity 0
-  "How verbose to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 to +90 are \"sane\".  The
-rest are for debugging."
-  :type 'integer
-  :group 'erburl)
-
-(defcustom erburl-interactivity 0
-  "How interactive to be.
-Once you are experienced with this lib, 0 is the recommended
-value.  Values between -90 and +90 are \"sane\".  The rest are for
-debugging."
-  :type 'integer
-  :group 'erburl)
-
-(defcustom erburl-y-or-n-p-function 'erburl-y-or-n-p
-  "Function to use for interactivity-dependent  `y-or-n-p'.
-Format same as that of `erburl-y-or-n-p'."
-  :type 'function
-  :group 'erburl)
-
-(defcustom erburl-n-or-y-p-function 'erburl-n-or-y-p
-  "Function to use for interactivity-dependent n-or-y--p.
-Format same as that of `erburl-n-or-y-p'."
-  :type 'function
-  :group 'erburl)
-
-(defun erburl-message (points &rest args)
-  "Signal message, depending on POINTS anderburl-verbosity.
-ARGS are passed to `message'."
-  (unless (minusp (+ points erburl-verbosity))
-    (apply #'message args)))
-
-(defun erburl-y-or-n-p (add prompt)
-  "Query or assume t, based on `erburl-interactivity'.
-ADD is added to `erburl-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erburl-interactivity))
-      t
-    (funcall 'y-or-n-p prompt)))
-
-(defun erburl-n-or-y-p (add prompt)
-  "Query or assume t, based on `erburl-interactivity'.
-ADD is added to `erburl-interactivity' to decide whether
-to query using PROMPT, or just return t."
-  (if (minusp (+ add erburl-interactivity))
-      nil
-    (funcall 'y-or-n-p prompt)))
 
 ;;; Real Code:
 

@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2005-01-08 12:52:24 deego>
+;; Time-stamp: <2005-08-11 20:32:12 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -14,9 +14,6 @@
 ;; Version:
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; For latest version:
-
-(defconst erbcspecial-home-page
-  "http://gnufans.net/~deego")
 
 
  
@@ -40,14 +37,7 @@
 
 ;; See also:
 
-(defconst erbcspecial-version "0.0-DUMMY")
-(defun erbcspecial-version (&optional arg)
-   "Display erbcspecial's version string.
-With prefix ARG, insert version string into current buffer at point."
-  (interactive "P")
-  (if arg
-      (insert (message "erbcspecial version %s" erbcspecial-version))
-    (message "erbcspecial version %s" erbcspecial-version)))
+(defconst erbcspecial-version "0.0dev")
 
 ;;==========================================
 ;;; Requires:
