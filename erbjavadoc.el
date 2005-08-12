@@ -102,8 +102,7 @@ It should be noted that this command can only be executed via a user
 in IRC because in relies on various vars that are in scope when
 erbot.el invokes this function."
   (unless (stringp url) (setq url (format "%s" url)))
-  (let (proc tgt
-	(base (erbjavadoc-base-url url)))
+  (let ((base (erbjavadoc-base-url url)))
     (if (member base erbjavadoc-scraped-urls)
 	"That set of javadocs has already been learned."
       (dolist (page erbjavadoc-pages)
