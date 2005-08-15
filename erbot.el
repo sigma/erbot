@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-08-11 20:34:10 deego>
+;; Time-stamp: <2005-08-16 00:00:02 forcer>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -650,13 +650,13 @@ the beginning of your .emacs")
 	 (add-hook 'erc-server-PRIVMSG-functions 'erbot-remote t)
 	 ;; Do we need this local command thing...?
 	 ;;(add-hook 'erc-send-completed-hook 'erbot-local t)
-	 (add-hook 'erc-server-376-functions
+	 (add-hook 'erc-server-001-functions
 		   'erbot-autojoin-channels))
 	(t
 	 (add-hook 'erc-server-PRIVMSG-hook 'erbot-remote t)
 	 ;; Do we need this local command thing...?
 	 ;;(add-hook 'erc-send-completed-hook 'erbot-local t)
-	 (add-hook 'erc-server-376-hook
+	 (add-hook 'erc-server-001-hook
 		   'erbot-autojoin-channels))
 	)
   (erbot-install-symbols)
