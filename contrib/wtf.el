@@ -105,6 +105,7 @@
     ("FOAD" . "fall over and die")
     ("FSDO" . "for some definition of")
     ("FSVO" . "for some value of")
+    ("FTBFS" . "failure to build from source")
     ("FTFM" . "fuck the fuckin' manual!")
     ("FUBAR" . "fucked up beyond all recognition")
     ("FUD" . "fear, uncertainty and doubt")

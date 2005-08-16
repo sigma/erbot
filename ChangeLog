@@ -1,3 +1,7 @@
+2005-08-16  D Goel  <deego@gnufans.org>
+
+	* contrib/wtf.el (wtf-alist): add ("FTBFS" . "failure to build from source")
+
 2005-08-15  Michael Olson  <mwolson@gnu.org>
 
 	* contrib/wtf.el: I received permission to receive these terms in
