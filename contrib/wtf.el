@@ -15,20 +15,24 @@
 ;; GNU General Public License for more details.
 ;;
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; if not, write to the Free Software
-;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 
 ;; Thanks to Trent Buck for `emacs-wiki-wtf.el', which inspired the
 ;; creation of `wtf.el'.
-
+;;
 ;; The terms were downloaded from
 ;; http://cvsweb.netbsd.org/bsdweb.cgi/src/share/misc/.  No copyright
-;; notice was included, but since the program that makes use of them
+;; notice was included, but the intent of the original author was to
+;; put these terms in the public domain.  This was deduced from
+;; several emails sent to the authors of these files.
+;;
+;; The original program that uses these files in NetBSD
 ;; (http://cvsweb.netbsd.org/bsdweb.cgi/src/games/wtf/wtf) is in the
-;; public domain, it seems reasonable to infer that the acronym files
-;; are also in the public domain.
+;; public domain.
 
 (defvar wtf-alist
   '(;; $NetBSD: acronyms,v 1.146 2005/03/10 05:45:25 soda Exp $
@@ -611,6 +615,7 @@
     ("NIFOC" . "naked in front of computer")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
+    ("TWAT" . "the war against terrorism")
     ("WTB" . "where's the beef")
     )
   "Mapping of acronyms to expansions.")
@@ -642,7 +647,7 @@ DEF refers to the definition associated with TERM in `wtf-alist'."
   (interactive
    (list (completing-read "Term: "
                           (mapcar #'(lambda (term)
-                                      (downcase (car term)))
+                                      (list (downcase (car term))))
                                   wtf-alist)
                           nil t (wtf-get-term-at-point))))
   (when (stringp term)

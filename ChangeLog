@@ -1,3 +1,10 @@
+2005-08-15  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/wtf.el: I received permission to receive these terms in
+	the public domain.
+	(wtf-alist): Add "TWAT".
+	(wtf-is): Fix Emacs21 issue.
+
 2005-08-11  Michael Olson  <mwolson@gnu.org>
 
 	* contrib/wtf.el (wtf-match-string-no-properties): New function
