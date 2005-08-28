@@ -28,7 +28,9 @@
 ;; http://cvsweb.netbsd.org/bsdweb.cgi/src/share/misc/.  No copyright
 ;; notice was included, but the intent of the original author was to
 ;; put these terms in the public domain.  This was deduced from
-;; several emails sent to the authors of these files.
+;; several emails sent to the authors of these files.  Additionally,
+;; the original data files use a specific syntax which does not allow
+;; for a copyright notice.
 ;;
 ;; The original program that uses these files in NetBSD
 ;; (http://cvsweb.netbsd.org/bsdweb.cgi/src/games/wtf/wtf) is in the
@@ -105,7 +107,6 @@
     ("FOAD" . "fall over and die")
     ("FSDO" . "for some definition of")
     ("FSVO" . "for some value of")
-    ("FTBFS" . "failure to build from source")
     ("FTFM" . "fuck the fuckin' manual!")
     ("FUBAR" . "fucked up beyond all recognition")
     ("FUD" . "fear, uncertainty and doubt")
@@ -611,6 +612,7 @@
     ("ZFOD" . "zero-filled on demand")
     ;; Additional terms go here
     ("BTDTBTTS" . "been there, done that, bought the t-shirt")
+    ("FTBFS" . "failure to build from source")
     ("GAFC" . "get a fucking clue")
     ("IDS" . "intrusion detection system")
     ("NIFOC" . "naked in front of computer")

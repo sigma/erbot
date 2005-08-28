@@ -1,3 +1,8 @@
+2005-08-28  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/wtf.el: Add to copyright notice.
+	(wtf-alist): Move FTBFS to the "Additional terms go here" section.
+
 2005-08-22  Jose E. Marchesi  <jemarch@gnu.org>
 
 	* contrib/haiku.el (fs-haiku): New file
