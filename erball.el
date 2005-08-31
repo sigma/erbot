@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2005-07-01 08:20:54 deego>
+;; Time-stamp: <2005-08-31 10:54:32 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -99,6 +99,9 @@ to: Kalle on 7/3/01:
 (erball-ignore-errors-loudly (require 'doctor))
 (erball-ignore-errors-loudly (require 'erc))
 (erball-ignore-errors-loudly (require 'erc-stamp))
+
+
+
 (unless noninteractive (erball-ignore-errors-loudly (require 'dunnet)))
 (erball-ignore-errors-loudly (require 'erbot))
 (erball-ignore-errors-loudly (require 'erbcountry))

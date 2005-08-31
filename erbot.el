@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-08-16 00:00:02 forcer>
+;; Time-stamp: <2005-08-31 11:02:00 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -305,6 +305,26 @@ entries. ")
 Each of these is called with the arguments arguments: nick channel
 term entry-num old-entry new-entry")
 
+;;; 2005-08-31 T10:56:27-0400 (Wednesday)    D. Goel
+(defvar erbot-nickserv-p t
+  "When t, erbot will load the appropriate erc modules and will try to
+auto-identify to nickserv.  Note that the default value boing t is a
+new behavior for erbot.  
+  
+We also recommend these settings in .emacs: 
+     (setq erc-prompt-for-nickserv-password nil) 
+
+     (setq erc-nickserv-passwords
+          '((freenode     ((\"mybot\" . \"mypassword\")))))
+
+See this page for more details: 
+http://www.emacswiki.org/cgi-bin/wiki?ErcNickserv
+")
+
+(when erbot-nickserv-p
+  (require 'erc-nickserv)
+  (erc-nickserv-mode 1)
+  )
 
 
 
