@@ -1,3 +1,11 @@
+2005-08-31  D Goel  <deego@gnufans.org>
+
+	* erbot.el (erbot-nickserv-p): Add auto-identify code, also enable
+	by default, see doc for erbot-nickserv-p for how to make changes
+	to your bot's .emacs.  This is now required by freenode for
+	privmsgs to work.
+	
+
 2005-08-28  Michael Olson  <mwolson@gnu.org>
 
 	* contrib/wtf.el: Add to copyright notice.
