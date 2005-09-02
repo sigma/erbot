@@ -1,10 +1,26 @@
+2005-09-02  D Goel  <deego@gnufans.org>
+
+	* .*.el: Get rid of all string properties everywhere, especially
+	right at the source, for extra security. 
+
+	* erbc.el (fsi-read): minor: read-> read-from-string for more
+	safety 
+	(erbn-read): new
+	(fsi-read-from-string): new
+	(fsi-describe-variable): use erbn-read for safety
+	(fsi-require): ditto
+
+	* erbbdb.el (erbbdb-add): ditto
+	
 2005-08-31  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-nickserv-p): Add auto-identify code, also enable
 	by default, see doc for erbot-nickserv-p for how to make changes
 	to your bot's .emacs.  This is now required by freenode for
 	privmsgs to work.
-	
+	(erbot-nickserv-p): Unde default behavior change.  The default
+	behavior of erbot remains as xbefore: to *not*idontify by
+	default. 
 
 2005-08-28  Michael Olson  <mwolson@gnu.org>
 

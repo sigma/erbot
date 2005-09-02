@@ -1,5 +1,5 @@
 ;;; erblog.el --- 
-;; Time-stamp: <2005-08-11 20:33:23 deego>
+;; Time-stamp: <2005-08-31 17:14:50 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblog.el
@@ -62,7 +62,7 @@ out which channels have had activity...
 ;; operator bind to C-c s
 (defun erblog-show-targets ()
   (interactive)
-  (message (format "%s" erblog-active-targets)))
+  (message "%s" erblog-active-targets))
 
 ;; bind to C-c r
 (defun erblog-reset-targets ()

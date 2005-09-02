@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-08-31 11:35:11 deego>
+;; Time-stamp: <2005-09-02 15:08:03 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -455,25 +455,29 @@ the new erc-backend functions."
 		       (erc-response.sender parsed))
 		      (t (aref parsed 1))))
 	 (userinfo (erc-parse-user sspec))
-	 (nick (nth 0 userinfo))
+	 (nick (erbutils-remove-text-properties-maybe (nth 0 userinfo)))
 	 ;; bind fs-nick in a let.. so that changes to fs-nick are
 	 ;; independent and do not affect each other.. when it is
 	 ;; parsing too many messages once..
 	 (fs-nick nick)
-	 (erbn-nick nick)
+	 (erbn-nick fs-nick)
 	 (cmdargs (and erbot-on-new-erc-p
 		       (erc-response.command-args parsed)))
-	 (tgta (cond (cmdargs
-		      (nth 0 cmdargs))
-		     (t (aref parsed 2))))
+	 (tgta 
+	  (erbutils-remove-text-properties-maybe 
+	   (cond (cmdargs
+		  (nth 0 cmdargs))
+		 (t (aref parsed 2)))))
 	 (tgt (if (equalp tgta (or (erc-current-nick) erbot-nick))
 		  nick
 		tgta))
 	 (erbn-tgt tgt)
 	 (fs-tgt tgt)
-	 (msg (cond (cmdargs
-		     (nth 1 cmdargs))
-		    (t (aref parsed 3))))
+	 (msg 
+	  (erbutils-remove-text-properties-maybe 
+	   (cond (cmdargs
+		  (nth 1 cmdargs))
+		 (t (aref parsed 3)))))
 	 (erbot-end-user-nick nick)
 	 )
     ;; changing the structure here..
@@ -519,7 +523,7 @@ the new erc-backend functions."
       (while (re-search-forward "\n" nil t)
 	(replace-match
 	 (concat "\n" erbot-init-string) nil t))
-      (concat erbot-init-string (buffer-string))))))
+      (concat erbot-init-string (erbutils-buffer-string))))))
 
 (defvar erbot-init-string ""
   "The basic init string.. should be concated to ALL lines of

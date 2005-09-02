@@ -1,5 +1,5 @@
 ;;; erbtrain.el --- Train erbot (erbot).. 
-;; Time-stamp: <2005-08-11 20:35:09 deego>
+;; Time-stamp: <2005-09-02 14:18:06 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtrain.el
@@ -133,7 +133,7 @@ advantage of being much faster. "
   (let* ((strlisp1 (ignore-errors (fs-parse str)))
 	 (strlisp (ignore-errors 
 		   (if (stringp strlisp1)
-		       (read strlisp1) nil)))
+		       (erbn-read strlisp1) nil)))
 	 (result (ignore-errors (fs-eval strlisp))))
     (erbtrain-local-log str strlisp result)))
 
@@ -144,7 +144,7 @@ advantage of being much faster. "
     (insert "\n")
     (let ((msg (concat str "\n" "=> " (format "%S" expr) "\n" "==> " 
 		       (format "%S" result) "\n\n")))
-      (message (format "%s" msg))
+      (message "%s" msg)
       (insert msg))))
 
     

@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-08-11 20:27:57 deego>
+;; Time-stamp: <2005-09-02 14:52:55 deego>
 ;; Copyright (C) 2002,2003,2004,2005  D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -236,27 +236,27 @@ as many times as it returns a...
     (terpri)
     (if (erbcompat-local-variable-p variable)
         (progn
-    (princ (format "Local in buffer %s; " (buffer-name)))
-    ;; (if (not (default-boundp variable))
-    ;;        (princ "globally void")
-    ;;      (let ((val (default-value variable)))
-    ;;        (with-current-buffer standard-output
-    ;;          (princ "global value is ")
-    ;;  (terpri) Fixme: pp can take an age if you happen
-    ;;          ;; to ask for a very large
-    ;;          ;; expression.  We should
-    ;;          ;; probably print it raw once
-    ;;          ;; and check it's a sensible
-    ;;          ;; size before prettyprinting.
-    ;;          ;; -- fx
-    ;;          (let ((from (point)))
-    ;;      (pp val)
-    ;;      (help-xref-on-pp from (point))
-    ;;      (if (< (point) (+ from 20))
-    ;;          (save-excursion
-    ;;            (goto-char from)
-    ;;            (delete-char -1)))))))
-    (terpri)))
+	  (princ (format "Local in buffer %s; " (buffer-name)))
+	  ;; (if (not (default-boundp variable))
+	  ;;        (princ "globally void")
+	  ;;      (let ((val (default-value variable)))
+	  ;;        (with-current-buffer standard-output
+	  ;;          (princ "global value is ")
+	  ;;  (terpri) Fixme: pp can take an age if you happen
+	  ;;          ;; to ask for a very large
+	  ;;          ;; expression.  We should
+	  ;;          ;; probably print it raw once
+	  ;;          ;; and check it's a sensible
+	  ;;          ;; size before prettyprinting.
+	  ;;          ;; -- fx
+	  ;;          (let ((from (point)))
+	  ;;      (pp val)
+	  ;;      (help-xref-on-pp from (point))
+	  ;;      (if (< (point) (+ from 20))
+	  ;;          (save-excursion
+	  ;;            (goto-char from)
+	  ;;            (delete-char -1)))))))
+	  (terpri)))
     (terpri)
     ;; (with-current-buffer standard-output
     ;;      (if (> (count-lines (point-min) (point-max)) 10)
@@ -277,32 +277,32 @@ as many times as it returns a...
     ;; (princ "Documentation:")
     (terpri)
     (let ((doc 
-     (documentation-property variable 'variable-documentation)))
+	   (documentation-property variable 'variable-documentation)))
       (princ (or doc "not documented as a variable.")))
-          (help-setup-xref (list #'describe-variable variable (current-buffer))
-         (interactive-p))
+    (help-setup-xref (list #'describe-variable variable (current-buffer))
+		     (interactive-p))
     
     ;; Make a link to customize if this variable can be customized.
     ;; Note, it is not reliable to test only for a custom-type property
     ;; because those are only present after the var's definition
     ;; has been loaded.
     (if (or (get variable 'custom-type) ; after defcustom
-      (get variable 'custom-loads) ; from loaddefs.el
-      (get variable 'standard-value)) ; from cus-start.el
+	    (get variable 'custom-loads) ; from loaddefs.el
+	    (get variable 'standard-value)) ; from cus-start.el
         (let ((customize-label "customize"))
-    (terpri)
-    (terpri)
-    (princ (concat "You can " customize-label " this variable."))
-    (with-current-buffer "*Help*"
-      (save-excursion
-        (re-search-backward
-         (concat "\\(" customize-label "\\)") nil t)
-        (help-xref-button 1 (lambda (v)
-            (if help-xref-stack
-                (pop help-xref-stack))
-            (customize-variable v))
-              variable
-              "mouse-2, RET: customize variable")))))
+	  (terpri)
+	  (terpri)
+	  (princ (concat "You can " customize-label " this variable."))
+	  (with-current-buffer "*Help*"
+	    (save-excursion
+	      (re-search-backward
+	       (concat "\\(" customize-label "\\)") nil t)
+	      (help-xref-button 1 (lambda (v)
+				    (if help-xref-stack
+					(pop help-xref-stack))
+				    (customize-variable v))
+				variable
+				"mouse-2, RET: customize variable")))))
     ;; Make a hyperlink to the library if appropriate.  (Don't
     ;; change the format of the buffer's initial line in case
     ;; anything expects the current format.)
@@ -326,7 +326,9 @@ as many times as it returns a...
     (save-excursion
       (set-buffer standard-output)
       ;; Return the text we displayed.
-      (buffer-string)))))))
+      (buffer-substring-no-properties (point-min) (point-max))))))))
+
+
 
 
 (defvar erbutils-itemize-style
@@ -382,7 +384,7 @@ as many times as it returns a...
       (if (stringp (sexp-at-point))
     ;; this sets mark.. bad programming, i know..
     (backward-kill-sexp 1))
-      (buffer-string)))
+      (erbutils-buffer-string)))
     (erbutils-single-lines newdoc)))
 
 (defun erbutils-single-lines (str)
@@ -633,7 +635,7 @@ might prefer calling erbutils-defalias-i instead.
     (and 
      (stringp str)
      (not (string= str ""))
-     (setq expr (read (concat " ( " str " )"))))))
+     (setq expr (erbn-read (concat " ( " str " )"))))))
 
 
 (defun erbutils-functions-in-file (file)
@@ -644,7 +646,7 @@ lisp file, else error. "
     (and 
      (stringp str)
      (not (string= str ""))
-     (setq expr (read (concat " ( " str " )")))
+     (setq expr (erbn-read (concat " ( " str " )")))
      (ignore-errors (mapcar 'second expr)))))
 
 
@@ -687,5 +689,27 @@ Thanks to edrx on #emacs for suggesting 'symbol-name.."
     (intern str)))
 
 
+
+
+(defun erbutils-remove-text--properties (str)
+  (let (str2)
+    (cond
+     ((stringp str)
+      (setq str2 (copy-sequence str))
+      (set-text-properties 0 (length str2) nil str2)
+      str2)
+     (t (error "Not a string.")))))
+
+
+
+
+(defun erbutils-remove-text-properties-maybe (str)
+  (if (stringp str) 
+      (erbutils-remove-text-properties str)
+    str))
+
+
+(defun erbutils-buffer-string ()
+  (buffer-substring-no-properties (point-min) (point-max)))
 
 ;;; erbutils.el ends here

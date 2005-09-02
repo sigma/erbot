@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2005-08-11 20:33:12 deego>
+;; Time-stamp: <2005-09-02 14:18:07 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -52,7 +52,7 @@ something like
 This command sandboxes the message and then processes it.."
 
   (if (stringp msg)
-      (setq msg (read msg)))
+      (setq msg (erbn-read msg)))
   (format "%s" (eval (erblisp-sandbox-fuzzy msg))))
 
 (defun erblisp-sandbox-quoted-maybe (expr)

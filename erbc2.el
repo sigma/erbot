@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2005-08-11 20:30:03 deego>
+;; Time-stamp: <2005-09-02 14:34:33 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -308,7 +308,7 @@ bash-specific-quotes, like random, should work."
     ;;       (when (and aa bb)
     ;; 	(buffer-substring-no-properties aa bb)))
     (set-buffer "*bash*")
-    (setq bashstr (buffer-string))
+    (setq bashstr (erbutils-buffer-string))
     (with-temp-buffer 
       (insert bashstr)
       (goto-char (point-min))

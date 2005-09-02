@@ -1,5 +1,5 @@
 ;;; erball.el --- Functions on all files. 
-;; Time-stamp: <2005-08-31 10:54:32 deego>
+;; Time-stamp: <2005-08-31 17:25:50 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -44,9 +44,9 @@ A trailing backslash is required.")
 (defvar erball-compiling-p
   (if (erball-assoc-string "--compile-erbot" command-line-args-left)
       (progn
-        (message (concat "\nCompiling source in "
-                         (file-name-nondirectory (expand-file-name "."))
-                         " ...\n"))
+        (message "%s" (concat "\nCompiling source in "
+			      (file-name-nondirectory (expand-file-name "."))
+			      " ...\n"))
         (setq command-line-args-left
               (delete "--compile-erbot" command-line-args-left))
         t)

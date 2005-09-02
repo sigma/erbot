@@ -1,5 +1,5 @@
 ;;; erbbdb.el --- 
-;; Time-stamp: <2005-08-11 20:31:33 deego>
+;; Time-stamp: <2005-09-02 14:47:53 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbbdb.el
@@ -191,7 +191,7 @@ If no record exists, then a nil is returned.
     ;; should almost always be the case.. except when nil..
     (if (stringp oldnotes)
 	(setq oldnotes 
-	      (ignore-errors (read oldnotes))))
+	      (ignore-errors (erbn-read oldnotes))))
     (setq newnotes (format "%S" (append oldnotes (list note))))
     (erbbdb-remove-not-really name)
     (erbbdb-change name newnotes)))

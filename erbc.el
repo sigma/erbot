@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-08-11 20:29:52 deego>
+;; Time-stamp: <2005-09-02 14:48:11 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -271,6 +271,7 @@ If no such function, return the symbol 'unbound. "
   (when (and (null key) (null args))
     (setq key ""))
   (unless (stringp key)
+    ;; is this safe? what about properties?
     (setq key (read-kbd-macro
 	       (mapconcat '(lambda (arg) (format "%s" arg))
 			  (cons key args)
@@ -407,8 +408,8 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
   (let* ((f function)
 	 g
 	 )
-    (if (stringp f)
-	(setq f (read f)))
+    (when (stringp f)
+      (setq f (erbn-read f)))
     (cond
      ((symbolp f)
       (progn
@@ -416,7 +417,7 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
 	 g
 	 (cond
 	  ((fboundp f) f)
-	  (t (read (concat "fs-" (format "%s" f))))))
+	  (t (erbn-read (concat "fs-" (format "%s" f))))))
 	(unless (fboundp g)
 	  (setq g f))
 	(let* ((def (symbol-function g)))
@@ -431,8 +432,7 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
 	      (describe-function g)
 	    (describe-function g))
 
-	  )))
-     ;; if list, DO NOT wanna eval it-->
+	  )))     ;; if list, DO NOT wanna eval it-->
      (t
       "NO function specified"))))
 
@@ -448,7 +448,7 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
 	 (str3 "")
 	 )
     (cond
-     ((stringp function) (setq function (read function)))
+     ((stringp function) (setq function (erbn-read function)))
      (t nil))
     (cond
      ((null function)  (format "Sorry, %s is not a symbol" function))
@@ -457,7 +457,7 @@ nolimitp has to be eq 'nolimit for the nolimit effect to take place..
       (setq str2
 	    (with-temp-buffer
 	      (where-is function t)
-	      (buffer-string)))
+	      (erbutils-buffer-string)))
       (concat str0 str1 str2 str3))
      (t (format "Looks like %s is not a symbol" function)))))
 
@@ -476,7 +476,7 @@ Use with caution only in privmsgs please, for may produce long outputs. "
   (unless variable (error "Syntax: , dv 'variable"))
   (let* ((f variable))
     (if (stringp f)
-	(setq f (read f)))
+	(setq f (erbn-read f)))
     (cond
      ((symbolp f)
       (erbutils-describe-variable f))
@@ -494,7 +494,7 @@ So that the command df
 or dv works fine..Actually, df knows how to load unloaded features
 automatically."
   (if (stringp feature)
-      (setq feature (read feature)))
+      (setq feature (fsi-read feature)))
   (when (or (string-match "/" (format "%s" feature))
 	    (string-match "\\\\" (format "%s" feature)))
     (error "Your safety is VERY important to us, so we avoid loading features containing slashes."))
@@ -916,7 +916,7 @@ local, because the parent function calling this function should have
 	       (newmsglist nil)
 	       (msgstr (erbutils-stringify msg))
 					;(newstrmsg nil)
-	       (lispmsg (read msgstr)
+	       (lispmsg (erbn-read msgstr)
 		))
 
 
@@ -978,7 +978,7 @@ local, because the parent function calling this function should have
 	      ;;(mapcar 'intern (cdr msg))))
 	      ;;(read (cons (intern (first msg))
 	      ;;	  (read (list (erbutils-stringify (cdr msg))))))
-	      (read (concat "( "(erbutils-stringify msg) " )"))))
+	      (fsi-read (concat "( "(erbutils-stringify msg) " )"))))
 
 	    ((equal 0
 		    (string-match "\\(s\\|r\\)/" (first msg)))
@@ -1159,7 +1159,7 @@ Else, of course, do the usual thing: viz. call describe...
 		  (progn
 		    (unless (stringp tmpv) (setq tmpv (format "%s"
 							      tmpv)))
-		    (not (integerp (ignore-errors (read tmpv))))))))
+		    (not (integerp (ignore-errors (erbn-read tmpv))))))))
 	;;(setq searchp t)
 	(setq mainterm
 	      (concat mainterm ".*" tmpv))
@@ -1304,7 +1304,7 @@ anything useful. ")))
 
 (defun fsi-eval-or-say (str &optional fs-victim)
   (let ((aa (when (stringp str)
-	      (ignore-errors (read str)))))
+	      (ignore-errors (erbn-read str)))))
     (cond
      ((consp aa)
       (unless fs-victim (setq fs-victim fs-nick))
@@ -1471,7 +1471,7 @@ Optional argument ARGS ."
 	  (replace-string prefix "")
 	  (text-mode)
 	  (fill-paragraph 1)
-	  (read (buffer-substring (point-min) (point-max))))))
+	  (erbn-read (buffer-substring (point-min) (point-max))))))
     shortnames))
 
 (defun fsi-commands (&optional regexp N M &rest foo)
@@ -1959,11 +1959,11 @@ it was addressed at last. "
  	  )
 
      (if (stringp N)
- 	(setq N (read N)))
+ 	(setq N (erbn-read N)))
      (unless (integerp N)
        (setq N 0))
      (if (stringp M)
- 	(setq M (read M)))
+ 	(setq M (erbn-read M)))
      (if (and (integerp M) (= M N))
  	(setq M (+ N 1)))
      (setq records
@@ -2075,11 +2075,11 @@ number N, and ending at M-1. The first record is numbered 0.
 	   )
       (setq foo (fs-correct-entry foo))
       (if (stringp N)
-	  (setq N (read N)))
+	  (setq N (erbn-read N)))
       (unless (integerp N)
 	(setq N 0))
       (if (stringp M)
-	  (setq M (read M)))
+	  (setq M (erbn-read M)))
       (if (and (integerp M) (= M N))
 	  (setq M (+ N 1)))
       (unless (stringp foo)
@@ -2089,7 +2089,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	       foo
 	       ))
 	     (result1 (and (stringp result0)
-			   (ignore-errors (read result0))))
+			   (ignore-errors (erbn-read result0))))
 	     (len (length result1))
 	     (newM (if (and (integerp M)
 			    (< M len))
@@ -2332,15 +2332,15 @@ Move the FROMth entry to the TOth position in the given TERM.
 Numbering of positions starts from 0. "
   (unless term (error "Syntax: , N->M in TERM (no term found)"))
   (when (stringp from)
-    (setq from (read from)))
+    (setq from (erbn-read from)))
   (when (stringp to)
-    (setq to (read to)))
+    (setq to (erbn-read to)))
   (unless (stringp term)
     (setq term (format "%s" term)))
   (let*
       ((exactnotes (erbbdb-get-exact-notes term))
        (realterm (erbbdb-get-exact-name term))
-       (notes (and (stringp exactnotes ) (read exactnotes)))
+       (notes (and (stringp exactnotes ) (erbn-read exactnotes)))
        (len (length notes))
        (max (- len 1))
        (newnotes notes)
@@ -2400,7 +2400,7 @@ With NUMBER, forget only the NUMBERth entry of NAME. "
       (numstring
        (entries0 (erbbdb-get-exact-notes name))
        (entries (and (stringp entries0 )
-		     (ignore-errors (read entries0))))
+		     (ignore-errors (erbn-read entries0))))
        (len (length entries)))
 
     (unless entries
@@ -2409,7 +2409,7 @@ With NUMBER, forget only the NUMBERth entry of NAME. "
       (setq number 0))
     (setq numstring (downcase (format "%s" number)))
     (when (stringp number)
-      (setq number (read number)))
+      (setq number (erbn-read number)))
     (unless (integerp number) (setq number nil))
     (unless
 	(or number
@@ -2588,7 +2588,7 @@ Syntax: , no foo is bar."
   (progn
     (let* ((fir (first args))
 	   (aa (erbbdb-get-exact-notes fir))
-	   (notes (and (stringp aa) (read aa)))
+	   (notes (and (stringp aa) (erbn-read aa)))
 	   (len (length notes)))
       (when (= len 0)
 	(error "There's no such term %s.  Use , %s is ..." fir fir))
@@ -2955,7 +2955,7 @@ Thus, keep it below, say 350."
       (goto-char (point-min))
       (let ((fill-column fs-internal-fill-column))
 	(fill-paragraph nil))
-      (buffer-string)))
+      (erbutils-buffer-string)))
    (t "\n")))
 (defun fsi-dunnet-mode (&optional arg)
 
@@ -3251,7 +3251,7 @@ here."
   "Show the apropos-matches  of regexp starting at match number N"
   (unless regexp
     (error "Syntax: , apropos REGEXP &optional N M"))
-  (if (stringp N) (setq N (read N)))
+  (if (stringp N) (setq N (erbn-read N)))
   (unless (integerp N) (setq N 0))
   (unless (stringp regexp)
     (setq regexp (format "%s" regexp)))
@@ -3282,7 +3282,7 @@ here."
 
 (defun fsi-find-variable-internal (function &optional nolimitp &rest ignore)
   "Finds the variable named FUNCTION."
-  (if (stringp function) (setq function (read function)))
+  (if (stringp function) (setq function (erbn-read function)))
   (cond
    ((symbolp function)
     (unless (boundp function)
@@ -3330,7 +3330,7 @@ here."
   (unless function
     (error
      "Syntax: (ff 'fucntion)"))
-  (if (stringp function) (setq function (read function)))
+  (if (stringp function) (setq function (erbn-read function)))
   (cond
    ((symbolp function)
     (unless (fboundp function)
@@ -3435,7 +3435,7 @@ number N, and ending at M-1. The first record is numbered 0.
 	   mainterm
 	   ))
 	 (result1 (and (stringp result0)
-		       (ignore-errors (read result0))))
+		       (ignore-errors (erbn-read result0))))
 	 (len (length result1)))
       (cond
        ;; in cond0
@@ -3556,7 +3556,7 @@ number N, and ending at M-1. The first record is numbered 0.
       (setq num
 	    (if (numberp fir)
 		fir
-	      (ignore-errors (read fir)))))
+	      (ignore-errors (erbn-read fir)))))
     (if (numberp num)
 	(setq args (cdr args))
       (setq num 1))
@@ -3646,7 +3646,7 @@ author know.."
 
 (defun fsi-cp (name dest)
   (let* ((exn (erbbdb-get-exact-notes name))
-	 (notes (and (stringp exn) (read exn))))
+	 (notes (and (stringp exn) (erbn-read exn))))
     (unless notes
       (error "No such term %s" name))
     (when (erbbdb-get-exact-notes dest)
@@ -3658,7 +3658,7 @@ author know.."
 (defun fsi-notes (name)
   "Internal. Return the notes as a list. "
   (let ((exnotes (erbbdb-get-exact-notes name)))
-    (and (stringp exnotes) (read exnotes))))
+    (and (stringp exnotes) (erbn-read exnotes))))
 
 
 
@@ -3826,7 +3826,7 @@ MSG here is a list which needs to be combined.  "
       (setq sr
 	    (if (equal 0 (string-match "s" (first remmsg))) "s" "r"))
       (setq las (first (last remmsg)))
-      (setq number (and (stringp las) (read las)))
+      (setq number (and (stringp las) (erbn-read las)))
       (if (or (numberp number)
 	      (equal 0 (string-match
 			"all"
@@ -3842,7 +3842,7 @@ MSG here is a list which needs to be combined.  "
 
       (when termcheckp
 	(let* ((exn (erbbdb-get-exact-notes term))
-	       (notes (and (stringp exn) (read exn)))
+	       (notes (and (stringp exn) (erbn-read exn)))
 	       (len (length notes)))
 	  (if (> len 1)
 	      (throw 'erbnocmd-repl-error
@@ -3955,14 +3955,14 @@ initargs.  Then the function is applied as (function @initargs string
   (setq number (format "%s" number))
   (let*
       ((exactnotes (erbbdb-get-exact-notes term))
-       (notes (and (stringp exactnotes) (read exactnotes)))
+       (notes (and (stringp exactnotes) (erbn-read exactnotes)))
        (len (length notes))
        newnotes
        newnote
        (lenargs (length arglist))
        (initargs (subseq arglist 0 (- lenargs 1)))
        (finargs (first (last arglist)))
-       (numnum (read number))
+       (numnum (erbn-read number))
        )
     (when (and (null number) (= len 1)) (setq number 0))
     (unless exactnotes (error "No such term: %S" term))
@@ -4106,9 +4106,9 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-channel-members (&optional n m &rest args)
   (when (stringp n)
-    (setq n (ignore-errors (read n))))
+    (setq n (ignore-errors (erbn-read n))))
   (when (stringp m)
-    (setq m (ignore-errors (read m))))
+    (setq m (ignore-errors (erbn-read m))))
   (unless (integerp n) (setq n 0))
   (unless (integerp m) (setq m nil))
   (subseq (fs-channel-members-all) n m))
@@ -4830,7 +4830,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 ;; (buffer-string)).. and cause a huge uservariables file..
 
 (defun fsi-buffer-string (&rest args)
-  (buffer-string-no-properties (point-min) (point-max)))
+  (buffer-substring-no-properties (point-min) (point-max)))
 
 (defalias 'fsi-buffer-substring 'buffer-substring-no-properties)
 
@@ -5039,18 +5039,29 @@ query to another user. "
 Note: Used by fs-describe"
   (cond
    ((stringp arg)
-    (condition-case fs-tmp (read arg)
+    (condition-case fs-tmp (erbn-read arg)
       (error arg)))
    (t arg)))
 
 
-(defun fsi-read (str)
+(defun erbn-read-from-string (str)
+  (let (str2)
   (cond
    ((stringp str)
-    (read str))
-   (t (error "The bot will only read from strings. "))))
+    (setq str2 (copy-sequence str))
+    (set-text-properties 0 (length str2) nil str2)
+    (read-from-string str))
+   (t (error "The bot will only read from strings. ")))))
 
 
+
+(defun erbn-read (str)
+  "Like read, but only from strings"
+  (car (erbn-read-from-string str)))
+
+
+(defalias 'fsi-read 'erbn-read)
+(defalias 'fsi-read-from-string 'erbn-read-from-string)
 
 
 (erbutils-defalias-i

@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.23 2005/03/29 20:06:51 hroptatyr Exp $
+;; $Id: erbmsg.el,v 1.24 2005/09/02 19:24:59 deego Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,7 +14,7 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.23 $")
+  "Version 0.2 $Revision: 1.24 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
@@ -542,8 +542,8 @@ if so return 'noreply, if not return an according answer."
           (and (file-readable-p file)
                (with-temp-buffer
                  (insert-file-contents file)
-                 (eval (read (format "(setq file-vector '(%s))"
-                                     (buffer-string))))))))
+                 (eval (erbn-read (format "(setq file-vector '(%s))"
+                                     (erbutils-buffer-string))))))))
     (mapvector
      (lambda (tablevector)
        (let ((table (aref tablevector 0))

@@ -158,7 +158,7 @@ wish elisp supported lexical closures!)"
              cbargs))
     (erbot-working
      (dolist (entry entries)
-       (message (format "Adding entry for %s" (first entry)))
+       (message "Adding entry for %s" (first entry))
        (sleep-for 0.1)
        ;; I need to find a way to speed this up.  As the bbdb gets
        ;; larger things really start to slow down significantly.

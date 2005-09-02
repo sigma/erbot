@@ -1,5 +1,5 @@
 ;;; erbeng.el --- 
-;; Time-stamp: <2005-08-11 20:32:33 deego>
+;; Time-stamp: <2005-09-02 14:18:08 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbeng.el
@@ -177,7 +177,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 
 (defun erbeng-lisp-object-p (msg) 
-  (setq msg (ignore-errors (read msg)))
+  (setq msg (ignore-errors (erbn-read msg)))
   (and (listp msg)
        (let ((fir (format "%s" (first msg))))
    (or
@@ -247,7 +247,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 (defun erbeng-get-reply (msg &optional proc nick tgt &rest foo)
   "  ;; now assumes that the msg is (a string) in lisp format... and this just
   ;; evals it.."
-  (eval (read msg)))
+  (eval (erbn-read msg)))
 ;  (let* (
 ;  (lispmsg 
 ;   (erbeng-read (erbutils-stringify msg))))
@@ -260,7 +260,7 @@ nil nil\ nil nil nil nil nil nil nil nil]
 
 
 (defun erbeng-read (msg)
-  (ignore-errors (read msg)))
+  (ignore-errors (erbn-read msg)))
 
 
 
