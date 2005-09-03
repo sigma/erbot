@@ -616,6 +616,7 @@
     ("GAFC" . "get a fucking clue")
     ("IDS" . "intrusion detection system")
     ("NIFOC" . "naked in front of computer")
+    ("NSFW" . "not safe for work")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
     ("TWAT" . "the war against terrorism")
