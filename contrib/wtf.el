@@ -2,6 +2,8 @@
 
 ;; Copyright (C) 2005  Michael Olson
 
+;; Version: 1.1
+
 ;; This file is not part of GNU Emacs.
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -23,6 +25,13 @@
 
 ;; Thanks to Trent Buck for `emacs-wiki-wtf.el', which inspired the
 ;; creation of `wtf.el'.
+
+;; Use:
+;;
+;; To use this, go to an unknown term in a buffer and type M-x wtf.
+;; This can also be used programmatically.
+
+;; Legalese:
 ;;
 ;; The terms were downloaded from
 ;; http://cvsweb.netbsd.org/bsdweb.cgi/src/share/misc/.  No copyright
@@ -37,7 +46,7 @@
 ;; public domain.
 
 (defvar wtf-alist
-  '(;; $NetBSD: acronyms,v 1.146 2005/03/10 05:45:25 soda Exp $
+  '(;; $NetBSD: acronyms,v 1.148 2005/09/20 13:22:04 jschauma Exp $
     ("AFAIC" . "as far as I'm concerned")
     ("AFAICR" . "as far as I can recall")
     ("AFAICT" . "as far as I can tell")
@@ -105,6 +114,7 @@
     ("FIIR" . "fuck[ed] if I remember")
     ("FM" . "fucking magic")
     ("FOAD" . "fall over and die")
+    ("FOS" . "full of shit")
     ("FSDO" . "for some definition of")
     ("FSVO" . "for some value of")
     ("FTFM" . "fuck the fuckin' manual!")
@@ -185,6 +195,7 @@
     ("NP" . "no problem")
     ("NRFPT" . "not ready for prime time")
     ("NRN" . "no reply necessary")
+    ("NSFW" . "not suitable for work")
     ("OIC" . "oh, I see")
     ("OMG" . "oh, my god")
     ("OT" . "off topic")
@@ -616,12 +627,10 @@
     ("GAFC" . "get a fucking clue")
     ("IDS" . "intrusion detection system")
     ("NIFOC" . "naked in front of computer")
-    ("NSFW" . "not safe for work")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
     ("TWAT" . "the war against terrorism")
-    ("WTB" . "where's the beef")
-    )
+    ("WTB" . "where's the beef"))
   "Mapping of acronyms to expansions.")
 
 (defun wtf-match-string-no-properties (num &optional string)
