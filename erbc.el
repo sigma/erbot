@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-09-02 14:48:11 deego>
+;; Time-stamp: <2005-09-28 17:04:17 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -2204,7 +2204,7 @@ number N, and ending at M-1. The first record is numbered 0.
 		 (erbutils-random
 		  '(
 		    ;;"%s is perhaps "
-		    "%s is like, "
+		    "%s is, like, "
 		    "I heard %s is "
 		    "I think %s is "
 		    ;;"/me thinks %s is "
