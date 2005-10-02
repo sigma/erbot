@@ -1,5 +1,5 @@
 ;;; erbwiki.el --- SECURITY RISK, READ BELOW.
-;; Time-stamp: <2005-09-02 14:18:11 deego>
+;; Time-stamp: <2005-10-02 16:07:15 deego>
 ;; Copyright (C) 2002, 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbwiki.el
@@ -483,11 +483,11 @@ connected."
      (ignore-errors
        (find-file lastfile)
        (goto-char (point-min))
-       (setq oldfields (ignore-errors (erbn-read (get-file-buffer lastfile)))))
+       (setq oldfields (ignore-errors (read (get-file-buffer lastfile)))))
      (find-file newfile)
      (goto-char (point-min))
      (setq currentfields (ignore-errors
-			   (erbn-read (get-file-buffer newfile))))
+			   (read (get-file-buffer newfile))))
      (setq newfields 
 	   (set-difference currentfields oldfields
 			   :test 'equal
