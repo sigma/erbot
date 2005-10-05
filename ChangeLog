@@ -1,17 +1,23 @@
+2005-10-05  Michael Olson  <mwolson@gnu.org>
+
+	* erbot.el (erbot-join-servers): Call `erc-computer-port' instead
+	of using the value of `erc-port', since by default erc-port is
+	nil.
+
 2005-09-02  D Goel  <deego@gnufans.org>
 
 	* .*.el: Get rid of all string properties everywhere, especially
-	right at the source, for extra security. 
+	right at the source, for extra security.
 
 	* erbc.el (fsi-read): minor: read-> read-from-string for more
-	safety 
+	safety
 	(erbn-read): new
 	(fsi-read-from-string): new
 	(fsi-describe-variable): use erbn-read for safety
 	(fsi-require): ditto
 
 	* erbbdb.el (erbbdb-add): ditto
-	
+
 2005-08-31  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-nickserv-p): Add auto-identify code, also enable

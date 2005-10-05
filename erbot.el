@@ -806,7 +806,7 @@ not, try to reconnect. "
       ;; 2002-08-21 T11:22:35-0400 (Wednesday)    D. Goel
       (setq erc-current-server-my server)
 
-      (if (null port) (setq port erc-port))
+      (if (null port) (setq port (erc-compute-port)))
       (setq nick (or erbot-nick (erc-compute-nick nick)))
       (let* (
 	     (foo 'bar)
