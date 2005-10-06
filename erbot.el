@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-09-02 15:08:03 deego>
+;; Time-stamp: <2005-10-05 20:30:09 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -805,8 +805,11 @@ not, try to reconnect. "
       ;;	  (setq server erc-server))
       ;; 2002-08-21 T11:22:35-0400 (Wednesday)    D. Goel
       (setq erc-current-server-my server)
-
-      (if (null port) (setq port (erc-compute-port)))
+      (if (null port) 
+	  (setq port 
+		(if (boundp 'erc-compute-port)
+		    erc-compute-port
+		  erc-port)))
       (setq nick (or erbot-nick (erc-compute-nick nick)))
       (let* (
 	     (foo 'bar)

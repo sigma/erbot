@@ -1,3 +1,10 @@
+2005-10-05  D Goel  <deego@gnufans.org>
+
+	* erbot.el (erbot-join-servers): `erc-computer-port' seems to be
+	undefined for my older ERC (4.0 $Revision: 1.25 $).  So, I
+	reverted to old behavior when it is undefined.  Did I do it right? 
+
+	
 2005-10-05  Michael Olson  <mwolson@gnu.org>
 
 	* erbot.el (erbot-join-servers): Call `erc-computer-port' instead
