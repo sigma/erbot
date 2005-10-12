@@ -807,8 +807,8 @@ not, try to reconnect. "
       (setq erc-current-server-my server)
       (if (null port) 
 	  (setq port 
-		(if (boundp 'erc-compute-port)
-		    erc-compute-port
+		(if (fboundp 'erc-compute-port)
+		    (erc-compute-port)
 		  erc-port)))
       (setq nick (or erbot-nick (erc-compute-nick nick)))
       (let* (
