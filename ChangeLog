@@ -1,3 +1,17 @@
+2005-11-08  Michael Olson  <mwolson@gnu.org>
+
+	* erblisp.el (erblisp-max-list-length): New option that determines
+	how long a sand-boxed list or expression may be.
+	(erblisp-safe-length): New function that checks the given list to
+	make sure it isn't too long.  It's able to handle nested lists as
+	well.
+	(erblisp-check-args): New function that calls erblisp-safe-length
+	with the correct args.
+	(erblisp-sandbox): Use erblisp-check-args.
+
+	* erbc3.el (fsi-defun): Add erblisp-check-args invocation to each
+	newly-created user function.
+
 2005-10-12  Michael Olson  <mwolson@gnu.org>
 
 	* erbot.el (erbot-join-servers): Use fboundp check;
@@ -6,7 +20,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.26 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.27 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>

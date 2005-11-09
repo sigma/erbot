@@ -92,28 +92,53 @@ We WON'T do this by default since this could lead to exploits if you
 \(setq &rest (shell-command \"rm -rf /\")) in your .emacs."
 )
 
+(defvar erblisp-max-list-length 100)
+
+(defun erblisp-safe-length (list so-far len)
+  (let ((cur list)
+	stack)
+    (while (and cur
+		(<= so-far len))
+      (if (consp (car cur))
+	  (progn (setq cur (car cur))
+		 (when (consp (cdr cur))
+		   (push (cdr cur) stack)))
+	(setq cur (cdr cur)))
+      (unless cur
+	(setq cur (pop stack)))
+      (setq so-far (1+ so-far)))
+    (if (<= so-far len)
+	t
+      nil)))
+
+(defun erblisp-check-args (&rest args)
+  (if (erblisp-safe-length args 0 erblisp-max-list-length)
+      t
+    (error "encountered overlong expression, ignoring")
+    nil))
+
 (defun erblisp-sandbox (expr)
   ""
-  (cond 
+  (cond
    ;; first condition
    ((null expr) nil)
    ;; second condition
-   ((listp expr) 
-    (let ((fir (first expr)))
-      (cond
-       ((listp fir)
-	(cons (erblisp-sandbox fir)
-	      (mapcar 'erblisp-sandbox (cdr expr))))
-       ((equal (format "%S" fir) "quote")
-	;; if quoted, it is fine...
-	expr)
-       (t (cons 
-	   (if (or (equal 0 (string-match "fs-" (format "%S" fir)))
-		   (member fir erblisp-allowed-words))
-	       fir
-	     (intern (concat "fs-" (format "%S" fir))))
-	   (mapcar 'erblisp-sandbox (cdr expr)))))))
-   
+   ((listp expr)
+    (when (erblisp-check-args expr)
+      (let ((fir (first expr)))
+	(cond
+	 ((listp fir)
+	  (cons (erblisp-sandbox fir)
+		(mapcar 'erblisp-sandbox (cdr expr))))
+	 ((equal (format "%S" fir) "quote")
+	  ;; if quoted, it is fine...
+	  expr)
+	 (t (cons 
+	     (if (or (equal 0 (string-match "fs-" (format "%S" fir)))
+		     (member fir erblisp-allowed-words))
+		 fir
+	       (intern (concat "fs-" (format "%S" fir))))
+	     (mapcar 'erblisp-sandbox (cdr expr)))))))
 
    ;; final condition.. --> when the expr is an atom..  It should be a
    ;; a constant..  or an allowed atom.. allowed == prefixed with fs-
@@ -137,7 +162,6 @@ We WON'T do this by default since this could lead to exploits if you
 	       "What are you trying to feed me? Byte-compiled code? Vectors?"  ))
        (t expr)))
    ))
-	 
 
 (defun erblisp-sandbox-fuzzy (expr)
   "Sandboxes a message.. Ensures that the functions are all fs-

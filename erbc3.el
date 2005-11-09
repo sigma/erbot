@@ -191,15 +191,19 @@ With prefix ARG, insert version string into current buffer at point."
 			    (cons 
 			     (first body)
 			     (cons
-			      '(sit-for 0)
-			      (cdr body))))))
+			      `(erblisp-check-args ,@args)
+			      (cons
+			       '(sit-for 0)
+			       (cdr body)))))))
 
 	  (cons 'defun 
 		(cons fcn 
 		      (cons args 
-			    (cons 
-			     '(sit-for 0)
-			     body)))))
+			    (cons
+			     `(erblisp-check-args ,@args)
+			     (cons 
+			      '(sit-for 0)
+			      body))))))
       
       fcn))
     (fsi-pf-load)
