@@ -138,7 +138,7 @@ We WON'T do this by default since this could lead to exploits if you
 		     (member fir erblisp-allowed-words))
 		 fir
 	       (intern (concat "fs-" (format "%S" fir))))
-	     (mapcar 'erblisp-sandbox (cdr expr)))))))
+	     (mapcar 'erblisp-sandbox (cdr expr))))))))
 
    ;; final condition.. --> when the expr is an atom..  It should be a
    ;; a constant..  or an allowed atom.. allowed == prefixed with fs-
