@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-11-10 00:54:37 deego>
+;; Time-stamp: <2005-11-10 00:58:56 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -844,7 +844,7 @@ If this functions deems a reply as unsafe, you should not send it to
 ERC.  If an unsafe reply has no newlines, it may be rendered safe by
 appending a space in front of the reply."
   (and
-   (not (string-match "\n\r" reply))
+   (not (string-match "[\n\r]" reply))
    (or
     (string-match "^[0-9a-zA-Z]" reply)
     ;;(not (string-match "^/" reply)) -- this is bad.. since, control

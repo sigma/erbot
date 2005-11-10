@@ -4,6 +4,7 @@
 	this function live up to its name: make it deem any newlines
 	unsafe.  Because of the way the engine works, this change has no
 	effect on erbot at this time.
+	(erbot-safep): minor correction to last change.
 
 2005-11-09  Michael Olson  <mwolson@gnu.org>
 
@@ -34,7 +35,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.29 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.30 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
