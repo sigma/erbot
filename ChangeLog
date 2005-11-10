@@ -1,3 +1,10 @@
+2005-11-10  D Goel  <deego@gnufans.org>
+
+	* erbot.el (erbot-safep): Make a minor change, to try to render
+	this function live up to its name: make it deem any newlines
+	unsafe.  Because of the way the engine works, this change has no
+	effect on erbot at this time.
+
 2005-11-09  Michael Olson  <mwolson@gnu.org>
 
 	* erbot.el (erbot-reply): Make erbot-safep check each line of the
@@ -27,7 +34,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.28 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.29 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
