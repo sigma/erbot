@@ -592,9 +592,6 @@ or \"noreply\"
     ;;					    ": try \"cmds\""))
     ;;				(concat "no access to command \"" cmd
     ;;					"\" for " from ".")))))
-    (when (and reply
-	       (not (erbot-safep reply)))
-      (setq reply (concat " " reply)))
     (erc-log reply)
 
 
@@ -617,11 +614,14 @@ or \"noreply\"
 	  )
 	       
 	(let* ((inhibit-read-only t)
-	       (lines (split-string reply "\n"))
+	       (lines (split-string reply "[\n\r]+"))
 	       (multiline-p (< 1 (length lines)))
 	       p)
 	  (mapc
 	   (lambda (line)
+	     (when (and line
+			(not (erbot-safep line)))
+	       (setq line (concat " " line)))
 	     (goto-char (point-max))
 	     (setq p (re-search-backward (erc-prompt)))
 	     ;;(insert (erc-format-timestamp) "<" me "> ")

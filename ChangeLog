@@ -1,3 +1,10 @@
+2005-11-09  Michael Olson  <mwolson@gnu.org>
+
+	* erbot.el (erbot-reply): Make erbot-safep check each line of the
+	split reply.  Split the string on both \n and \r.  Together, this
+	fixes an exploit in user-defined functions, which involved
+	returning a string like "^Mquit".
+
 2005-11-08  Michael Olson  <mwolson@gnu.org>
 
 	* erblisp.el (erblisp-max-list-length): New option that determines
@@ -20,7 +27,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.27 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.28 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
