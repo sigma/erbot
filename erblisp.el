@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2005-09-02 14:18:07 deego>
+;; Time-stamp: <2005-11-11 13:28:55 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -92,9 +92,11 @@ We WON'T do this by default since this could lead to exploits if you
 \(setq &rest (shell-command \"rm -rf /\")) in your .emacs."
 )
 
-(defvar erblisp-max-list-length 100)
+(defvar erblisp-max-list-length 2000
+  "If non-numeric, we will skip this check."
+  )
 
-(defun erblisp-safe-length (list so-far len)
+(defun erblisp-safe-length-args-p (list so-far len)
   (let ((cur list)
 	stack)
     (while (and cur
@@ -112,7 +114,9 @@ We WON'T do this by default since this could lead to exploits if you
       nil)))
 
 (defun erblisp-check-args (&rest args)
-  (if (erblisp-safe-length args 0 erblisp-max-list-length)
+  (if (or 
+       (not (numberp erblisp-max-list-length))
+       (erblisp-safe-length-args-p args 0 erblisp-max-list-length))
       t
     (error "encountered overlong expression, ignoring")
     nil))
