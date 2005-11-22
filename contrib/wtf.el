@@ -630,6 +630,7 @@
     ("GAFC" . "get a fucking clue")
     ("GNU" . "GNU's Not UNIX")
     ("IDS" . "intrusion detection system")
+    ("IYSWIM" . "if you see what i mean")
     ("NIFOC" . "naked in front of computer")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
