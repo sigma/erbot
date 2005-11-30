@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-09-28 17:04:17 deego>
+;; Time-stamp: <2005-11-30 12:35:17 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4642,7 +4642,7 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (defalias 'fs-gw 'fs-google-wikipedia)
 (defalias 'fs-gwe 'fs-google-wikipedia-english)
 (defalias 'fs-gh 'fs-google-hurdwiki)
-(defalias 'fs-gm 'fs-google-meatball)
+;;(defalias 'fs-gm 'fs-google-meatball)
 (defalias 'fs-gnufans 'fs-google-gnufans-net)
 (defalias 'fs-gg 'fs-google-gnufans-net)
 (defalias 'fs-ggn 'fs-google-gnufans-net)
