@@ -1,5 +1,5 @@
 ;;; erbc3.el ---erbot lisp stuff which should be PERSISTENT ACROSS SESSIONS.
-;; Time-stamp: <2005-08-11 20:30:32 deego>
+;; Time-stamp: <2005-12-08 13:02:18 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc3.el
@@ -156,7 +156,7 @@ With prefix ARG, insert version string into current buffer at point."
    
 (defun erbn-readonly-check (sym)
   (if (get sym 'readonly)
-      (error "The symbol %S can't be redefined! It is read-only!"
+      (error "The symbol %S can't be redefined or set! It is read-only!"
 	     sym)))
 
 

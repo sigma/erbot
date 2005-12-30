@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-11-30 12:35:17 deego>
+;; Time-stamp: <2005-12-30 13:10:00 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -536,7 +536,7 @@ reply please be abbreviated. ")
   "Change it to t to enable the erbot to look up the title of urls
 posted in a channel.  When string, will be matched against target.")
 
-(defcustom fs-m8b-p nil
+(defcustom fsi-m8b-p nil
   "Change it to t for the magic 8-ball... define m8b then of
 course...
 When string, will be matched against target. "
@@ -646,9 +646,9 @@ local, because the parent function calling this function should have
     ;; requested by elf:
     ;; if double ??, then make it a call to m8b
     (when (and
-	   fs-m8b-p
-	   (if (stringp fs-m8b-p)
-	       (and (stringp tgt) (string-match fs-m8b-p tgt))
+	   fsi-m8b-p
+	   (if (stringp fsi-m8b-p)
+	       (and (stringp tgt) (string-match fsi-m8b-p tgt))
 	     t))
       (let (len)
 	(when (and (stringp msg)
