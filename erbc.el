@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-12-30 13:10:00 deego>
+;; Time-stamp: <2005-12-30 14:14:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3054,6 +3054,8 @@ here."
 	 new-point
 	 )
     (with-temp-buffer
+      ;; fledermaus: ensure that the buffer's byteness  matches the str's.
+      (set-buffer-multibyte (multibyte-string-p str))
       (insert str)
       (setq ptmx (point-max))
       (setq this-point ptmx new-point ptmx)
