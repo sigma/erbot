@@ -1,3 +1,6 @@
+;; 2005-12-31 T04:34:34-0500 (Saturday)    D. Goel	
+Vivek Dasmohapatra fixes/fixing coding issues.
+
 ;; 2005-08-11 T19:49:47-0400 (Thursday)    D. Goel	
 
 Michael Olson creates a Makefile, thus, for the first time, making the
@@ -32,4 +35,17 @@ Summary in reverse order, IIRC:
 erbot-lispy 
 
 erc-robot (David Edmunston)-> erbot, 
+
+====================================================
+
+The idea for rr (russian roulette) came from e1f. 
+
+The idea for answering questions not addressed to fsbot, like "foo?"
+came from resolve.
+
+The idea for invoking the bot in the middle of sentences came from
+resolve. 
+
+
+
 

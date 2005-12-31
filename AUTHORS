@@ -3,7 +3,7 @@ Maintainers:
  D. Goel <deego@gnufans.org> 
  Michael Olson <mwolson@gnu.org>
  Sebastian Freundt <freundt@math.TU-Berlin.DE>
-
+ Vivek Dasmohapatra  <vivek@etla.org>
 
 Authors and Contributors: 
 
@@ -22,6 +22,7 @@ Alphabetically:
 Enrico Bandiera 
 Dheeraj Buduru  (dbuduru)
 Grant Bowman (grantbow)
+Vivek Dasmohapatra  <vivek@etla.org>
 J. Michael Dupont (mdupont)
 Damien Elmes (resolve)
 Luis Fernandes  (e1f)
@@ -36,13 +37,3 @@ Brian Templeton (bpt)
 anyone else know, or please feel free to add them in. )
 
 ====================================================
-
-The idea for rr (russian roulette) came from e1f. 
-
-The idea for answering questions not addressed to fsbot, like "foo?"
-came from resolve.
-
-The idea for invoking the bot in the middle of sentences came from
-resolve. 
-
-
