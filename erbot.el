@@ -479,6 +479,9 @@ the new erc-backend functions."
 		  (nth 1 cmdargs))
 		 (t (aref parsed 3)))))
 	 (erbot-end-user-nick nick)
+	 (csys     (erc-coding-system-for-target tgt))
+	 (code-in  (if (consp csys) (cdr csys)  csys))
+	 (code-out (if (consp csys) (car csys)  csys))
 	 )
     ;; changing the structure here..
     ;; also changing erbot-command to erbot-reply..
@@ -493,6 +496,12 @@ the new erc-backend functions."
 
     ;;(setq fs-nick nick)
     ;;(setq erbn-nick nick)
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; make sure we decode the raw text we received...
+    (unless (multibyte-string-p msg)
+      (setq msg (decode-coding-string msg code-in)))
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     (let ((msgg
 	   (erbeng-main msg proc nick tgt nil userinfo)))
@@ -559,7 +568,7 @@ or \"noreply\"
   (unless (stringp main-reply)
     (setq main-reply (format "%S" main-reply)))
   (let (
-	linen line3
+	linen
 	(me (or (erc-current-nick) erbot-nick))
 	;;(if (and erbot-commands
 	;;	     (string-match (concat "^" (regexp-quote me)
@@ -640,11 +649,11 @@ or \"noreply\"
 	     (set-marker erc-insert-marker (point))
 	     (goto-char (point-max))
 	     (setq linen (concat line "\n"))
-	     (setq line3
-		   (string-make-unibyte 
-		    (encode-coding-string linen 'utf-8)))
-
-	     (erc-process-input-line line3  t multiline-p))
+	     ;; fledermaus: I used to force the encoding here, but I now 
+	     ;; think that's the wrong thing to do. Hopefully if the data-path 
+	     ;; through erc->fsbot->erc is clean, erc will do the right thing 
+	     ;; to outbound data.
+	     (erc-process-input-line linen  t multiline-p))
 	   lines))))))
 
 

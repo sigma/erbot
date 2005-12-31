@@ -1,3 +1,11 @@
+2005-12-30  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbot.el (erbot-remote): Decode the incoming data properly
+	paying attention to erc's inbound coding system.
+	(erbot-reply): Now that the inbound data is (hopefully) cleanly
+	decoded we shouldn't need to force the outbound coding.
+	In emacs21, mule-ucs may be required for this to work.
+
 2005-11-10  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-safep): Make a minor change, to try to render
@@ -35,7 +43,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.30 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.31 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
