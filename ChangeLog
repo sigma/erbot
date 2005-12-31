@@ -1,3 +1,11 @@
+2005-12-31  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbmsg.el (fs-memo): if a memo command was not recognised,
+	emit an error so we know it happened.
+	(fs-memos): If someone had no memos, return the help-memo
+	text too - makes it easier for people to figure out how it
+	all works.
+
 2005-12-30  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbot.el (erbot-remote): Decode the incoming data properly
@@ -43,7 +51,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.31 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.32 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
