@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2005-11-10 00:58:56 deego>
+;; Time-stamp: <2006-01-01 04:23:03 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -479,7 +479,9 @@ the new erc-backend functions."
 		  (nth 1 cmdargs))
 		 (t (aref parsed 3)))))
 	 (erbot-end-user-nick nick)
-	 (csys     (erc-coding-system-for-target tgt))
+	 (csys     (if (fboundp 'erc-coding-system-for-target)
+		       (erc-coding-system-for-target tgt)
+		     'utf-8))
 	 (code-in  (if (consp csys) (cdr csys)  csys))
 	 (code-out (if (consp csys) (car csys)  csys))
 	 )

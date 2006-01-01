@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2005-11-11 13:28:55 deego>
+;; Time-stamp: <2006-01-01 04:19:58 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -113,13 +113,35 @@ We WON'T do this by default since this could lead to exploits if you
 	t
       nil)))
 
-(defun erblisp-check-args (&rest args)
+(defmacro erblisp-check-args (&rest args)
+  "All we do in this macro we remove some bindings for things like
+&rest, etc, things that do not have values but got passed to us --
+this occurs when a user attempts to use &rest in his function
+definitions -- see `erblisp-allowed-words'.  
+
+All the arguments to this macro should have been in their evalled form
+and hence constants already, so we do not bother protecting against
+multiple evaluations here -- evaluating a constant causes no harm.
+All we do in this macro we remove some bindings for things like &rest,
+etc, things that are not defined, but passed on here in any case."
+  `(erblisp-check-args-nascent 
+    ,@(remove-if 
+       #'(lambda (arg) (and
+			(symbolp arg) 
+			(not (boundp arg)))) 
+       args)))
+
+
+
+(defun erblisp-check-args-nascent (&rest args)
   (if (or 
        (not (numberp erblisp-max-list-length))
        (erblisp-safe-length-args-p args 0 erblisp-max-list-length))
       t
-    (error "encountered overlong expression, ignoring")
-    nil))
+    (error "encountered overlong expression, ignoring") nil))
+
+
+
 
 (defun erblisp-sandbox (expr)
   ""

@@ -1,3 +1,13 @@
+2006-01-01  D Goel  <deego@gnufans.org>
+
+	* erblisp.el (erblisp-check-args): Promote to a macro.  This macro
+	first removes any arguments that can't be evalled. This happens,
+	when, for example, the user-defined function contained &optional,
+	&rest, etc.
+
+	* erbot.el (erbot-remote): erc-coding-system-for-target was not
+	defined for older versions of erc.
+
 2005-12-31  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbmsg.el (fs-memo): if a memo command was not recognised,
@@ -51,7 +61,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.32 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.33 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
