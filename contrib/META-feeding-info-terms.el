@@ -1,10 +1,11 @@
 ;; this helps prepare an erbtrain file from
 ;; http://www.emacswiki.org/emacs/info-ref.dat, see also
-;; http://www.emacswiki.org/cgi-bin/wiki?action=browse;diff=1;id=EmacsWikiSuggestions
+;; http://www.emacswiki.org/cgi-bin/wiki/EmacsWikiSuggestions
+;; or google for emacswiki info ref for pertinent discussions.
 
-;; Author Alex Shroeder
+;; Author Alex Shroeder <alex@gnu.org>
 
-;; from kensanata:
+;; received from kensanata:
 (defun meta-feeding-info-k ()
   (let (data (lines 0))
     (with-current-buffer (get-buffer "info-ref.dat")
