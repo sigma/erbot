@@ -1,3 +1,8 @@
+2006-01-05  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/units.el: Newly-added file that is recommended on the
+	ErbotInstallation page of emacswiki.org.
+
 2006-01-01  D Goel  <deego@gnufans.org>
 
 	* erblisp.el (erblisp-check-args): Promote to a macro.  This macro
@@ -61,7 +66,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.33 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.34 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
