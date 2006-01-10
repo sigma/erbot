@@ -1,3 +1,8 @@
+2006-01-10  D Goel  <deego@gnufans.org>
+
+	* erbc5.el (symbol-name): minor: provide this fs-function.
+
+
 2006-01-05  Michael Olson  <mwolson@gnu.org>
 
 	* README.txt (NOTE): Add directions for getting the units file for
@@ -5,6 +10,7 @@
 
 	* contrib/units.el: Newly-added file that is recommended on the
 	ErbotInstallation page of emacswiki.org.
+
 
 2006-01-01  D Goel  <deego@gnufans.org>
 
@@ -69,7 +75,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.35 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.36 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
