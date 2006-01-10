@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2005-08-11 20:30:59 deego>
+;; Time-stamp: <2006-01-10 10:26:32 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -179,6 +179,8 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
 (erbutils-defalias-i '(isqrt floor* ceiling* round* mod* rem* signum
 			     random*))
 
+
+(erbutils-defalias-i '(symbol-function))
 
 
 (provide 'erbc5)
