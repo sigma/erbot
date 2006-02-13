@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2005-12-30 14:14:57 deego>
+;; Time-stamp: <2006-02-13 14:22:57 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3859,7 +3859,7 @@ MSG here is a list which needs to be combined.  "
 	  (string= "in" (downcase (format "%s" las)))
 	(throw 'erbnocmd-repl-error
 	       `(fs-error
-		 "missing \"in\"--- Format: %s/foo.../bar..../ in TERM &optional N"
+		 "Format: %s/foo.../bar..../ in TERM &optional NUMBER"
 		 ,sr ))
 	)
 
