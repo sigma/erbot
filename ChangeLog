@@ -1,3 +1,9 @@
+2006-02-26  Michael Olson  <mwolson@gnu.org>
+
+	* erbc.el (fs-flame): Concat multiple arguments together to form
+	the flame target, unless there are only 2 arguments and the last
+	one is a number.  In that case, we pick the specified flame.
+
 2006-01-10  D Goel  <deego@gnufans.org>
 
 	* erbc5.el (symbol-name): minor: provide this fs-function.
@@ -75,7 +81,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.36 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.37 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>

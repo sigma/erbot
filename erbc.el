@@ -1321,21 +1321,28 @@ anything useful. ")))
 
 (defun fs-flame (&rest args)
   ""
-  (let ((fs-flame-target
-	 (if (first args)
-	     (format "%s" (first args))
-	   erbot-end-user-nick))
-	(num (second args))
-	(flames (ignore-errors (fs-notes "flames"))))
+  (let ((flames (ignore-errors (fs-notes "flames")))
+        fs-flame-target num)
+    (cond ((and (numberp (cadr args))
+                (not (cddr args)))
+           (setq fs-flame-target (car args)
+                 num (cadr args)))
+          ((consp (cdr args))
+           (setq fs-flame-target (mapconcat (lambda (arg)
+                                              (format "%s" arg))
+                                            args " ")))
+          ((car args)
+           (setq fs-flame-target (format "%s" (car args))))
+          (t (setq fs-flame-target (format "%s" erbot-end-user-nick))))
     (if (string= (format "%s" fs-flame-target) "me")
-	(setq fs-flame-target erbot-end-user-nick))
+        (setq fs-flame-target erbot-end-user-nick))
     ;; Check for flame.el support
     (cond
      ((and (consp flames) (> (length flames) 0))
       (fsi-eval-or-say
-       (if (numberp num)
-	   (nth num flames)
-	 (fs-random-choose flames))
+       (if num
+           (nth num flames)
+         (fs-random-choose flames))
        fs-flame-target))
      (t (fs-flame-mild fs-flame-target)))))
 
