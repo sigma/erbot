@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-01-01 04:23:03 deego>
+;; Time-stamp: <2006-02-27 16:18:58 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -120,6 +120,19 @@
 ;      (replace-in-string string regexp rep literal))
 
 (defalias 'erc-replace-regexp-in-string 'replace-regexp-in-string)
+
+(defvar erbot-paranoid-p t
+  " Meant as a CATCHALL for security. Setting this variable to non-nil
+should disable most features. When non-nil, all potentially funny
+functions are disabled.  We think these functions are safe, but we
+disable them in any case.
+
+
+t by default.  No enablings like erbot-setf-p, etc. will work
+unless this is non-nil. If this is non-nil, erbot is paranoid, it will
+not allow apply, setf, funcall, sregex, etc. even if the corresponding
+variables are turned on.")
+
 
 
 
@@ -697,7 +710,8 @@ the beginning of your .emacs")
 		   'erbot-autojoin-channels))
 	)
   (erbot-install-symbols)
-  (when erbot-setf-p (erbot-install-setf))
+  (when (and erbot-setf-p (not erbot-paranoid-p))
+    (erbot-install-setf))
   )
 
 

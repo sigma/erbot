@@ -1,5 +1,5 @@
 ;;; erbc2.el --- mostly: special functions for erbc.el
-;; Time-stamp: <2005-09-02 14:34:33 deego>
+;; Time-stamp: <2006-02-27 16:14:49 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc2.el
@@ -123,6 +123,8 @@
 
 (defmacro fs-apply (fcnsym &rest args)
   ""
+  (when erbot-paranoid-p 
+    (error "This function is disabled: erbot-paranoid-p"))
   (unless fcnsym (error "No function to fs-apply!"))
   (let (erbn-tmpargs
 	(erbn-tmplen (length args))
@@ -160,52 +162,54 @@
      (t (error "No clue how to apply that. ")))
     (cond
      (erbn-tmpspecialp
-      `(apply ,fcnsym nil))
+      `(apply (erblisp-sandbox-quoted ,fcnsym) nil))
      (erbn-tmpnoinitialp
-      `(apply ,fcnsym ,erbn-tmplastargs))
+      `(apply (erblisp-sandbox-quoted ,fcnsym) ,erbn-tmplastargs))
      (t
-      `(apply ,fcnsym ,@erbn-tmpargs ,erbn-tmplastargs)))))
+      `(apply (erblisp-sandbox-quoted ,fcnsym) ,@erbn-tmpargs ,erbn-tmplastargs)))))
 
 
-(defmacro fs-apply-old (fcnsym &rest args)
-  (unless fcnsym (error "No function to fs-apply!"))
-  (let (erbn-tmpargs
-	(erbn-tmplen (length args))
-	erbn-tmpnewargs
-	)
-    (cond
-     ((null args)
-      (setq erbn-tmpargs nil))
-     (t
-      (setq erbn-tmpargs
-	    (append (subseq args 0 (- erbn-tmplen 1))
-		    (last args)))))
+;; (defmacro fs-apply-old (fcnsym &rest args)
+;;   (error "This function is old.")
+;;   (unless fcnsym (error "No function to fs-apply!"))
+;;   (let (erbn-tmpargs
+;; 	(erbn-tmplen (length args))
+;; 	erbn-tmpnewargs
+;; 	)
+;;     (cond
+;;      ((null args)
+;;       (setq erbn-tmpargs nil))
+;;      (t
+;;       (setq erbn-tmpargs
+;; 	    (append (subseq args 0 (- erbn-tmplen 1))
+;; 		    (last args)))))
     
-    (let* (
-	   (erbn-tmp-newargs (erbn-apply-sandbox-args erbn-tmpargs))
-	   (erbn-tmp-newlen (length erbn-tmp-newargs)))
-    (cond
-     ((listp fcnsym)
-      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
-     ((symbolp fcnsym)
-      (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
-     (t (error "No clue how to apply that. ")))
-    `(let ((erbn-tmp-avar ,fcnsym))
-       (cond
-	((symbolp erbn-tmp-avar)
-	 (setq erbn-tmp-avar
-	       (erblisp-sandbox-quoted erbn-tmp-avar)))
-	(t "nada"))
-       ,(if (= erbn-tmp-newlen 0)
-	    `(apply erbn-tmp-avar nil)
-	  `(apply erbn-tmp-avar ,@erbn-tmp-newargs nil))))))
+;;     (let* (
+;; 	   (erbn-tmp-newargs (erbn-apply-sandbox-args erbn-tmpargs))
+;; 	   (erbn-tmp-newlen (length erbn-tmp-newargs)))
+;;     (cond
+;;      ((listp fcnsym)
+;;       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
+;;      ((symbolp fcnsym)
+;;       (setq fcnsym (erblisp-sandbox-quoted fcnsym)))
+;;      (t (error "No clue how to apply that. ")))
+;;     `(let ((erbn-tmp-avar ,fcnsym))
+;;        (cond
+;; 	((symbolp erbn-tmp-avar)
+;; 	 (setq erbn-tmp-avar
+;; 	       (erblisp-sandbox-quoted erbn-tmp-avar)))
+;; 	(t "nada"))
+;;        ,(if (= erbn-tmp-newlen 0)
+;; 	    `(apply erbn-tmp-avar nil)
+;; 	  `(apply erbn-tmp-avar ,@erbn-tmp-newargs nil))))))
+
 
 (defmacro fs-funcall (symbol &rest args)
   `(fs-apply ,symbol ,@args nil))
 
 
 
-;; hm, WTF is this?  Was it me?  silly me.. Why did I do this?? 
+;; hm, what is this?  Was it me?  silly me.. Why did I do this?? 
 (defalias 'fs-function 'identity)
 
 (defvar erbn-read-mode nil)

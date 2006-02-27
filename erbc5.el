@@ -1,5 +1,5 @@
 ;;; erbc5.el --- continuation of erbc.el
-;; Time-stamp: <2006-01-10 10:28:14 deego>
+;; Time-stamp: <2006-02-27 16:10:14 deego>
 ;; Copyright (C) 2003 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc5.el
@@ -123,7 +123,7 @@ waiting for user input..
 which is why turned off by default.
 
 "
-  (unless erbn-calc-p 
+  (unless (and erbn-calc-p  (not erbot-paranoid-p))
     (error "Sorry, but i am a bot! not a calc!"))
   (unless str (error "Eval what?"))
   (unless (stringp str)
@@ -150,7 +150,7 @@ I think it is safe, but not 100% sure, so disabled by default. --DG"
 
 (defun fsi-sregex (&rest args)
   (cond
-   (erbn-sregex-p
+   ((and erbn-sregex-p (not erbot-paranoid-p))
     (apply 'sregex args))
    (t
     (error "sregexp is disabled in this bot. "))))

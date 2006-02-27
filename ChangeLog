@@ -1,3 +1,14 @@
+2006-02-27  D Goel  <deego@gnufans.org>
+
+	* erbc2.el (fs-apply): SECURITY FIX!  Also, disable when
+	paranoid.  Ditto for funcall.
+
+	* erbot.el (erbot-paranoid-p): Make this new variable a catchall
+	for security. t by default.  No enablings like erbot-setf-p,
+	etc. will work unless this is non-nil. If this is non-nil, erbot
+	is paranoid, it will not allow apply, setf, funcall, sregex,
+	etc. even if the corresponding variables are turned on.
+
 2006-02-26  Michael Olson  <mwolson@gnu.org>
 
 	* erbc.el (fs-flame): Concat multiple arguments together to form
@@ -81,7 +92,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.37 $).  So, I
+	undefined for my older ERC (4.0 $Revision: 1.38 $).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
