@@ -1,3 +1,7 @@
+2006-02-28  Michael Olson  <mwolson@gnu.org>
+
+	* ChangeLog: Remove use of CVS Revision tag.
+
 2006-02-27  D Goel  <deego@gnufans.org>
 
 	* erbc2.el (fs-apply): SECURITY FIX!  Also, disable when
@@ -92,7 +96,7 @@
 2005-10-05  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-join-servers): `erc-compute-port' seems to be
-	undefined for my older ERC (4.0 $Revision: 1.38 $).  So, I
+	undefined for my older ERC (4.0).  So, I
 	reverted to old behavior when it is undefined.  Did I do it right?
 
 2005-10-05  Michael Olson  <mwolson@gnu.org>
