@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-03-21 10:42:28 deego>
+;; Time-stamp: <2006-03-21 11:06:42 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4956,9 +4956,17 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 (erbutils-defalias-i '(window-system))
 
 
-(unless erbot-paranoid-p 
-  (erbutils-defalias-i
-   '(kbd read-kbd-macro)))
+(defvar erbot-kbd-p nil
+  "Whether to enable kbd.
+
+Note that making this non-nil can lead to vector results. For
+example, (kbd \"<home>\"), (thanks to fledermaus).")
+
+(when (and 
+       (not erbot-paranoid-p)
+       erbot-kbd-p
+       (erbutils-defalias-i
+	'(kbd read-kbd-macro))))
 
 (defconst fs-t t
   "As such, when we sandbox a lisp expression, t remains t, so this is
