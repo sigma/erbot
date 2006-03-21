@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-02-27 16:18:58 deego>
+;; Time-stamp: <2006-03-21 10:44:19 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -131,7 +131,13 @@ disable them in any case.
 t by default.  No enablings like erbot-setf-p, etc. will work
 unless this is non-nil. If this is non-nil, erbot is paranoid, it will
 not allow apply, setf, funcall, sregex, etc. even if the corresponding
-variables are turned on.")
+variables are turned on.
+
+NOTE: Making this variable nil and later non-nil in the middle of a
+running emacs session will NOT make your bot completely paranoid.  You
+need to have this function non-nil BEFORE you load erbot. See, for
+example, how we define fs-kbd.
+")
 
 
 
@@ -645,7 +651,7 @@ or \"noreply\"
 	   (lambda (line)
 	     (when (and line
 			(not (erbot-safep line)))
-	       (setq line (concat " " line)))
+	       (setq line (erbot-safe-make line)))
 	     (goto-char (point-max))
 	     (setq p (re-search-backward (erc-prompt)))
 	     ;;(insert (erc-format-timestamp) "<" me "> ")
@@ -860,6 +866,21 @@ not, try to reconnect. "
 	   server port nick user-full-name (not not-connect-arg) passwd))))))
 
 
+(defun erbot-safe-make (line)
+  (let* ((ans line)
+	 (rlist (string-to-list line)))
+    (when (string-match "^/" line)
+      (unless (string-match "^/me " line)
+	(setq ans (concat " " line))))
+    (when (member-if (lambda (a) (< a 32)) rlist)
+      (setq ans "<control characters>"))
+    (when (string-match "[\n\r]" line)
+      (setq ans " <newlines> "))
+    ans))
+
+
+
+    
 
 (defun erbot-safep (reply)
   "Determine whether a reply is safe.  Any newlines are simply

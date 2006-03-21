@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-02-13 14:22:57 deego>
+;; Time-stamp: <2006-03-21 10:42:28 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4955,8 +4955,10 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (erbutils-defalias-i '(window-system))
 
-(erbutils-defalias-i
- '(kbd read-kbd-macro))
+
+(unless erbot-paranoid-p 
+  (erbutils-defalias-i
+   '(kbd read-kbd-macro)))
 
 (defconst fs-t t
   "As such, when we sandbox a lisp expression, t remains t, so this is
