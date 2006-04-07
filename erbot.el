@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-03-21 10:44:19 deego>
+;; Time-stamp: <2006-04-07 12:51:41 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -872,7 +872,10 @@ not, try to reconnect. "
     (when (string-match "^/" line)
       (unless (string-match "^/me " line)
 	(setq ans (concat " " line))))
-    (when (member-if (lambda (a) (< a 32)) rlist)
+    (when (member-if (lambda (a) 
+		       (and (< a 32)
+			    (not (= a 9))))
+		     rlist)
       (setq ans "<control characters>"))
     (when (string-match "[\n\r]" line)
       (setq ans " <newlines> "))

@@ -1,3 +1,13 @@
+2006-04-07  D Goel  <deego@gnufans.org>
+
+	* erbot.el (erbot-safe-make): Exception to control characters:
+	Allow \t
+
+2006-03-21  D Goel  <deego@gnufans.org>
+
+	* erbot.el (erbot-safe-make): new function.
+	(erbot-reply): call erbot-safe-make before replying.
+
 2006-02-28  Michael Olson  <mwolson@gnu.org>
 
 	* ChangeLog: Remove use of CVS Revision tag.
