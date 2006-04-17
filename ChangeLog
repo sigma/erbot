@@ -1,3 +1,8 @@
+2006-04-17  D Goel  <deego@gnufans.org>
+
+	* erbtranslate.el: adapted from indio's myerc.el.  Work in
+	progress. INSECURE.  DO NOT USE THIS FILE.
+
 2006-04-07  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-safe-make): Exception to control characters:
