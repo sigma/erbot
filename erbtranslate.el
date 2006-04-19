@@ -1,10 +1,10 @@
 ;;; erbtranslate.el --- Natural Language translation functions.  CURRENTLY INSECURE.
-;; Time-stamp: <2006-04-17 15:03:46 deego>
+;; Time-stamp: <2006-04-19 16:01:44 deego>
 ;; Copyright (C) 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc
 ;; Package: erbotn
-;; Author: From: "Alejandro Benitez" <benitezalejandrogm@gmail.com>
+;; Author: "Alejandro Benitez" <benitezalejandrogm@gmail.com>
 ;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 
