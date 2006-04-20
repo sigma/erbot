@@ -1,3 +1,10 @@
+2006-04-20  D Goel  <deego@gnufans.org>
+
+	* erbc.el (erbn-url-functions-p): new variable.  Disallow url's
+	unless enabled here.  Else potential freeze.
+	(erbn-internal-web-page-time): rename from the one below.
+	(fs-internal-web-page-time): rename to the one above
+
 2006-04-19  D Goel  <deego@gnufans.org>
 
 	* erbtranslate.el: fix minor doc typo

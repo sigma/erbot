@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-04-07 12:51:41 deego>
+;; Time-stamp: <2006-04-20 10:25:52 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -125,7 +125,9 @@
   " Meant as a CATCHALL for security. Setting this variable to non-nil
 should disable most features. When non-nil, all potentially funny
 functions are disabled.  We think these functions are safe, but we
-disable them in any case.
+disable them in any case.  We also disable all functions that we can
+that may potentially freeze the bot or severly slow it down upon
+receiving weird requests.
 
 
 t by default.  No enablings like erbot-setf-p, etc. will work

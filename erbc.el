@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-03-21 11:06:42 deego>
+;; Time-stamp: <2006-04-20 10:33:03 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4422,22 +4422,37 @@ See: http://www.w3.org/Security/faq/wwwsf4.html#CGI-Q7
 
 (defalias 'fsi-shell-test 'erbn-shell-test)
 
-(defcustom fs-internal-web-page-time 10
+(defcustom erbn-internal-web-page-time 10
   "" :group 'erbc)
+(defcustom erbn-url-functions-p nil
+  "when true, enable url functions, provided that erbot-paranoid-p
+allows us that.
+
+The reason you may not want to enable this function is that when you
+fetch url's like http://205.188.215.230:8012 (icecast, etc. content),
+url.el continues fetching that url forever.  The bot times out, but
+url continues fetching it in the background, slowing down your bot."
+  :group 'erbc)
+
+
 
 (defmacro erbn-with-web-page-buffer (site &rest body)
   (let ((buffer (make-symbol "web-buffer")))
-    `(with-timeout (fs-internal-web-page-time "HTTP time out")
-       (let ((,buffer (url-retrieve-synchronously ,site)))
-         (when (null ,buffer)
-           (error "Invalid URL %s" site))
-         (save-excursion
-           (set-buffer ,buffer)
-           (goto-char (point-min))
-           (prog1
-               (progn
-                 ,@body)
-             (kill-buffer ,buffer)))))))
+    `(progn
+       (unless (and (not erbot-paranoid-p)
+		    erbn-url-functions-p)
+	 (error "erbn-url-functions-p is disabled"))
+       (with-timeout (erbn-internal-web-page-time "HTTP time out")
+	 (let ((,buffer (url-retrieve-synchronously ,site)))
+	   (when (null ,buffer)
+	     (error "Invalid URL %s" site))
+	   (save-excursion
+	     (set-buffer ,buffer)
+	     (goto-char (point-min))
+	     (prog1
+		 (progn
+		   ,@body)
+	       (kill-buffer ,buffer))))))))
 
 (defun fsi-web-page-title (&optional site &rest args)
   (unless site (error (format "Syntax: %s web-page-title SITE" erbn-char)))
