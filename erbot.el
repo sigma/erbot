@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-04-20 10:25:52 deego>
+;; Time-stamp: <2006-04-20 14:26:37 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -652,7 +652,7 @@ or \"noreply\"
 	  (mapc
 	   (lambda (line)
 	     (when (and line
-			(not (erbot-safep line)))
+			(not (erbot-safe-p line)))
 	       (setq line (erbot-safe-make line)))
 	     (goto-char (point-max))
 	     (setq p (re-search-backward (erc-prompt)))
@@ -887,15 +887,16 @@ not, try to reconnect. "
 
     
 
-(defun erbot-safep (reply)
+(defun erbot-safe-p (reply)
   "Determine whether a reply is safe.  Any newlines are simply
 reported as unsafe.
 
 If this functions deems a reply as unsafe, you should not send it to
-ERC.  If an unsafe reply has no newlines, it may be rendered safe by
-appending a space in front of the reply."
+ERC but call `erbot-safe-make' first. "
   (and
    (not (string-match "[\n\r]" reply))
+    ;; err on the side of caution.  Demand that the 1st char. be VERY
+   ;; safe.  
    (or
     (string-match "^[0-9a-zA-Z]" reply)
     ;;(not (string-match "^/" reply)) -- this is bad.. since, control
@@ -903,9 +904,15 @@ appending a space in front of the reply."
     
     ;; Allow /me commands.. but only when the rest of the text has no
     ;; control characters..
-    (and (equal 0 (string-match "^/me " reply))
-	 (let ((rlist (string-to-list reply)))
-	   (not (member-if (lambda (a) (< a 32)) rlist)))))))
+    (equal 0 (string-match "^/me " reply)))
+   ;; And there be no control characters whatsoever anywhere.
+   (erbot-safe-nocontrol-p reply)))
+
+(defun erbot-safe-nocontrol-p (reply)
+  (let ((rlist (string-to-list reply)))
+    (not (member-if (lambda (a) (< a 32)) rlist))))
+
+
 
 
 

@@ -1,10 +1,20 @@
 2006-04-20  D Goel  <deego@gnufans.org>
 
+	* erbot.el (erbot-safe-p): Improve this function a bit.
+	(erbot-safe-nocontrol-p): new.
+
+	* erbot-lispy.el (erbot-lispy-safe-p): change name from erbot-lispy-safep
+
+	* erbot.el (erbot-safe-p): change name from erbot-safep
+
 	* erbc.el (erbn-url-functions-p): new variable.  Disallow url's
 	unless enabled here.  Else potential freeze.
 	(erbn-internal-web-page-time): rename from the one below.
 	(fs-internal-web-page-time): rename to the one above
 	(erbn-url-functions-p): add bug discoverer's name in docstring.
+	(fsi-get-more-invocation-string): new function.
+	(fsi-limit-lines): Make the bot spit something useful instead of
+	,more, when using weird erbn-char.
 
 2006-04-19  D Goel  <deego@gnufans.org>
 

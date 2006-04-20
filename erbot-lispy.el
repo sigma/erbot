@@ -1,5 +1,5 @@
 ;;; erbot-lispy.el --- ErBot integration in Lispy
-;; Time-stamp: <2005-01-08 12:52:18 deego>
+;; Time-stamp: <2006-04-20 14:14:33 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot-lispy.el
 ;; Package: erbot
@@ -75,12 +75,12 @@
         (mapc
          (lambda (line)
            (lispy-message (concat (if (string-match "^#" tgt)
-				      (if (erbot-lispy-safep line) "" " ")
+				      (if (erbot-lispy-safe-p line) "" " ")
 				    (format "tell %s " tgt)) line "\n")))
          lines)))))
 
 ;; Mtp does not use prefixed commands, activate the right ones via aliases
-(defun erbot-lispy-safep (msg)
+(defun erbot-lispy-safe-p (msg)
   (string-match "^/" line))
 
 (defadvice erbot-install (after ad-erbot-install-lispy-after act)

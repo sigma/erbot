@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-04-20 10:41:48 deego>
+;; Time-stamp: <2006-04-20 14:29:33 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3114,7 +3114,7 @@ here."
 	(setq more (buffer-substring new-point (point-max)))
 	(if
 	    (string-match "[^ \t\n]" more )
-	    (setq ans (concat ans " ..[Type " erbn-char "more]"))
+	    (setq ans (concat ans (fsi-get-more-invocation-string))) 
 	  (when nomorep (setq more "")))
 	)
       )
@@ -3122,6 +3122,10 @@ here."
     (erbn-more-set more erbn-tgt)
     ans))
 
+(defun fsi-get-more-invocation-string ()
+  (if (erbot-safe-nocontrol-p erbn-char)
+      (concat " ..[Type " erbn-char "more]")
+    (concat " ..[Type " erbot-nick ": more]")))
 
 (defun fsi-limit-lines-old (str0 &rest ignored)
   ""
@@ -3375,7 +3379,7 @@ here."
 	  '(lambda (arg)
 	     (format "%s" arg))
 	  args " ")))
-    (if (erbot-safep response) response
+    (if (erbot-safe-p response) response
       (concat " " response))))
 
 
