@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-04-20 10:33:03 deego>
+;; Time-stamp: <2006-04-20 10:41:48 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -4430,8 +4430,9 @@ allows us that.
 
 The reason you may not want to enable this function is that when you
 fetch url's like http://205.188.215.230:8012 (icecast, etc. content),
-url.el continues fetching that url forever.  The bot times out, but
-url continues fetching it in the background, slowing down your bot."
+url.el continues fetching that url forever (discovered by indio).  The
+bot times out, but url continues fetching it in the background,
+slowing down your bot."
   :group 'erbc)
 
 

@@ -4,6 +4,7 @@
 	unless enabled here.  Else potential freeze.
 	(erbn-internal-web-page-time): rename from the one below.
 	(fs-internal-web-page-time): rename to the one above
+	(erbn-url-functions-p): add bug discoverer's name in docstring.
 
 2006-04-19  D Goel  <deego@gnufans.org>
 
