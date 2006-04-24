@@ -1,5 +1,5 @@
 ;;; erbtranslate.el --- Natural Language translation functions.  CURRENTLY INSECURE.
-;; Time-stamp: <2006-04-24 12:37:46 deego>
+;; Time-stamp: <2006-04-24 13:41:30 deego>
 ;; Copyright (C) 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc
@@ -54,14 +54,16 @@ here whenever passing any arguments to external commands.")
 
 
 
-(defun fsi-translate (from to text)
+(defun fsi-translate (from to &rest text)
   (erbtranslate-enabled-check)
   (require 'shs)
+  (setq text (mapconcat #'(lambda (arg) (format "%s" arg))
+			text " "))
   (shsp
    (list 
     "translate-bin" "-f" (format "%s" from)
     "-t" (format "%s" to))
-   nil text))
+   nil (format "%s" text)))
 
 
 
@@ -69,25 +71,25 @@ here whenever passing any arguments to external commands.")
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
 
-(defun fsi-translate-list-pairs ()
+(defun fsi-translate-list-pairs (&rest args)
   (erbtranslate-enabled-check)
   (erbn-shell-command-to-string "translate-bin --list-pairs"
-				t))
+			       '(t)))
 
 
 
 (defalias 'fsi-t8-s 'fsi-translate-list-services)
 
 
-(defun fsi-translate-list-services ()
+(defun fsi-translate-list-services (&rest args)
    (erbtranslate-enabled-check)
    (erbn-shell-command-to-string "translate-bin --list-services"
-				 t))
+				 '(t)))
 
 
 
 
-(defun fsi-translate-web-page (from to url)
+(defun fsi-translate-web-page (from to url &rest args)
   (erbtranslate-enabled-check)
   (shsp (list "translate-bin" "-f" 
 	      (format "%s" from) "-t"
