@@ -1,5 +1,5 @@
-;;; erbtranslate.el --- Natural Language translation functions.  CURRENTLY INSECURE.
-;; Time-stamp: <2006-04-24 13:41:30 deego>
+;;; erbtranslate.el --- Natural Language translation functions. 
+;; Time-stamp: <2006-04-24 13:44:01 deego>
 ;; Copyright (C) 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc
@@ -8,9 +8,6 @@
 ;;         Deepak Goel <deego@gnufans.org>
 ;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
-
-;;; THIS FILE IS WORK IN PROGRESS.  DO NOT USE IT IN YOUR BOT YET.  IT
-;;; WORKS, BUT HAS SECURITY LOOPHOLES.
 
 
 ;; This file is NOT (yet) part of GNU Emacs.

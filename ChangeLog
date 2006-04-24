@@ -1,5 +1,9 @@
 2006-04-24  D Goel  <deego@gnufans.org>
 
+	* erbtranslate.el: DECLARE SAFE. Uses call-process now.
+
+	* erball.el: require erbtranslate.
+
 	* erbutils.el (erbutils-enabled-check): new function.  
 
 	* erbtranslate.el: revamp the file to make it secure, not yet final.
