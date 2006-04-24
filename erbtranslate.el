@@ -1,10 +1,11 @@
 ;;; erbtranslate.el --- Natural Language translation functions.  CURRENTLY INSECURE.
-;; Time-stamp: <2006-04-19 16:01:44 deego>
+;; Time-stamp: <2006-04-24 12:37:46 deego>
 ;; Copyright (C) 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc
-;; Package: erbotn
-;; Author: "Alejandro Benitez" <benitezalejandrogm@gmail.com>
+;; Package: erbot
+;; Authors: Alejandro Benitez <benitezalejandrogm@gmail.com>, 
+;;         Deepak Goel <deego@gnufans.org>
 ;; Version: 0.0DEV
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 
@@ -29,82 +30,71 @@
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;; Boston, MA 02111-1307, USA.
 
-
+;; You need to install libtranslate for this to work.  The binary,
+;; translate-bin, is provided, for example in Ubuntu Dapper:
+;; http://packages.ubuntu.com/dapper/libs/libtranslate-bin
 ;; See also:
 
-
+;; This file needs shs.el
+;;(require 'shs)
 
 
 (defvar erbtranslate-version "0.0dev")
 
+(defun erbtranslate-enabled-check ()
+  (erbutils-enabled-check erbn-translate-p))
 
 
-(defun fsi-translate (from to text)
-  (erbn-translate from to text))
 
 (defalias 'fsi-t8 'fsi-translate)
 
-(defcustom erbn-translate-p nil
-  "This is true by default.. (shell-command \"translate-bin\") has
-exploits.
-todo: erbot-paranoid-p
-")
+(defcustom erbn-translate-p nil 
+ "Enabling this should be completely safe.  We do use call-process
+here whenever passing any arguments to external commands.")
 
 
-(defun erbn-translate (from to text)
-  (error "Disabled for now because of security")
-  (cond
-   (t
-    (erbn-shell-command-to-string (format "echo \"%s\" | translate-bin -f %s -t %s" text from to)
-				  (list erbn-translate-p)
-				  ))))
+
+(defun fsi-translate (from to text)
+  (erbtranslate-enabled-check)
+  (require 'shs)
+  (shsp
+   (list 
+    "translate-bin" "-f" (format "%s" from)
+    "-t" (format "%s" to))
+   nil text))
+
+
+
+
+(defalias 'fsi-t8-l 'fsi-translate-list-pairs)
+
 
 (defun fsi-translate-list-pairs ()
-  (erbn-translate-list-pairs))
+  (erbtranslate-enabled-check)
+  (erbn-shell-command-to-string "translate-bin --list-pairs"
+				t))
 
-(defalias 'fs-t8-l 'fs-translate-list-pairs)
 
-(defcustom erbn-translate-list-pairs-p t
-  "This is true by default.. since (shell-command \"translate-bin\") is not
-risky.. ")
 
-(defun erbn-translate-list-pairs ()
-  (cond
-   (t
-    (erbn-shell-command-to-string "translate-bin --list-pairs"
-				  (list erbn-translate-list-pairs-p)
-				  ))))
+(defalias 'fsi-t8-s 'fsi-translate-list-services)
+
 
 (defun fsi-translate-list-services ()
-  (erbn-translate-list-services))
+   (erbtranslate-enabled-check)
+   (erbn-shell-command-to-string "translate-bin --list-services"
+				 t))
 
-(defalias 'fs-t8-s 'fs-translate-list-services)
 
-(defcustom erbn-translate-list-services-p t
-  "This is true by default.. since (shell-command \"translate-bin\") is not
-risky.. ")
 
-(defun erbn-translate-list-services ()
-  (cond
-   (t
-    (erbn-shell-command-to-string "translate-bin --list-services"
-				  (list erbn-translate-list-services-p)
-				  ))))
 
 (defun fsi-translate-web-page (from to url)
-  (erbn-translate-web-page from to url))
+  (erbtranslate-enabled-check)
+  (shsp (list "translate-bin" "-f" 
+	      (format "%s" from) "-t"
+	      (format "%s" to)
+	      (format "%s" url))))
 
-(defalias 'fs-t8-w 'fs-translate-web-page)
+(defalias 'fsi-t8-w 'fsi-translate-web-page)
 
-(defcustom erbn-translate-web-page-p t
-  "This is true by default.. since (shell-command \"translate-bin\") is not
-risky.. ")
-
-(defun erbn-translate-web-page (from to url)
-  (cond
-   (t
-    (erbn-shell-command-to-string (format "translate-bin -f %s -t %s %s" from to url)
-				  (list erbn-translate-web-page-p)
-				  ))))
 (provide 'erbtranslate)
 ;;; erbtranslate.el ends here

@@ -1,3 +1,9 @@
+2006-04-24  D Goel  <deego@gnufans.org>
+
+	* erbutils.el (erbutils-enabled-check): new function.  
+
+	* erbtranslate.el: revamp the file to make it secure, not yet final.
+
 2006-04-20  D Goel  <deego@gnufans.org>
 
 	* erbot.el (erbot-safe-p): Improve this function a bit.

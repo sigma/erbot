@@ -1,5 +1,5 @@
 ;;; erbutils.el --- 
-;; Time-stamp: <2005-09-02 14:52:55 deego>
+;; Time-stamp: <2006-04-24 12:30:26 deego>
 ;; Copyright (C) 2002,2003,2004,2005  D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbutils.el
@@ -711,5 +711,10 @@ Thanks to edrx on #emacs for suggesting 'symbol-name.."
 
 (defun erbutils-buffer-string ()
   (buffer-substring-no-properties (point-min) (point-max)))
+
+
+(defmacro erbutils-enabled-check (var)
+  `(when (or erbot-paranoid-p (not ,var))
+     (error "Variable %s is disabled, or erbot-paranoid-p is t. " ',var)))
 
 ;;; erbutils.el ends here
