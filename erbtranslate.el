@@ -49,28 +49,48 @@
  "Enabling this should be completely safe.  We do use call-process
 here whenever passing any arguments to external commands.")
 
-
-
 (defun fsi-translate (from to &rest text)
   (erbtranslate-enabled-check)
   (require 'shs)
-  (setq text (mapconcat #'(lambda (arg) (format "%s" arg))
-			text " "))
-  (shsp
-   (list 
-    "translate-bin" "-f" (format "%s" from)
-    "-t" (format "%s" to))
-   nil (format "%s" text)))
-
-
-
+  (setq text (mapconcat #'(lambda (arg) (format "%s" arg)) text " "))
+  ;; =======================================================================
+  ;; the temp file should be written as utf-8, hence coding-system-for-write
+  ;; -----------------------------------------------------------------------
+  ;; since we dump the file contents already encoded to utf-8 (that's what 
+  ;; libtranslate expects), we must force the process to 'no-conversion to 
+  ;; avoid double-encoding.
+  ;; -----------------------------------------------------------------------
+  ;; we might have to force the locale, according to the translate docs,
+  ;; but this doesn't actually seem to be necessary at the moment.
+  ;; -----------------------------------------------------------------------
+  (let ((process-coding-system-alist '(("." . no-conversion)))
+	(coding-system-for-write 'utf-8)
+	(translation nil)
+	(from-lang (format "%s") from)
+	(to-lang   (format "%s") to)
+	;;(locale (getenv "LC_ALL")) 
+	)
+    ;;(setenv "LC_ALL" nil)
+    ;;(message "=> string is %S" (string-to-sequence text        'vector))
+    (setq translation 
+	  (shsp (list "translate" "-f" from-lang "-t" to-lang) nil text))
+    ;;(message "0 string is %sbyte" 
+    ;;         (if (multibyte-string-p translation) "MULTI" "UNI"))
+    ;;(setq translation (string-make-unibyte translation))
+    ;;(message "1 string is %sbyte" 
+    ;;         (if (multibyte-string-p translation) "MULTI" "UNI"))
+    (setq translation (decode-coding-string translation 'utf-8))
+    ;;(message "2 string is %sbyte" 
+    ;;     (if (multibyte-string-p translation) "MULTI" "UNI"))
+    ;;(message "<= string is %S" (string-to-sequence translation 'vector))
+    translation))
 
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
 
 (defun fsi-translate-list-pairs (&rest args)
   (erbtranslate-enabled-check)
-  (erbn-shell-command-to-string "translate-bin --list-pairs"
+  (erbn-shell-command-to-string "translate --list-pairs"
 			       '(t)))
 
 
@@ -80,7 +100,7 @@ here whenever passing any arguments to external commands.")
 
 (defun fsi-translate-list-services (&rest args)
    (erbtranslate-enabled-check)
-   (erbn-shell-command-to-string "translate-bin --list-services"
+   (erbn-shell-command-to-string "translate --list-services"
 				 '(t)))
 
 
@@ -88,7 +108,7 @@ here whenever passing any arguments to external commands.")
 
 (defun fsi-translate-web-page (from to url &rest args)
   (erbtranslate-enabled-check)
-  (shsp (list "translate-bin" "-f" 
+  (shsp (list "translate" "-f" 
 	      (format "%s" from) "-t"
 	      (format "%s" to)
 	      (format "%s" url))))
