@@ -50,17 +50,24 @@ known.")
 (defun erbtranslate-enabled-check ()
   (erbutils-enabled-check erbn-translate-p))
 
-
-
 (defalias 'fsi-t8 'fsi-translate)
 
 (defvar erbn-translate-program "translate" 
   "External program")
 
-
 (defcustom erbn-translate-p nil 
  "Enabling this should be completely safe.  We do use call-process
 here whenever passing any arguments to external commands.")
+
+(defun erbtranslate-req-to-pair (from to)
+  (let ( (code nil) )
+    (mapc 
+     (lambda (p) 
+       (if (and (member-ignore-case from (car  p)) 
+                (member-ignore-case to   (cadr p)))
+           (setq code (cons (caar p) (car (cadr p))) )) )
+     erbtranslate-pairs)
+    code))
 
 (defun fsi-translate (from to &rest text)
   (erbtranslate-enabled-check)
@@ -71,7 +78,7 @@ here whenever passing any arguments to external commands.")
   ;; -----------------------------------------------------------------------
   ;; since we dump the file contents already encoded to utf-8 (that's what 
   ;; libtranslate expects), we must force the process to 'no-conversion to 
-  ;; avoid double-encoding.
+  ;; avoid double-encoding (with process-coding-system-alist).
   ;; -----------------------------------------------------------------------
   ;; we might have to force the locale, according to the translate docs,
   ;; but this doesn't actually seem to be necessary at the moment.
@@ -79,38 +86,36 @@ here whenever passing any arguments to external commands.")
   (let ((process-coding-system-alist '(("." . no-conversion)))
 	(coding-system-for-write 'utf-8)
 	(translation nil)
+        (code        nil)
 	(from-lang (format "%s" from))
 	(to-lang   (format "%s" to))
-	;;(locale (getenv "LC_ALL")) 
-	)
-    ;;(setenv "LC_ALL" nil)
-    ;;(message "=> string is %S" (string-to-sequence text        'vector))
-    (setq translation 
-	  (shsp (list erbn-translate-program
-		      "-f" from-lang "-t" to-lang) nil text))
-    ;;(message "0 string is %sbyte" 
-    ;;         (if (multibyte-string-p translation) "MULTI" "UNI"))
-    ;;(setq translation (string-make-unibyte translation))
-    ;;(message "1 string is %sbyte" 
-    ;;         (if (multibyte-string-p translation) "MULTI" "UNI"))
-    (setq translation (decode-coding-string translation 'utf-8))
-    ;;(message "2 string is %sbyte" 
-    ;;     (if (multibyte-string-p translation) "MULTI" "UNI"))
-    ;;(message "<= string is %S" (string-to-sequence translation 'vector))
-    translation))
+        ;;(locale (getenv "LC_ALL")) 
+        )
+    (setq code (erbtranslate-req-to-pair from to))
+    (if (not code)
+        (format "%s -> %s: no matching translation services found." 
+                from-lang to-lang)
+      ;;(message "=> string is %S" (string-to-sequence text 'vector))
+      (setq translation 
+            (shsp (list erbn-translate-program
+                        "-f" (car code) "-t" (cdr code)) nil text))
+      (setq translation (decode-coding-string translation 'utf-8))
+      ;;(message "<= string is %S" (string-to-sequence translation 'vector))
+      translation)))
 
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
+(makunbound 'erbtranslate-pair-regex)
 (defconst erbtranslate-pair-regex 
-  (concat "^\\([a-z][a-z]\\(?:-..\\)?\\)" ;; language code (from)
+  (concat "^\\([a-z]\\{2,3\\}\\(?:-..\\)?\\)" ;; language code (from)
           "\\s-+" 
-          "(\\(.*\\))"                    ;; language names (from)
+          "(\\(.*\\))"                        ;; language names (from)
           "\\s-+->\\s-+" 
-          "\\([a-z][a-z]\\(?:-..\\)?\\)"  ;; language code (to)
+          "\\([a-z]\\{2,3\\}\\(?:-..\\)?\\)"  ;; language code (to)
           "\\s-+"
-          "(\\(.*\\)):"                   ;; language aliases (to)
+          "(\\(.*\\)):"                       ;; language aliases (to)
           "\\s-+"
-          "\\(.*\\)"))                    ;; capabilities
+          "\\(.*\\)"))                        ;; capabilities
 
 (defun erbtranslate-parse-pair (pair-line)
   "Parse a single line of output from translate --list-pairs, returns
@@ -141,26 +146,18 @@ an element for insertion into erbtranslate-pairs."
                   (setq to-names (cons (match-string 1 x) to-names)
                         pos      (match-end 1)) ))) 
             to-alias)
-      (list (cons from (mapcar 'downcase from-names)) 
-            (cons to   (mapcar 'downcase to-names  )) cap))
-    (message "`%s' does not match.\n" pair-line) nil))
-
-;;(defun test-parse-line () 
-;;  (interactive)
-;;  (message "%S" 
-;;           (erbtranslate-parse-pair 
-;;            (buffer-substring-no-properties (point-at-bol) (point-at-eol)))) )
+      (list (cons from from-names) 
+            (cons to   to-names  ) cap))
+    (message "%S does not match.\n" pair-line) nil))
 
 (defun erbtranslate-load-pairs ()
-  "Parse the output of translate -l and load `erbtranslate-pairs'"
+  "Parse the output of `erbn-translate-program' -l into `erbtranslate-pairs'"
   (when (not erbtranslate-pairs)
     (let ( (y nil) 
-           (pair-text
-            (erbn-shell-command-to-string 
-             (format "%s --list-pairs" erbn-translate-program) '(t))) )
-      (mapc 
+           (pair-text (erbn-shell-command-to-string
+                       (concat erbn-translate-program " -l") '(t))) )
+      (mapc
        (lambda (x) 
-         ;;(message "parsing %s" x)
          (when (setq y (erbtranslate-parse-pair x)) 
            (setq erbtranslate-pairs (cons y erbtranslate-pairs))))
        (split-string pair-text "\n")) ))
@@ -182,14 +179,14 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
      ( (not to) 
        (let ( (x 0) (fl (format "%s" from)) )
          (mapc 
-          (lambda (p) 
-            (if (member fl (car p)) (setq x (1+ x)))) erbtranslate-pairs)
+          (lambda (p) (if (member-ignore-case fl (car p)) (setq x (1+ x)))) 
+          erbtranslate-pairs)
          (format "From %s: %d pair(s) available." fl x)) )
      ( (not from) 
        (let ( (x 0) (tl (format "%s" to)) ) 
          (mapc 
-          (lambda (p) 
-            (if (member tl (cadr p)) (setq x (1+ x)))) erbtranslate-pairs)
+          (lambda (p) (if (member-ignore-case tl (cadr p)) (setq x (1+ x)))) 
+          erbtranslate-pairs)
          (format "To %s: %d pair(s) available.\n" tl x)) )
      (t 
       (let ( (s nil) 
@@ -198,7 +195,7 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
              (tl (format "%s" to  )) )
         (mapc 
          (lambda (p) 
-           (if (and (member fl (car p)) (member tl (cadr p))) 
+           (if (and (member-ignore-case fl (car p)) (member tl (cadr p))) 
                (setq x (1+ x) s (cons p s)) )) 
          erbtranslate-pairs)
         (apply 'concat 

@@ -8,6 +8,15 @@
 	have been specified. Otherwise just tells the user how many matching
 	language pairs there are.
 	(fsi-translate-list-pairs): coerce the arguments into strings first.
+	(erbtranslate-parse-pair): some (one?) language codes are 3 letter.
+	I thought this was non-canonical but that's what translate returns,
+	so we must support it.
+	(erbtranslate-parse-pair): tidy up error message
+	(erbtranslate-req-to-pair): new. take the (possibly non-canonical)
+	language names from the user and map them to the canonical language
+	codes that translate expects.
+	(fsi-translate): map human-friendly language names in translation 
+	request to canonical language codes.
 
 2006-05-08  D Goel  <deego@gnufans.org>
 
