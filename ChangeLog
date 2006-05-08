@@ -7,6 +7,7 @@
 	possible translations when both an origin and a destination language
 	have been specified. Otherwise just tells the user how many matching
 	language pairs there are.
+	(fsi-translate-list-pairs): coerce the arguments into strings first.
 
 2006-05-08  D Goel  <deego@gnufans.org>
 

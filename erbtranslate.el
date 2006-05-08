@@ -170,6 +170,8 @@ an element for insertion into erbtranslate-pairs."
   "Allow the user to search for translation pairs. Only gives counts 
 unless both from and to are specified. *, any, - are allowed as wildcards."
   (erbtranslate-enabled-check)
+  (setq from (format "%s" from)
+        to   (format "%s" to  ))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" from) (setq from nil))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" to  ) (setq to   nil))
   (if (not (erbtranslate-load-pairs))
