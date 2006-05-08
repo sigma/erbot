@@ -38,6 +38,15 @@
 
 (defvar erbtranslate-version "0.0dev")
 
+(defvar erbtranslate-pairs nil 
+  "A cache for the language pairs. A list of entries of the form: \n
+     '((fromaliases) (toaliases) (types)).\n
+The first elements of fromaliases and toaliases are the canonical two letter
+language codes (possibly with a -XX country variant extension). Any remaining
+elements are human-readable aliases. (types) is a list of translation types, 
+usually text, and occasionally web-page as well. No other types are currently 
+known.")
+
 (defun erbtranslate-enabled-check ()
   (erbutils-enabled-check erbn-translate-p))
 
@@ -92,15 +101,110 @@ here whenever passing any arguments to external commands.")
 
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
+(defconst erbtranslate-pair-regex 
+  (concat "^\\([a-z][a-z]\\(?:-..\\)?\\)" ;; language code (from)
+          "\\s-+" 
+          "(\\(.*\\))"                    ;; language names (from)
+          "\\s-+->\\s-+" 
+          "\\([a-z][a-z]\\(?:-..\\)?\\)"  ;; language code (to)
+          "\\s-+"
+          "(\\(.*\\)):"                   ;; language aliases (to)
+          "\\s-+"
+          "\\(.*\\)"))                    ;; capabilities
 
+(defun erbtranslate-parse-pair (pair-line)
+  "Parse a single line of output from translate --list-pairs, returns
+an element for insertion into erbtranslate-pairs."
+  (if (string-match erbtranslate-pair-regex pair-line)
+    (let ( (from       (match-string 1 pair-line))
+           (from-alias (match-string 2 pair-line))
+           (to         (match-string 3 pair-line))
+           (to-alias   (match-string 4 pair-line))
+           (cap        (match-string 5 pair-line)) 
+           (cleanup    (lambda (x) (replace-regexp-in-string ",.*" "" x))) 
+           (from-names nil) 
+           (to-names   nil))
+      (setq from-alias (split-string from-alias ";")
+            to-alias   (split-string to-alias   ";")
+            from-alias (mapcar cleanup from-alias)
+            to-alias   (mapcar cleanup to-alias  )
+            cap        (split-string cap ",\\s-+"))
+      (mapc (lambda (x)
+              (let ((pos 0))
+                (while (setq pos (string-match "\\<\\(\\S-+\\)\\>" x pos))
+                  (setq  from-names (cons (match-string 1 x) from-names)
+                         pos        (match-end 1)) ))) 
+            from-alias)
+      (mapc (lambda (x)
+              (let ((pos 0))
+                (while (setq pos (string-match "\\<\\(\\S-+\\)\\>" x pos))
+                  (setq to-names (cons (match-string 1 x) to-names)
+                        pos      (match-end 1)) ))) 
+            to-alias)
+      (list (cons from (mapcar 'downcase from-names)) 
+            (cons to   (mapcar 'downcase to-names  )) cap))
+    (message "`%s' does not match.\n" pair-line) nil))
 
-(defun fsi-translate-list-pairs (&rest args)
+;;(defun test-parse-line () 
+;;  (interactive)
+;;  (message "%S" 
+;;           (erbtranslate-parse-pair 
+;;            (buffer-substring-no-properties (point-at-bol) (point-at-eol)))) )
+
+(defun erbtranslate-load-pairs ()
+  "Parse the output of translate -l and load `erbtranslate-pairs'"
+  (when (not erbtranslate-pairs)
+    (let ( (y nil) 
+           (pair-text
+            (erbn-shell-command-to-string 
+             (format "%s --list-pairs" erbn-translate-program) '(t))) )
+      (mapc 
+       (lambda (x) 
+         ;;(message "parsing %s" x)
+         (when (setq y (erbtranslate-parse-pair x)) 
+           (setq erbtranslate-pairs (cons y erbtranslate-pairs))))
+       (split-string pair-text "\n")) ))
+  erbtranslate-pairs)
+
+(defun fsi-translate-list-pairs (&optional from to &rest args)
+  "Allow the user to search for translation pairs. Only gives counts 
+unless both from and to are specified. *, any, - are allowed as wildcards."
   (erbtranslate-enabled-check)
-  (erbn-shell-command-to-string (concat erbn-translate-program 
-					" --list-pairs")
-			       '(t)))
-
-
+  (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" from) (setq from nil))
+  (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" to  ) (setq to   nil))
+  (if (not (erbtranslate-load-pairs))
+      "translate doesn't seem to have been setup - no languages found."
+    (cond 
+     ( (and (not from) (not to))
+       (format "%d language pair(s) available." (length erbtranslate-pairs)) )
+     ( (not to) 
+       (let ( (x 0) (fl (format "%s" from)) )
+         (mapc 
+          (lambda (p) 
+            (if (member fl (car p)) (setq x (1+ x)))) erbtranslate-pairs)
+         (format "From %s: %d pair(s) available." fl x)) )
+     ( (not from) 
+       (let ( (x 0) (tl (format "%s" to)) ) 
+         (mapc 
+          (lambda (p) 
+            (if (member tl (cadr p)) (setq x (1+ x)))) erbtranslate-pairs)
+         (format "To %s: %d pair(s) available.\n" tl x)) )
+     (t 
+      (let ( (s nil) 
+             (x   0) 
+             (fl (format "%s" from)) 
+             (tl (format "%s" to  )) )
+        (mapc 
+         (lambda (p) 
+           (if (and (member fl (car p)) (member tl (cadr p))) 
+               (setq x (1+ x) s (cons p s)) )) 
+         erbtranslate-pairs)
+        (apply 'concat 
+               (format "%s -> %s: %d pair(s) available.\n" fl tl x) 
+               (mapcar (lambda (x) 
+                         (format "%s -> %s\n" 
+                                 (princ (car  x)) 
+                                 (princ (cadr x)))) s)) )) ) ))
 
 (defalias 'fsi-t8-s 'fsi-translate-list-services)
 
