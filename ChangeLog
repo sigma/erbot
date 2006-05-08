@@ -17,6 +17,7 @@
 	codes that translate expects.
 	(fsi-translate): map human-friendly language names in translation 
 	request to canonical language codes.
+	(fsi-translate): use the coerced-strings, not the raw language args.
 
 2006-05-08  D Goel  <deego@gnufans.org>
 

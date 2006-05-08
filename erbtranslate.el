@@ -91,7 +91,7 @@ here whenever passing any arguments to external commands.")
 	(to-lang   (format "%s" to))
         ;;(locale (getenv "LC_ALL")) 
         )
-    (setq code (erbtranslate-req-to-pair from to))
+    (setq code (erbtranslate-req-to-pair from-lang to-lang))
     (if (not code)
         (format "%s -> %s: no matching translation services found." 
                 from-lang to-lang)
