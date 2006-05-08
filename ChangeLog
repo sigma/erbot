@@ -1,3 +1,7 @@
+2006-05-08  D Goel  <deego@gnufans.org>
+
+	* contrib/shs.el: New shs.el, cleans up temporary files.
+
 2006-04-24  D Goel  <deego@gnufans.org>
 
 	* erbtranslate.el: DECLARE SAFE. Uses call-process now.

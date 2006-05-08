@@ -1,5 +1,5 @@
 ;;; shs.el --- facilitate SHell Scripting through Emacs. 
-;; Time-stamp: <2006-04-24 10:48:33 deego>
+;; Time-stamp: <2006-05-08 00:00:17 deego>
 ;; Copyright (C) 2005 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: shs.el
@@ -284,7 +284,7 @@ be safer.
 	     (buffer-substring (point-min) (point-max)))))))
 
 ;;;###autoload
-(defun shs-process (command &optional infile instring)
+(defun shs-process (command &optional infile instring outfile appendp)
   "process from a running script, exit on errors. 
 
 NOT suitable for asynchronous processes.  If everything ok,
@@ -300,27 +300,44 @@ Both infile and instring can be nil, in which case, no stdin is passed
 to the process.  
 
 If INFILE is non-nil it is used.  If INFILE is nil and INSTRING is
-not, we put instring in a temporary file, and use that as the stdin.
+not, we put instring in a temporary file, and use that as the
+stdin. This is kinda like bash's <.
 
+If outfile is non-nil, the output is also written to outfile.  If
+appendp is non-nil, the output is appended to any preceding output.
+These were kinda like bash's > and >>. 
+
+pseudo-Pipes can be accomplished via use of instring.  See, for
+example, `shsu-pipe'.
 "
-  (setq command (shs-convert-command-string-to-list-maybe command))
-  (when (and (not infile) instring)
-    ;; see also, for example, shsu-mktemp-d
-    (setq infile (shsp "mktemp"))
-    (with-temp-buffer
-      (insert instring)
-      (let ((require-final-newline nil))
-	(write-file infile nil))))
-  (let* ((codeoutput (shs-process-and-code command infile))
-	 (code (car codeoutput))
-	 (output (cadr codeoutput)))
-    (cond
-     ((equal code 0)
-      output)
-     ;; as you see, the string-to-number of this error code will
-     ;; always be the correct error code.
-     (t (error "%S -- error code when call-process: %S\n Output was: %S" code command output)))))
-
+  (let ((rmp (and (not infile) instring)))
+    (setq command (shs-convert-command-string-to-list-maybe command))
+    (when rmp
+      ;; see also, for example, shsu-mktemp-d
+      (setq infile (shsp "mktemp"))
+      (with-temp-buffer
+	(insert instring)
+	(let ((require-final-newline nil))
+	  (write-file infile nil))))
+    (let* ((codeoutput (shs-process-and-code command infile))
+	   (code (car codeoutput))
+	   (output (cadr codeoutput)))
+      (when rmp (delete-file infile))
+      (cond
+       ((equal code 0)
+	(when outfile
+	  (with-temp-buffer
+	    (when (and appendp (file-exists-p outfile))
+	      (insert-file-contents outfile))
+	  (goto-char (point-max))
+	  (insert output)
+	  (let ((require-final-newline nil))
+	    (write-file outfile nil))))
+	output)
+       ;; as you see, the string-to-number of this error code will
+       ;; always be the correct error code.
+       (t (error "%S -- error code when call-process: %S\n Output was: %S" code command output))))))
+  
 
 
 
@@ -526,9 +543,6 @@ as far as argument structure and all function features are concerned.
 	  (file-name-nondirectory  file)))
 
 	 
-
-
-
 
 
 
