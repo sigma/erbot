@@ -1,5 +1,8 @@
 2006-05-08  D Goel  <deego@gnufans.org>
 
+	* erbtranslate.el (erbn-translate-program): new.  Make the program customizeable.
+	
+
 	* contrib/shs.el: New shs.el, cleans up temporary files.
 
 2006-04-24  D Goel  <deego@gnufans.org>

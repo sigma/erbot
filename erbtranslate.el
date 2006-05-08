@@ -1,5 +1,5 @@
 ;;; erbtranslate.el --- Natural Language translation functions. 
-;; Time-stamp: <2006-04-24 13:44:01 deego>
+;; Time-stamp: <2006-05-08 00:17:18 deego>
 ;; Copyright (C) 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc
@@ -45,6 +45,10 @@
 
 (defalias 'fsi-t8 'fsi-translate)
 
+(defvar erbn-translate-program "translate" 
+  "External program")
+
+
 (defcustom erbn-translate-p nil 
  "Enabling this should be completely safe.  We do use call-process
 here whenever passing any arguments to external commands.")
@@ -66,14 +70,15 @@ here whenever passing any arguments to external commands.")
   (let ((process-coding-system-alist '(("." . no-conversion)))
 	(coding-system-for-write 'utf-8)
 	(translation nil)
-	(from-lang (format "%s") from)
-	(to-lang   (format "%s") to)
+	(from-lang (format "%s" from))
+	(to-lang   (format "%s" to))
 	;;(locale (getenv "LC_ALL")) 
 	)
     ;;(setenv "LC_ALL" nil)
     ;;(message "=> string is %S" (string-to-sequence text        'vector))
     (setq translation 
-	  (shsp (list "translate" "-f" from-lang "-t" to-lang) nil text))
+	  (shsp (list erbn-translate-program
+		      "-f" from-lang "-t" to-lang) nil text))
     ;;(message "0 string is %sbyte" 
     ;;         (if (multibyte-string-p translation) "MULTI" "UNI"))
     ;;(setq translation (string-make-unibyte translation))
@@ -88,9 +93,11 @@ here whenever passing any arguments to external commands.")
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
 
+
 (defun fsi-translate-list-pairs (&rest args)
   (erbtranslate-enabled-check)
-  (erbn-shell-command-to-string "translate --list-pairs"
+  (erbn-shell-command-to-string (concat erbn-translate-program 
+					" --list-pairs")
 			       '(t)))
 
 
@@ -100,15 +107,17 @@ here whenever passing any arguments to external commands.")
 
 (defun fsi-translate-list-services (&rest args)
    (erbtranslate-enabled-check)
-   (erbn-shell-command-to-string "translate --list-services"
-				 '(t)))
+   (erbn-shell-command-to-string 
+    (concat erbn-translate-program " --list-services")
+    '(t)))
 
 
 
 
 (defun fsi-translate-web-page (from to url &rest args)
   (erbtranslate-enabled-check)
-  (shsp (list "translate" "-f" 
+  (shsp (list erbn-translate-program
+	      "-f" 
 	      (format "%s" from) "-t"
 	      (format "%s" to)
 	      (format "%s" url))))
