@@ -209,21 +209,22 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
      ( (or (not to) (not from)) ;; one end point specified
        (let ( (dir (if from "From" "To")) 
               (op  (if from 'car 'cadr))
+              (op2 (if from 'cadr 'car))
               (s   nil)
               (x   0) 
               (fl  (format "%s" (or from to))) )
          (mapc 
           (lambda (p) (if (member-ignore-case fl (funcall op p)) 
-                          (setq x (1+ x) s (cons p s))))
+                          (setq x (1+ x) 
+                                s (cons (car (funcall op2 p)) s))))
           erbtranslate-pairs)
          (setq fl (or (erbtranslate-full-name fl) fl))
          (apply 'concat 
                 (format "%s %s: %d language(s) available.\n" dir fl x) 
-                (if (<= (length s) 20) 
-                    (mapcar (lambda (x) 
-                              (format "%s -> %s\n" 
-                                      (princ (car  x)) 
-                                      (princ (cadr x)))) s)) )) )
+                (if (<= (length s) 100) 
+                    (list 
+                     (mapconcat 
+                      (lambda (x) (erbtranslate-full-name x)) s ", ")) ))) )
      (t ;; fully spec'd translation 
       (let ( (s nil) 
              (x   0) 
