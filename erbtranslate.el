@@ -201,7 +201,7 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
     (cond 
      ( (and (not from) (not to)) ;; neither end point specified
        (concat 
-        (format "%d language pair(s) available." (length erbtranslate-pairs))
+        (format "%d language pair(s) available.\n" (length erbtranslate-pairs))
         "Specify an origin and/or destination language to see a list:\n"
         "  translate-list-pairs es ja\n"
         "  translate-list-pairs castilian\n"
