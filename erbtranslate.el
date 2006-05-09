@@ -47,6 +47,9 @@ elements are human-readable aliases. (types) is a list of translation types,
 usually text, and occasionally web-page as well. No other types are currently 
 known.")
 
+(defvar erbtranslate-unsupported-langs '("ar" "he")
+  "Languages (two letter codes) that we cannot utf-8 encode yet.")
+
 (defun erbtranslate-enabled-check ()
   (erbutils-enabled-check erbn-translate-p))
 
@@ -68,6 +71,20 @@ here whenever passing any arguments to external commands.")
            (setq code (cons (caar p) (car (cadr p))) )) )
      erbtranslate-pairs)
     code))
+
+(defun erbtranslate-full-name (code-or-name)
+  "Return the full name of a language based on a code or one of its aliases."
+  (let ((name nil) (lang nil) (ldata erbtranslate-pairs))
+    (while (and ldata (not name))
+      (setq lang (car ldata) ldata (cdr ldata))
+      (if (member-ignore-case code-or-name (car lang))
+          (setq lang (car lang))
+        (if (member-ignore-case code-or-name (cadr lang)) 
+            (setq lang (cadr lang)) 
+          (setq lang nil)))
+      (when lang  
+        (setq name (mapconcat (lambda (l) (format "%s" l)) (cdr lang) " ")) ))
+    name))
 
 (defun fsi-translate (from to &rest text)
   (erbtranslate-enabled-check)
@@ -92,16 +109,23 @@ here whenever passing any arguments to external commands.")
         ;;(locale (getenv "LC_ALL")) 
         )
     (setq code (erbtranslate-req-to-pair from-lang to-lang))
-    (if (not code)
-        (format "%s -> %s: no matching translation services found." 
-                from-lang to-lang)
-      ;;(message "=> string is %S" (string-to-sequence text 'vector))
-      (setq translation 
-            (shsp (list erbn-translate-program
-                        "-f" (car code) "-t" (cdr code)) nil text))
-      (setq translation (decode-coding-string translation 'utf-8))
-      ;;(message "<= string is %S" (string-to-sequence translation 'vector))
-      translation)))
+    (cond 
+     ( (not code)
+       (concat (format "%s -> %s: no matching translation services found.\n" 
+                       from-lang to-lang)
+               "Syntax: translate FROM TO TEXT\n") )
+      ( (member (car code) erbtranslate-unsupported-langs)
+        (format "Sorry, unicode support for %s is not yet complete." 
+                (erbtranslate-full-name from)) )
+      ( (member (cdr code) erbtranslate-unsupported-langs)
+        (format "Sorry, unicode support for %s is not yet complete." 
+                (erbtranslate-full-name to)) )
+      (t
+       (setq translation 
+             (shsp (list erbn-translate-program
+                         "-f" (car code) "-t" (cdr code)) nil text)
+             translation (decode-coding-string translation 'utf-8))
+      translation)) ))
 
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
@@ -167,28 +191,39 @@ an element for insertion into erbtranslate-pairs."
   "Allow the user to search for translation pairs. Only gives counts 
 unless both from and to are specified. *, any, - are allowed as wildcards."
   (erbtranslate-enabled-check)
-  (setq from (format "%s" from)
-        to   (format "%s" to  ))
+  (setq from (format "%s" (or from "*"))
+        to   (format "%s" (or to   "*")))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" from) (setq from nil))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" to  ) (setq to   nil))
   (if (not (erbtranslate-load-pairs))
       "translate doesn't seem to have been setup - no languages found."
     (cond 
-     ( (and (not from) (not to))
-       (format "%d language pair(s) available." (length erbtranslate-pairs)) )
-     ( (not to) 
-       (let ( (x 0) (fl (format "%s" from)) )
+     ( (and (not from) (not to)) ;; neither end point specified
+       (concat 
+        (format "%d language pair(s) available." (length erbtranslate-pairs))
+        "Specify an origin and/or destination language to see a list:\n"
+        "  translate-list-pairs es ja\n"
+        "  translate-list-pairs castilian\n"
+        "  translate-list-pairs * zh-TW\n") )
+     ( (or (not to) (not from)) ;; one end point specified
+       (let ( (dir (if from "From" "To")) 
+              (op  (if from 'car 'cadr))
+              (s   nil)
+              (x   0) 
+              (fl  (format "%s" (or from to))) )
          (mapc 
-          (lambda (p) (if (member-ignore-case fl (car p)) (setq x (1+ x)))) 
+          (lambda (p) (if (member-ignore-case fl (funcall op p)) 
+                          (setq x (1+ x) s (cons p s))))
           erbtranslate-pairs)
-         (format "From %s: %d pair(s) available." fl x)) )
-     ( (not from) 
-       (let ( (x 0) (tl (format "%s" to)) ) 
-         (mapc 
-          (lambda (p) (if (member-ignore-case tl (cadr p)) (setq x (1+ x)))) 
-          erbtranslate-pairs)
-         (format "To %s: %d pair(s) available.\n" tl x)) )
-     (t 
+         (if (< 0 x) (setq fl (or (erbtranslate-full-name fl) fl)))
+         (apply 'concat 
+                (format "%s %s: %d language(s) available.\n" dir fl x) 
+                (if (<= (length s) 20) 
+                    (mapcar (lambda (x) 
+                              (format "%s -> %s\n" 
+                                      (princ (car  x)) 
+                                      (princ (cadr x)))) s)) )) )
+     (t ;; fully spec'd translation 
       (let ( (s nil) 
              (x   0) 
              (fl (format "%s" from)) 
@@ -198,6 +233,9 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
            (if (and (member-ignore-case fl (car p)) (member tl (cadr p))) 
                (setq x (1+ x) s (cons p s)) )) 
          erbtranslate-pairs)
+        (if (< 0 x) 
+            (setq fl (or (erbtranslate-full-name fl) fl)
+                  tl (or (erbtranslate-full-name tl) tl)))
         (apply 'concat 
                (format "%s -> %s: %d pair(s) available.\n" fl tl x) 
                (mapcar (lambda (x) 

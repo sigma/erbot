@@ -1,3 +1,17 @@
+2006-05-09  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbtranslate.el (fsi-translate-list-pairs): improved help, return
+	more information when < N pairs, where N is currently 20. (Always 
+	return full list if both origin and destination are both supplied)
+	(erbtranslate-full-name): returns a "full name" for a language,
+	consisting of all its human-readable aliases.
+	(erbtranslate-unsupported-langs): list of languages emacs can't utf-8
+	encode yet.
+	(fsi-translate): abort for non-unicodable languages like Arabic and 
+	Hebrew.
+	(fsi-translate): Use full names of languages in error messages.
+	(fsi-translate-list-pairs): Use full names of languages in messages.
+
 2006-05-08  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbtranslate.el (erbtranslate-parse-pair): parse the output of
