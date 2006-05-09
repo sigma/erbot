@@ -117,10 +117,10 @@ here whenever passing any arguments to external commands.")
                "Syntax: translate FROM TO TEXT\n") )
       ( (member (car code) erbtranslate-unsupported-langs)
         (format "Sorry, unicode support for %s is not yet complete." 
-                (erbtranslate-full-name from)) )
+                (erbtranslate-full-name from-lang)) )
       ( (member (cdr code) erbtranslate-unsupported-langs)
         (format "Sorry, unicode support for %s is not yet complete." 
-                (erbtranslate-full-name to)) )
+                (erbtranslate-full-name to-lang)) )
       (t
        (setq translation 
              (shsp (list erbn-translate-program
