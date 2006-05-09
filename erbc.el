@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-04-20 14:29:33 deego>
+;; Time-stamp: <2006-05-08 00:14:08 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3670,6 +3670,7 @@ author know.."
 
 (defun fsi-notes (name)
   "Internal. Return the notes as a list. "
+  (sit-for 0)
   (let ((exnotes (erbbdb-get-exact-notes name)))
     (and (stringp exnotes) (erbn-read exnotes))))
 

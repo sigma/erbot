@@ -1,6 +1,6 @@
 ;; 2006-04-24 T14:02:53-0400 (Monday)    D. Goel	
-Alejandro Benitez <benitezalejandrogm@gmail.com> (and deego) provide
-natural language translation.
+Alejandro Benitez <benitezalejandrogm@gmail.com> (and deego and
+fledermaus) provide natural language translation.
 
 ;; 2005-12-31 T04:34:34-0500 (Saturday)    D. Goel	
 Vivek Dasmohapatra fixes/fixing coding issues.
