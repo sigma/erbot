@@ -215,7 +215,7 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
           (lambda (p) (if (member-ignore-case fl (funcall op p)) 
                           (setq x (1+ x) s (cons p s))))
           erbtranslate-pairs)
-         (if (< 0 x) (setq fl (or (erbtranslate-full-name fl) fl)))
+         (setq fl (or (erbtranslate-full-name fl) fl))
          (apply 'concat 
                 (format "%s %s: %d language(s) available.\n" dir fl x) 
                 (if (<= (length s) 20) 
@@ -233,9 +233,8 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
            (if (and (member-ignore-case fl (car p)) (member tl (cadr p))) 
                (setq x (1+ x) s (cons p s)) )) 
          erbtranslate-pairs)
-        (if (< 0 x) 
-            (setq fl (or (erbtranslate-full-name fl) fl)
-                  tl (or (erbtranslate-full-name tl) tl)))
+        (setq fl (or (erbtranslate-full-name fl) fl)
+              tl (or (erbtranslate-full-name tl) tl))
         (apply 'concat 
                (format "%s -> %s: %d pair(s) available.\n" fl tl x) 
                (mapcar (lambda (x) 
