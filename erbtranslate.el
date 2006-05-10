@@ -232,7 +232,8 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
              (tl (format "%s" to  )) )
         (mapc 
          (lambda (p) 
-           (if (and (member-ignore-case fl (car p)) (member tl (cadr p))) 
+           (if (and (member-ignore-case fl (car  p)) 
+                    (member-ignore-case tl (cadr p))) 
                (setq x (1+ x) s (cons p s)) )) 
          erbtranslate-pairs)
         (setq fl (or (erbtranslate-full-name fl) fl)
