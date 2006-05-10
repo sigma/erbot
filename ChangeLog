@@ -1,3 +1,7 @@
+2006-05-10  D Goel  <deego@gnufans.org>
+
+	* erbtranslate.el: update authors
+
 2006-05-10  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbtranslate.el (fsi-translate-list-pairs): destination language
