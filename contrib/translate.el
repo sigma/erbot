@@ -8,7 +8,8 @@
 ;; Created: 2006-05-10
 ;; Description: use gnome translate/libtranslate to translate text
 ;; Compatibility: Emacs21, Emacs22
-;; Last modified: Thu 2006-05-11 01:06:34 +0100
+;; Last modified: Fri 2006-05-12 02:52:44 +0100
+
 
 ;; Based on work by:
 ;; Deepak Goel <deego@gnufans.org>
@@ -151,8 +152,6 @@ if translate-pairs has already been loaded, it will not do anything."
 (defun translate-list-pairs (&optional from to)
   "Return the subset of `translate-pairs' that matches the FROM and TO
 arguments."
-  (setq from (format "%s" (or from "*"))
-        to   (format "%s" (or to   "*")))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" from) (setq from nil))
   (if (string-match "^\\(?:\*\\|any\\|-\\|\\)$" to  ) (setq to   nil))
   (if (not (translate-load-pairs))

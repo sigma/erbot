@@ -1,3 +1,15 @@
+2006-05-12  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* contrib/translate.el: the symbol -> string coercion is not 
+	required for arguments to translate.el, that's something
+	specific to user-visible erbot functions.
+
+	* erbtranslate.el: most translation code moved to translate.el
+	fsi-translate-web-page temporarily disabled till I've tested
+	it a bit more and made the implementation a little smarter
+	than it currently is. (It should check ti see if a web page 
+	service is actualy available)
+
 2006-05-10  D Goel  <deego@gnufans.org>
 
 	* erbtranslate.el: update authors
