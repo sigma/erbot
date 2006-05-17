@@ -1,3 +1,11 @@
+2006-05-17  Michael Olson  <mwolson@gnu.org>
+
+	* contrib/translate.el (translate-load-pairs): Docfix.
+
+	* erbtranslate.el (fsi-translate-list-services): Use
+	translate-program, not erbn-translate-program, since the latter
+	does not exist.
+
 2006-05-12  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* contrib/translate.el: the symbol -> string coercion is not 

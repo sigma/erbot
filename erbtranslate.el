@@ -105,7 +105,7 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
 (defun fsi-translate-list-services (&rest args)
    (erbtranslate-enabled-check)
    (erbn-shell-command-to-string 
-    (concat erbn-translate-program " --list-services")
+    (concat translate-program " --list-services")
     '(t)))
 
 ;; temporarily disabled till clean support is provided by translate.el

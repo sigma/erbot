@@ -132,7 +132,7 @@ an element for insertion into `translate-pairs'."
     (message "%S does not match.\n" pair-line) nil))
 
 (defun translate-load-pairs (&optional reload)
-  "Parse the output of `erbn-translate-program' -l into `translate-pairs'
+  "Parse the output of `translate-program' -l into `translate-pairs'
 Called interactively with a prefix argument, or non-interactively with a 
 non-nil reload argument, it will empty translate-pairs first. Otherwise,
 if translate-pairs has already been loaded, it will not do anything."
