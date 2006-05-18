@@ -46,15 +46,20 @@
  "Enabling this should be completely safe.  We do use call-process
 here whenever passing any arguments to external commands.")
 
-(defun fsi-translate (from to &rest text)
+(defun fsi-translate (&optional from to &rest text)
   (erbtranslate-enabled-check)
-  (setq text (mapconcat #'(lambda (arg) (format "%s" arg)) text " ")
-        from (format "%s" from)
-        to   (format "%s" to  ))
-  (condition-case caught
-      (translate from to text)
-    (error (concat "libtranslate error:" (cdr caught) )) ))
-
+  (if (not (and from to text))
+      (let ((frame (backtrace-frame 3)) (caller nil))
+        (setq caller (symbol-name (cadr frame))
+              caller (replace-regexp-in-string "^\\w+-" "" caller))
+        (format "Usage: ,%s FROM TO TEXT" caller))
+    (setq text (mapconcat #'(lambda (arg) (format "%s" arg)) text " ")
+          from (format "%s" from)
+          to   (format "%s" to  ))
+    (condition-case caught
+        (translate from to text)
+      (error (concat "libtranslate error:" (cdr caught)) )) ))
+  
 (defalias 'fsi-t8-l 'fsi-translate-list-pairs)
 
 (defun fsi-translate-list-pairs (&optional from to &rest args)
