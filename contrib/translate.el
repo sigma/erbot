@@ -212,14 +212,14 @@ or a work-alike). If an error occurs, either internally or while invoking
               (translate-full-name to-lang)) )
      ( t
        (with-temp-buffer
-         (let ( (lang     (getenv "LANG"))
-                (lc-ctype (getenv "LC_CTYPE"))
+         (let ( (lc-all (getenv "LC_ALL"))
+                (lang   (getenv "LANG"))
                 (coding-system-for-read  'utf-8)
                 (coding-system-for-write 'utf-8)
                 (process-coding-system-alist '("." . utf-8)) )
            (insert text)
-           (setenv "LANG"     "en_GB.UTF-8")
-           (setenv "LC_CTYPE" "ja_JP.UTF-8") ;; seems to work. here be dragons
+           (setenv "LC_ALL" nil)
+           (setenv "LANG"   "en_GB.UTF-8")
            (setq status
                  (call-process-region (point-min) (point-max)
                                       translate-program
@@ -227,11 +227,11 @@ or a work-alike). If an error occurs, either internally or while invoking
                                       "-f" from "-t" to)
                  translation (buffer-substring-no-properties (point-min)
                                                              (point-max)))
-           (setenv "LANG"     lang)
-           (setenv "LC_CTYPE" lc-ctype) 
+           (setenv "LANG" lang)
+           (setenv "LC_ALL" lc-all)
            )) ))
      (if (/= 0 status)
          (error "%d - %s" status translation))
-     translation ))                     ;
+     translation ))
 
 (provide 'translate)
