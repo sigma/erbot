@@ -191,8 +191,7 @@ or a work-alike). If an error occurs, either internally or while invoking
   ;; call-process should use utf-8, that's what libtranslate wants: hence 
   ;; we set process-coding-system-alist.
   ;; -----------------------------------------------------------------------
-  (let ( (process-coding-system-alist '(("." . utf-8)))
-         (from-lang (format "%s" from))
+  (let ( (from-lang (format "%s" from)) 
          (to-lang   (format "%s" to)) 
          (translation nil)  ;; translated text, or libtranslate error
          (code        nil)  ;; cons of (origin-lang . dest-lang)
@@ -212,15 +211,27 @@ or a work-alike). If an error occurs, either internally or while invoking
        (error "Sorry, unicode support for %s is not yet complete." 
               (translate-full-name to-lang)) )
      ( t
-       (with-temp-buffer 
-         (insert text)
-         (setq status 
-               (call-process-region (point-min) (point-max) translate-program 
-                                    :delete-input (current-buffer) nil
-                                    "-f" from "-t" to) 
-               translation (buffer-string)) )) ) 
-    (if (/= 0 status) 
-        (error "%d - %s" status translation)) 
-    translation))
+       (with-temp-buffer
+         (let ( (lang     (getenv "LANG"))
+                (lc-ctype (getenv "LC_CTYPE"))
+                (coding-system-for-read  'utf-8)
+                (coding-system-for-write 'utf-8)
+                (process-coding-system-alist '("." . utf-8)) )
+           (insert text)
+           (setenv "LANG"     "en_GB.UTF-8")
+           (setenv "LC_CTYPE" "ja_JP.UTF-8") ;; seems to work. here be dragons
+           (setq status
+                 (call-process-region (point-min) (point-max)
+                                      translate-program
+                                      :delete-input (current-buffer) nil
+                                      "-f" from "-t" to)
+                 translation (buffer-substring-no-properties (point-min)
+                                                             (point-max)))
+           (setenv "LANG"     lang)
+           (setenv "LC_CTYPE" lc-ctype) 
+           )) ))
+     (if (/= 0 status)
+         (error "%d - %s" status translation))
+     translation ))                     ;
 
 (provide 'translate)
