@@ -1,7 +1,8 @@
 ;; wtf.el --- Look up conversational and computing acronyms
 
-;; Copyright (C) 2005, 2006  Michael Olson
+;; Copyright (C) 2005, 2006 Michael Olson
 
+;; Author: Michael Olson
 ;; Version: 1.3
 
 ;; This file is not part of GNU Emacs.
@@ -28,8 +29,8 @@
 
 ;; Use:
 ;;
-;; To use this, go to an unknown term in a buffer and type M-x wtf.
-;; This can also be used programmatically.
+;; To use this, go to an unknown term in a buffer and type M-x wtf-is.
+;; This can also be done programmatically.
 
 ;; Legalese:
 ;;
