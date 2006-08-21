@@ -703,7 +703,7 @@ the beginning of your .emacs")
   (interactive)
   (setq erbot-on-new-erc-p
 	(and (boundp 'erc-server-PRIVMSG-functions)
-	     (boundp 'erc-backend-version)))
+	     (featurep 'erc-backend)))
   (cond (erbot-on-new-erc-p
 	 (add-hook 'erc-server-PRIVMSG-functions 'erbot-remote t)
 	 ;; Do we need this local command thing...?
