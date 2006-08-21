@@ -128,6 +128,7 @@ to: Kalle on 7/3/01:
 
 (erball-ignore-errors-loudly (require 'erbmsg))
 (erball-ignore-errors-loudly (require 'erbtranslate))
+(erball-ignore-errors-loudly (require 'erbim))
 
 (erball-ignore-errors-loudly (require 'flame))
 
