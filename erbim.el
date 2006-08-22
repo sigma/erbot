@@ -124,7 +124,7 @@ or `erbim-package-list' and return a help string describing the key sequences
               (when (or (equal Q "iso-transl") (assoc Q quail-package-alist))
                 ;;(message "%s keymap - %d" Q (length (erbim-keymap-map Q)))
                 ;; extract the inverse keymap if there is one, and pull
-                ;; put the first entry for the char we are looking for:
+                ;; out the first entry for the char we are looking for:
                 (when (setq qsec (assoc char (erbim-keymap-map Q)))
                   ;;(message "found sequence %s" qsec)
                   (setq res (cons (cons Q (cdr qsec)) res)) )) ))
@@ -132,8 +132,8 @@ or `erbim-package-list' and return a help string describing the key sequences
     ;; feed the results to the user (if there are lots of input methods,
     ;; just list the input methods instead):
     (if (> (length res) 10)
-        (format "%s is in the following input methods:\n%S" 
-                char (mapcar 'car res))
+        (format "%s is in the following input methods:\n%s"
+                c (mapconcat 'car res " "))
       (mapconcat 
        (lambda (R) 
          (if (equal (car R) "iso-transl")
