@@ -76,10 +76,6 @@ vectors of characters, or a cons of the form (LIST . TARGET)."
         (mapcar
          (lambda (M) (erbim-map-internal M iseq-str)) (cddr map))) ) ))
 
-;; load iso-transl's inverted keymap
-(add-to-list 'erbim-keymaps-map 
-             (cons "iso-transl" (erbim-map iso-transl-ctl-x-8-map)))
-
 (defun erbim-package-list ()
   "Return the list of input methods that erbim can understand.
 iso-transl is not exactly an input method, but it is a special case."
@@ -147,17 +143,11 @@ or `erbim-package-list' and return a help string describing the key sequences
     (if key (where-is-char key (mapcar 'symbol-name im-list)) 
       "where-is-char <CHAR-OR-SEQUENCE> [ INPUT-METHOD INPUT-METHOD... ]") ))
 
+;; load iso-transl's inverted keymap
+(add-to-list 'erbim-keymaps-map 
+             (cons "iso-transl" (erbim-map iso-transl-ctl-x-8-map)))
+;; trigger the preprocessing of the rest of the input methods:
+(where-is-char "x")
+
 (provide 'erbim)
 
-;; (where-is-char "Þ")
-;; (assoc (erbim-enc "þ") (erbim-keymap-map "iso-transl"))
-
-;; (setq erbim-keymaps-map nil)
-;; (insert "\n" (pp (assoc "japanese" erbim-keymaps-map)))
-;; (insert "\n" (pp (nth 2 (assoc "greek-babel" quail-package-alist))))
-;; (insert "\n" (pp (assoc "greek-babel" erbim-keymaps-map)))
-
-;; (erbim-map iso-transl-ctl-x-8-map)
-;; (insert "\n" 
-;;   (pp (erbim-map (nth 2 (assoc "greek-babel" quail-package-alist)))))
-;; (erbim-map (nth 2 (assoc "greek-babel" quail-package-alist)))
