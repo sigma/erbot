@@ -1,5 +1,5 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2006-04-20 14:26:37 deego>
+;; Time-stamp: <2006-08-24 11:11:11 deego>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
@@ -720,6 +720,12 @@ the beginning of your .emacs")
   (erbot-install-symbols)
   (when (and erbot-setf-p (not erbot-paranoid-p))
     (erbot-install-setf))
+  ;; A running bot should have these nil, else userfunctions will not
+  ;; function right:
+  (setq eval-expression-print-length nil)
+  (setq eval-expression-print-level nil)
+  (setq print-length nil)
+  (setq print-level nil)
   )
 
 
