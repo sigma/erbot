@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2006-05-08 00:14:08 deego>
+;; Time-stamp: <2006-09-28 12:17:42 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -1145,7 +1145,13 @@ Else, of course, do the usual thing: viz. call describe...
 	)
     (cond
      ((<= len 1)
-      (fs-describe (first msg) nil nil nil origmsg))
+      (if (fsi-notes (first msg))
+	  (fs-describe 
+	   (first msg)
+	   nil nil nil origmsg)
+      (fs-describe 
+       (fsi-generalize-search-term (first msg))
+       nil nil nil origmsg)))
      (t
       (setq mainterm (first msg))
       (setq firstterm mainterm)
@@ -1184,8 +1190,12 @@ Else, of course, do the usual thing: viz. call describe...
 	   mainterm (first remainder) (second remainder)
 	   "Try: " origmsg)
 	(fs-describe
-	 firstterm (first remainder) (second remainder)
+	 (fsi-generalize-search-term firstterm) (first remainder) (second remainder)
 	 (third remainder) origmsg))))))
+
+
+(defun fsi-generalize-search-term (term)
+  (erbutils-replace-string-in-string "-" "[ -]*" term))
 
 ;; (defalias 'fs-hello 'fs-hi)
 ;; (defalias 'fs-hey 'fs-hi)
@@ -3669,7 +3679,7 @@ author know.."
 
 
 (defun fsi-notes (name)
-  "Internal. Return the notes as a list. "
+  "Internal. Return the notes as a list.  Else nil"
   (sit-for 0)
   (let ((exnotes (erbbdb-get-exact-notes name)))
     (and (stringp exnotes) (erbn-read exnotes))))
