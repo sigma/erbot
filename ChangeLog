@@ -1,3 +1,8 @@
+2006-11-28  Michael Olson  <mwolson@gnu.org>
+
+	* erbot.el (erbot-join-servers): Make this work with the ERC
+	development branch.
+
 2006-09-28  D Goel  <deego@gnufans.org>
 
 	* erbc.el (fsi-describe-from-english): smarter self search

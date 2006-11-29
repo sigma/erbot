@@ -870,8 +870,12 @@ not, try to reconnect. "
 
 	(run-hook-with-args 'erc-before-connect server port nick)
 	(unless (erc-already-logged-in server port nick)
-	  (erc
-	   server port nick user-full-name (not not-connect-arg) passwd))))))
+	  (if (fboundp 'erc-open)
+	      (erc-open
+	       server port nick user-full-name (not not-connect-arg) passwd)
+	    (erc
+	     server port nick user-full-name (not not-connect-arg)
+	     passwd)))))))
 
 
 (defun erbot-safe-make (line)
