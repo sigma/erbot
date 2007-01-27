@@ -199,82 +199,18 @@ as many times as it returns a...
 
 (defun erbutils-describe-variable (&optional variable buffer)
   "Like describe-variable, but doesn't print the actual value.."
-  ;;   (interactive
-  ;;    (let ((v (variable-at-point))
-  ;;   (enable-recursive-minibuffers t)
-  ;;   val)
-  ;;      (setq val (completing-read (if (symbolp v)
-  ;;            (format
-  ;;             "Describe variable (default %s): " v)
-  ;;          "Describe variable: ")
-  ;;        obarray 'boundp t nil nil
-  ;;        (if (symbolp v) (symbol-name v))))
-  ;;      (list (if (equal val "")
-  ;;         v (intern val)))))
   (unless (bufferp buffer) (setq buffer (current-buffer)))
   (if (not (symbolp variable))
       (message "Unknown variable or You did not specify a variable")
     (let (valvoid)
       (with-current-buffer buffer
   (with-output-to-temp-buffer "*Help*"
-    ;; (prin1 variable)
-    ;;    (if (not (boundp variable))
-    ;;        (progn
-    ;;    (princ " is void")
-    ;;    (setq valvoid t))
-    ;;      (let ((val (symbol-value variable)))
-    ;;        (with-current-buffer standard-output
-    ;;    (princ "'s value is ")
-    ;;    (terpri)
-    ;;    (let ((from (point)))
-    ;;      (pp val)
-    ;;      (help-xref-on-pp from (point))
-    ;;      (if (< (point) (+ from 20))
-    ;;          (save-excursion
-    ;;      (goto-char from)
-    ;;      (delete-char -1)))))))
     (terpri)
     (if (erbcompat-local-variable-p variable)
         (progn
 	  (princ (format "Local in buffer %s; " (buffer-name)))
-	  ;; (if (not (default-boundp variable))
-	  ;;        (princ "globally void")
-	  ;;      (let ((val (default-value variable)))
-	  ;;        (with-current-buffer standard-output
-	  ;;          (princ "global value is ")
-	  ;;  (terpri) Fixme: pp can take an age if you happen
-	  ;;          ;; to ask for a very large
-	  ;;          ;; expression.  We should
-	  ;;          ;; probably print it raw once
-	  ;;          ;; and check it's a sensible
-	  ;;          ;; size before prettyprinting.
-	  ;;          ;; -- fx
-	  ;;          (let ((from (point)))
-	  ;;      (pp val)
-	  ;;      (help-xref-on-pp from (point))
-	  ;;      (if (< (point) (+ from 20))
-	  ;;          (save-excursion
-	  ;;            (goto-char from)
-	  ;;            (delete-char -1)))))))
+
 	  (terpri)))
-    (terpri)
-    ;; (with-current-buffer standard-output
-    ;;      (if (> (count-lines (point-min) (point-max)) 10)
-    ;;    (progn
-    ;;      ;; Note that setting the syntax table like below
-    ;;      ;; makes forward-sexp move over a `'s' at the end
-    ;;      ;; of a symbol.
-    ;;      (set-syntax-table emacs-lisp-mode-syntax-table)
-    ;;      (goto-char (point-min))
-    ;;      (if valvoid
-    ;;          (forward-line 1)
-    ;;        (forward-sexp 1)
-    ;;        (delete-region (point) (progn
-    ;;        (end-of-line) (point)))
-    ;;        (insert " value is shown below.\n\n")
-    ;;        (save-excursion
-    ;;          (insert "\n\nValue:"))))))
-    ;; (princ "Documentation:")
     (terpri)
     (let ((doc 
 	   (documentation-property variable 'variable-documentation)))
@@ -297,12 +233,15 @@ as many times as it returns a...
 	    (save-excursion
 	      (re-search-backward
 	       (concat "\\(" customize-label "\\)") nil t)
-	      (help-xref-button 1 (lambda (v)
-				    (if help-xref-stack
-					(pop help-xref-stack))
-				    (customize-variable v))
-				variable
-				"mouse-2, RET: customize variable")))))
+              (if (< 22 emacs-major-version)
+                  (help-xref-button 1 (lambda (v)
+                                        (if help-xref-stack
+                                            (pop help-xref-stack))
+                                        (customize-variable v))
+                                    variable
+                                    "mouse-2, RET: customize variable")
+                (help-xref-button 1 'help-customize-variable variable))
+              ))))
     ;; Make a hyperlink to the library if appropriate.  (Don't
     ;; change the format of the buffer's initial line in case
     ;; anything expects the current format.)
@@ -314,21 +253,22 @@ as many times as it returns a...
         (with-current-buffer "*Help*"
     (save-excursion
       (re-search-backward "`\\([^`']+\\)'" nil t)
-      (help-xref-button
-       1 (lambda (arg)
-           (let ((location
-            (find-variable-noselect arg)))
-       (pop-to-buffer (car location))
-       (goto-char (cdr location))))
-       variable "mouse-2, RET: find variable's definition")))))
+      (if (< 22 emacs-major-version)
+          (help-xref-button
+           1 (lambda (arg)
+               (let ((location
+                      (find-variable-noselect arg)))
+                 (pop-to-buffer (car location))
+                 (goto-char (cdr location))))
+           variable "mouse-2, RET: find variable's definition") 
+        (help-xref-button 1 'help-variable-def variable file-name)) 
+      ))))
 
     (print-help-return-message)
     (save-excursion
       (set-buffer standard-output)
       ;; Return the text we displayed.
       (buffer-substring-no-properties (point-min) (point-max))))))))
-
-
 
 
 (defvar erbutils-itemize-style

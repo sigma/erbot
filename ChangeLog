@@ -1,3 +1,8 @@
+2007-01-27  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbutils.el (erbutils-describe-variable): help-button-xref
+	has changed in emacs22, make this function work with it.
+
 2006-11-28  Michael Olson  <mwolson@gnu.org>
 
 	* erbot.el (erbot-join-servers): Make this work with the ERC
