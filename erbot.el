@@ -852,6 +852,7 @@ not, try to reconnect. "
       (setq nick (or erbot-nick (erc-compute-nick nick)))
       (let* (
 	     (foo 'bar)
+             (version nil)
 	     ;(nick
 	     ; (if (erc-already-logged-in server port nick)
 	     ;;	  (read-from-minibuffer
