@@ -869,13 +869,22 @@ not, try to reconnect. "
 	;; 		      nil nil 'erc-nick-history-list)))
 
 	(run-hook-with-args 'erc-before-connect server port nick)
+	(if (string-match "\\(\\<[[:digit:]]+.[[:digit:]]+\\>\\)" 
+			  erc-version-string)
+	    (setq version (string-to-number 
+			   (match-string 1 erc-version-string)))
+	  (setq version 0))
+
 	(unless (erc-already-logged-in server port nick)
-	  (if (fboundp 'erc-open)
-	      (erc-open
-	       server port nick user-full-name (not not-connect-arg) passwd)
-	    (erc
-	     server port nick user-full-name (not not-connect-arg)
-	     passwd)))))))
+	  (if (<= 5.0 version)
+	      (erc :server    server 
+		   :port      port 
+		   :nick      nick 
+		   :password  passwd
+		   :full-name user-full-name)
+	  (erc
+	   server port nick user-full-name (not not-connect-arg) passwd) )) 
+	))))
 
 
 (defun erbot-safe-make (line)

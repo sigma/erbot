@@ -1,3 +1,10 @@
+2007-01-28  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbot.el (erbot-join-servers): `erc' takes :keyword style
+	parameters in emacs22, the old argument list no longer works.
+	Work out which erc version we're using and alter the call
+	appropriately.
+
 2007-01-27  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbutils.el (erbutils-describe-variable): help-button-xref
