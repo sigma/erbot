@@ -1,9 +1,10 @@
 ;; wtf.el --- Look up conversational and computing acronyms
 
-;; Copyright (C) 2005, 2006 Michael Olson
+;; Copyright (C) 2005, 2006, 2007 Michael Olson
 
-;; Author: Michael Olson
-;; Version: 1.3
+;; Author: Michael Olson (mwolson AT gnu DOT org)
+;; Date: Tue 06-Feb-2007
+;; Version: 1.4
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,15 +25,15 @@
 
 ;;; Commentary:
 
-;; Thanks to Trent Buck for `emacs-wiki-wtf.el', which inspired the
-;; creation of `wtf.el'.
+;; wtf.el provides the ability to look up the definitions of popular
+;; conversational and computing acronyms.
 
-;; Use:
+;; * Use:
 ;;
 ;; To use this, go to an unknown term in a buffer and type M-x wtf-is.
 ;; This can also be done programmatically.
 
-;; Legalese:
+;; * Legalese:
 ;;
 ;; The terms were downloaded from
 ;; http://cvsweb.netbsd.org/bsdweb.cgi/src/share/misc/.  No copyright
@@ -46,8 +47,15 @@
 ;; (http://cvsweb.netbsd.org/bsdweb.cgi/src/games/wtf/wtf) is in the
 ;; public domain.
 
+;; * Acknowledgments:
+;;
+;; Thanks to Trent Buck for `emacs-wiki-wtf.el', which inspired the
+;; creation of `wtf.el'.
+
+;;; Code:
+
 (defvar wtf-alist
-  '(;; $NetBSD: acronyms,v 1.156 2006/05/15 14:11:07 christos Exp $
+  '(;; $NetBSD: acronyms,v 1.164 2007/01/31 18:37:07 elad Exp $
     ("AFAIC" . "as far as i'm concerned")
     ("AFAICR" . "as far as i can recall")
     ("AFAICT" . "as far as i can tell")
@@ -121,6 +129,8 @@
     ("FSDO" . "for some definition of")
     ("FSVO" . "for some value of")
     ("FTFM" . "fuck the fuckin' manual!")
+    ("FTL" . "for the loss")
+    ("FTW" . "for the win")
     ("FUBAR" . "fucked up beyond all recognition")
     ("FUD" . "fear, uncertainty and doubt")
     ("FWIW" . "for what it's worth")
@@ -133,6 +143,7 @@
     ("GMTA" . "great minds think alike")
     ("GTFO" . "get the fuck out")
     ("GTG" . "got to go")
+    ("GWS" . "get well soon")
     ("HAND" . "have a nice day")
     ("HHIS" . "hanging head in shame")
     ("HICA" . "here it comes again")
@@ -174,6 +185,7 @@
     ("L8R" . "later")
     ("LART" . "luser attitude readjustment tool (ie, hammer)")
     ("LBNL" . "last but not least")
+    ("LGTM" . "looks good to me")
     ("LJBF" . "let's just be friends")
     ("LMAO" . "laughing my ass off")
     ("LMSO" . "laughing my socks off")
@@ -252,22 +264,27 @@
     ("SOL" . "shit out [of] luck")
     ("SOP" . "standard operating procedure")
     ("SSIA" . "subject says it all")
+    ("SSTO" . "single stage to orbit")
     ("STFA" . "search the fucking archives")
     ("STFU" . "shut the fuck up")
     ("STFW" . "search the fucking web")
     ("SUS" . "stupid user syndrome")
     ("SWAG" . "silly, wild-assed guess")
     ("SWAHBI" . "silly, wild-assed hare-brained idea")
+    ("SWFG" . "search with fucking google")
     ("SWMBO" . "she who must be obeyed")
     ("TANSTAAFL" . "there ain't no such thing as a free lunch")
     ("TBC" . "to be continued")
     ("TBD" . "to be {decided,determined,done}")
+    ("TBH" . "to be honest")
     ("TBOMK" . "the best of my knowledge")
     ("THNX" . "thanks")
     ("THX" . "thanks")
     ("TIA" . "thanks in advance")
     ("TINC" . "there is no cabal")
     ("TLA" . "three letter acronym")
+    ("TLC" . "tender loving care")
+    ("TLDR" . "too long, didn't read")
     ("TMA" . "too many abbreviations")
     ("TMI" . "too much information")
     ("TMTOWTDI" . "there's more than one way to do it")
@@ -305,7 +322,7 @@
     ("YMA" . "yo momma's ass")
     ("YMMV" . "your mileage may vary")
     ("YW" . "you're welcome")
-    ;; $NetBSD: acronyms.comp,v 1.69 2006/06/09 07:07:28 elad Exp $
+    ;; $NetBSD: acronyms.comp,v 1.72 2007/01/19
     ("3WHS" . "three-way handshake")
     ("ABI" . "application binary interface")
     ("ACL" . "access control list")
@@ -323,12 +340,12 @@
     ("ARP" . "address resolution protocol")
     ("ARQ" . "automatic repeat request")
     ("AS" . "autonomous system")
-    ("ASN" . "autonomous system number")
     ("ASCII" . "american standard code for information interchange")
+    ("ASN" . "autonomous system number")
     ("AT" . "advanced technology")
     ("ATA" . "advanced technology attachment")
-    ("ATC" . "address translation cache")
     ("ATAPI" . "advanced technology attachment packet interface")
+    ("ATC" . "address translation cache")
     ("ATM" . "asynchronous transfer mode")
     ("ATX" . "advanced technology extended")
     ("BEDO" . "burst extended data output")
@@ -338,16 +355,17 @@
     ("BIOS" . "basic input/output system")
     ("BLOB" . "binary large object")
     ("BPS" . "bits per second")
-    ("BSD" . "berkeley software distribution")
     ("BQS" . "berkeley quality software")
+    ("BSD" . "berkeley software distribution")
     ("CAD" . "computer-aided design")
+    ("CARP" . "common address redundancy protocol")
     ("CAV" . "Constant Angular Velocity (as opposed to CLV)")
     ("CCD" . "charge coupled device")
     ("CD" . "compact disc")
     ("CDDA" . "compact disc digital audio")
     ("CDRAM" . "cache dynamic random access memory")
     ("CER" . "canonical encoding rules")
-    ("CGA" . "color graphics array")
+    ("CGA" . "color graphics {array,adapter}")
     ("CGI" . "common gateway interface")
     ("CHS" . "cylinder/head/sector")
     ("CIDR" . "classless inter-domain routing")
@@ -393,12 +411,15 @@
     ("DTE" . "dumb terminal emulator")
     ("DVD" . "digital versatile disc")
     ("DVI" . "digital visual interface")
+    ("E-XER" . "Extended XML encoding Rules")
+    ("EAP" . "extensible authentication protocol")
     ("ECP" . "enhanced capability port")
     ("EDID" . "extended display identification data")
     ("EDO" . "extended data out")
     ("EEPROM" . "electrically erasable programmable read only memory")
+    ("EFI" . "extensible firmware interface")
     ("EFM" . "eight to fourteen modulation")
-    ("EGA" . "enhanced graphics array")
+    ("EGA" . "enhanced graphics {array,adapter}")
     ("EGP" . "exterior gateway protocol")
     ("EISA" . "extended industry standard architecture")
     ("ELF" . "executable and linking format")
@@ -408,7 +429,6 @@
     ("EPRML" . "extended partial response, maximum likelihood")
     ("EPROM" . "erasable programmable read only memory")
     ("ESDRAM" . "enhanced synchronous dynamic random access memory")
-    ("E-XER" . "Extended XML Encoding Rules")
     ("FAT" . "file allocation table")
     ("FBRAM" . "frame buffer random access memory")
     ("FCS" . "frame check sequence")
@@ -421,6 +441,7 @@
     ("FPM" . "fast page mode")
     ("FQDN" . "fully qualified domain name")
     ("FTP" . "file transfer protocol")
+    ("FTPS" . "file transfer protocol, secure")
     ("GC" . "garbage collector")
     ("GCR" . "group-coded recording")
     ("GIF" . "graphics interchange format")
@@ -432,6 +453,7 @@
     ("HDCP" . "high-bandwidth digital content protection")
     ("HTML" . "hyper-text markup language")
     ("HTTP" . "hyper-text transfer protocol")
+    ("HTTPS" . "hyper-text transfer protocol, secure")
     ("I2O" . "intelligent input/output")
     ("IANA" . "internet assigned number authority")
     ("IC" . "integrated circuit")
@@ -447,10 +469,10 @@
     ("IKE" . "internet key exchange")
     ("IMAP" . "internet mail access protocol")
     ("INCITS" . "international committee on information technology standards")
-    ("IPC" . "interprocess communication")
     ("IO" . "input/output")
     ("IOCTL" . "input/output control")
     ("IP" . "internet protocol")
+    ("IPC" . "interprocess communication")
     ("IPNG" . "internet protocol, next generation")
     ("IPSEC" . "internet protocol security")
     ("IRC" . "internet relay chat")
@@ -467,6 +489,7 @@
     ("JPEG" . "joint photographic experts group")
     ("KPI" . "kernel programming interface")
     ("KVA" . "kernel virtual address")
+    ("KVM" . "keyboard, video, mouse switch")
     ("LAN" . "local area network")
     ("LBA" . "logical block addressing")
     ("LCD" . "liquid crystal display")
@@ -474,9 +497,10 @@
     ("LDAP" . "lightweight directory access protocol")
     ("LED" . "light emitting diode")
     ("LIR" . "local internet registry")
+    ("LKM" . "{linux, loadable} kernel module")
     ("LLC" . "logical link control")
     ("LRC" . "longitudinal redundancy check")
-    ("LSB" . "least significant bit [or: byte]")
+    ("LSB" . "Least Significant {Bit,Byte} (or Linux Standards Base)")
     ("LUN" . "logical unit number")
     ("LZW" . "Lempel Ziv Welch")
     ("MAC" . "medium access control")
@@ -488,7 +512,8 @@
     ("MIPS" . "million instructions per second")
     ("MMU" . "memory management unit")
     ("MPEG" . "moving picture experts group")
-    ("MSB" . "most significant bit [or: byte]")
+    ("MPLS" . "multiprotocol label switching")
+    ("MSB" . "most significant {bit,byte}")
     ("MSF" . "minutes seconds frames")
     ("MSS" . "maximum segment size")
     ("MTA" . "mail transfer agent")
@@ -498,6 +523,7 @@
     ("NAT" . "network address translation")
     ("NAV" . "network allocation vector")
     ("NCP" . "network control protocol")
+    ("NCQ" . "native command queuing")
     ("NFS" . "network file system")
     ("NIC" . "network interface card")
     ("NIS" . "network information service")
@@ -508,18 +534,19 @@
     ("OEM" . "original equipment manufacturer")
     ("OFDM" . "orthogonal frequency division multiplexing")
     ("OSF" . "open software foundation")
-    ("OSI" . "open systems interconnection")
+    ("OSI" . "Open Systems Interconnection (or Open-Source Initiative)")
+    ("OSPF" . "open shortest path first")
     ("OTP" . "one time password")
-    ("PAM" . "pluggable authentication modules")
-    ("PAM" . "pulse amplitude modulation")
+    ("PAM" .
+     "Pluggable Authentication Modules (or Pulse Amplitude Modulation)")
     ("PAT" . "port address translation")
     ("PAX" . "portable archive exchange")
     ("PC" . "personal computer")
     ("PCI" . "peripheral component interconnect")
     ("PCM" . "pulse code modulation")
     ("PCMCIA" . "personal computer memory card international association")
-    ("PDU" . "protocol data unit")
     ("PDP" . "page descriptor page")
+    ("PDU" . "protocol data unit")
     ("PER" . "packed encoding rules")
     ("PERL" . "practical extraction [and] report language")
     ("PFS" . "perfect forward secrecy")
@@ -540,10 +567,11 @@
     ("PPPOE" . "point-to-point protocol over ethernet")
     ("PRML" . "partial response, maximum likelihood")
     ("PROM" . "programmable read only memory")
+    ("PSK" . "pre-shared key")
+    ("PSTN" . "public switched telephone network")
     ("PTE" . "page table entry")
     ("PTLA" . "pseudo top level aggregator")
     ("PTP" . "page table page")
-    ("PSTN" . "public switched telephone network")
     ("PWM" . "pulse width modulation")
     ("QOS" . "quality of service")
     ("RAID" . "redundant array of inexpensive disks")
@@ -567,6 +595,8 @@
     ("SAM" . "serial access memory")
     ("SASI" . "Shugart Associates System Interface (predecessor to SCSI)")
     ("SATA" . "serial advanced technology attachment")
+    ("SB" . "sound blaster")
+    ("SCM" . "Software Configuration Management (or Source Code Management)")
     ("SCSI" . "small computer system interface")
     ("SDRAM" . "synchronous dynamic random access memory")
     ("SGRAM" . "synchronous graphics random access memory")
@@ -585,11 +615,13 @@
     ("SSH" . "secure shell")
     ("SSL" . "secure sockets layer")
     ("STP" . "shielded twisted pair")
-    ("SVGA" . "super video graphics array")
+    ("SVGA" . "super video graphics {array,adapter}")
     ("TCL" . "tool command language")
     ("TCP" . "transmission control protocol")
+    ("TCQ" . "tagged command queueing")
     ("TDD" . "test driven development")
     ("TFT" . "thin film transistor")
+    ("TFTP" . "trivial file transfer protocol")
     ("TIFF" . "tagged image file format")
     ("TLA" . "top level aggregator")
     ("TLB" . "transition lookaside buffer")
@@ -614,22 +646,27 @@
     ("USWC" . "uncacheable speculative write combining")
     ("UTP" . "unshielded twisted pair")
     ("UUCP" . "unix-to-unix copy protocol")
+    ("UUOC" . "useless use of cat")
     ("VAX" . "virtual address extension")
     ("VCM" . "virtual channel memory")
     ("VESA" . "video electronics standards association")
-    ("VGA" . "video graphics array")
+    ("VGA" . "video graphics {array,adapter}")
+    ("WIFI" . "wireless fidelity")
     ("VLAN" . "virtual local area network")
-    ("VLSM" . "variable length subnetting mask")
-    ("VM" . "virtual memory")
+    ("VLSM" . "variable length subnet mask")
+    ("VM" . "virtual {machine,memory}")
     ("VPN" . "virtual private network")
     ("VRAM" . "video random access memory")
+    ("VRRP" . "virtual router redundancy protocol")
     ("WAN" . "wide area network")
     ("WAP" . "wireless application protocol")
+    ("WEP" . "wired equivalent privacy")
     ("WLAN" . "wireless local area network")
+    ("WPA" . "wi-fi protected access")
     ("WRAM" . "window random access memory")
     ("WWW" . "world wide web")
     ("XER" . "XML Encoding Rules")
-    ("XGA" . "extended graphics array")
+    ("XGA" . "extended graphics {array,adapter}")
     ("XML" . "extensible markup language")
     ("XSL" . "extensible stylesheet language")
     ("XT" . "extended technology")
@@ -642,12 +679,13 @@
     ("FTBFS" . "failure to build from source")
     ("GAFC" . "get a fucking clue")
     ("IDS" . "intrusion detection system")
+    ("IDK" . "i don't know")
     ("IYSWIM" . "if you see what i mean")
     ("NIFOC" . "naked in front of computer")
     ("PITB" . "pain in the butt")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
     ("TWAT" . "the war against terrorism")
-    ("WTB" . "Where's The Beef"))
+    ("WTB" . "where's the beef"))
   "Mapping of acronyms to expansions.")
 
 (defun wtf-match-string-no-properties (num &optional string)
