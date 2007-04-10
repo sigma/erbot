@@ -146,6 +146,37 @@ or `erbim-package-list' and return a help string describing the key sequences
 ;; load iso-transl's inverted keymap
 (add-to-list 'erbim-keymaps-map 
              (cons "iso-transl" (erbim-map iso-transl-ctl-x-8-map)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Unicode information functions:
+(defvar erbim-unidata-file "/usr/share/perl/5.8.4/unicore/UnicodeData.txt")
+
+(defun erbim-name-by-character (thing)
+  (let ((char (if (stringp thing) (string-to-char thing) thing)) 
+        (unicode nil))
+    (setq unicode 
+          (when (or (< char 256)
+                    (memq 'coding-category-utf-8
+                          (mapcar 'coding-system-category
+                                  (find-coding-systems-string thing))))
+            (encode-char char 'ucs)) )
+    (unicode-name-by-codepoint unicode)) )
+
+(defun erbim-name-by-codepoint (codepoint)
+  (let ((cpstring (format "%04X" codepoint))
+        (unidata  (find-file-noselect erbim-unidata-file)))
+    (with-current-buffer unidata
+      (goto-char (point-min))
+      (if (re-search-forward (concat "^" cpstring ";\\([^;]*\\);") nil t)
+          (format "Codepoint %s: %s" cpstring (match-string 1))
+        (format "Unknown character number %s" cpstring) )) ))
+
+(defun fs-unicode-describe (&optional thing)
+  (cond ((integerp thing) (erbim-name-by-codepoint thing))
+        ((symbolp  thing) (erbim-name-by-character (symbol-name thing)))
+        (key              (erbim-name-by-character thing)) ))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; trigger the preprocessing of the rest of the input methods:
 (where-is-char "x")
 
