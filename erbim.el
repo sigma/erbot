@@ -160,7 +160,7 @@ or `erbim-package-list' and return a help string describing the key sequences
                           (mapcar 'coding-system-category
                                   (find-coding-systems-string thing))))
             (encode-char char 'ucs)) )
-    (unicode-name-by-codepoint unicode)) )
+    (erbim-name-by-codepoint unicode)) )
 
 (defun erbim-name-by-codepoint (codepoint)
   (let ((cpstring (format "%04X" codepoint))
