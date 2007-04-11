@@ -168,13 +168,45 @@ or `erbim-package-list' and return a help string describing the key sequences
     (with-current-buffer unidata
       (goto-char (point-min))
       (if (re-search-forward (concat "^" cpstring ";\\([^;]*\\);") nil t)
-          (format "Codepoint %s: %s" cpstring (match-string 1))
-        (format "Unknown character number %s" cpstring) )) ))
+          (format "#x%s: %s" cpstring (match-string 1))
+        (format "Unknown character #x%s" cpstring) )) ))
+
+(defun erbim-search-by-description (pat)
+  (let ( (unidata (find-file-noselect erbim-unidata-file)) 
+         (pattern        nil)
+         (case-fold-search t)
+         (count            0)
+         (limit           10)
+         (found          nil)
+         (char           nil)
+         (cp             nil)
+         (matches        nil))
+    (setq pattern (replace-regexp-in-string "^\\^\\|\\$$" "" pat)
+          pattern 
+          (concat "^\\([0-9A-F]+\\);\\(" (if (eq (aref pat 0) ?^) "" "[^;]*")
+                  pattern
+                  (if (eq (aref pat (1- (length pat))) ?$) "" "[^;]*") "\\);"))
+    (with-current-buffer unidata
+      (goto-char (point-min))
+      (while (re-search-forward pattern nil t)
+        (when (< (setq count (1+ count)) limit)
+          (setq cp    (string-to-int (match-string 1) #x10)
+                char  (or (decode-char 'ucs cp) ?�)
+                found (format "#x%04x (%c): %s" cp char (match-string 2)) 
+                matches   (cons found matches)) )) )
+    (if (< count limit)
+        (mapconcat 'identity (nreverse matches) "\n")
+      (format "Too many matches (%d) for %S" count pat)) ))
+
+(defun fs-unicode-find (&optional pattern)
+  (if pattern (erbim-search-by-description pattern)
+    "Usage: unicode-find <REGEX TO MATCH UNICODE DATA FILE DESCRIPTION>"))
 
 (defun fs-unicode-describe (&optional thing)
-  (cond ((integerp thing) (erbim-name-by-codepoint thing))
+  (cond ((not thing) "Usage: unicode-describe <CODEPOINT-INTEGER | CHARACTER>")
+        ((integerp thing) (erbim-name-by-codepoint thing))
         ((symbolp  thing) (erbim-name-by-character (symbol-name thing)))
-        (key              (erbim-name-by-character thing)) ))
+        (thing            (erbim-name-by-character thing)) ))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; trigger the preprocessing of the rest of the input methods:

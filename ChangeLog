@@ -1,3 +1,12 @@
+2007-04-11  Vivek Dasmohapatra  <vivek@etla.org>
+
+	* erbim.el (fs-unicode-describe): add usage instructions 
+	(erbim-search-by-description): search for unicode characters by 
+	description.
+	(fs-unicode-find): bot-ui wrapper for erbim-search-by-description
+	including usage message.
+	(erbim-name-by-codepoint): changed output format to use #xXXX
+
 2007-01-28  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbot.el (erbot-join-servers): `erc' takes :keyword style
