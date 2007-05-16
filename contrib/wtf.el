@@ -1,10 +1,11 @@
-;; wtf.el --- Look up conversational and computing acronyms
+;;; wtf.el --- Look up conversational and computing acronyms
 
 ;; Copyright (C) 2005, 2006, 2007 Michael Olson
 
-;; Author: Michael Olson (mwolson AT gnu DOT org)
-;; Date: Tue 06-Feb-2007
-;; Version: 1.4
+;; Author: Michael Olson <mwolson@gnu.org>
+;; Date: Wed 16-May-2007
+;; Version: 2.0
+;; URL: http://mwolson.org/static/dist/elisp/wtf.el
 
 ;; This file is not part of GNU Emacs.
 
@@ -30,18 +31,43 @@
 
 ;; * Use:
 ;;
-;; To use this, go to an unknown term in a buffer and type M-x wtf-is.
-;; This can also be done programmatically.
+;; To use this, move to an unknown acronym in a buffer and type
+;; the following:
+;;
+;;   M-x wtf-is RET
+;;
+;; The `wtf-is' function may also be called noninteractively, and it
+;; will return a string (or nil) rather than displaying a message.
+;;
+;; To add a custom acronym definition, either customize
+;; `wtf-custom-alist' or do:
+;;
+;;   M-x wtf-add RET <acronym> RET <definition> RET
+;;
+;; To remove a custom acronym definition, or mark a pre-defined
+;; acronym as "removed" in the case that no custom acronym definition
+;; exists in `wtf-custom-alist' for that acronym, do:
+;;
+;;   M-x wtf-remove RET <acronym> RET
+;;
+;; To mark a pre-defined acronym as "removed", without checking first
+;; to see whether it is in `wtf-custom-alist', customize the
+;; `wtf-removed-acronyms' option.
+;;
+;; If you add a custom acronym definition, and feel it to be worth
+;; sharing, you are encouraged to contact <mwolson@gnu.org> via email,
+;; providing the acronym and its definition.  This increases the
+;; chance that it will appear in future versions of wtf.el.
 
 ;; * Legalese:
 ;;
-;; The terms were downloaded from
+;; Many of the acronym definitions were downloaded from
 ;; http://cvsweb.netbsd.org/bsdweb.cgi/src/share/misc/.  No copyright
 ;; notice was included, but the intent of the original author was to
-;; put these terms in the public domain.  This was deduced from
-;; several emails sent to the authors of these files.  Additionally,
-;; the original data files use a specific syntax which does not allow
-;; for a copyright notice.
+;; put these acronym definitions in the public domain.  This was
+;; deduced from several emails sent to the authors of these files.
+;; Additionally, the original data files use a specific syntax which
+;; does not allow for a copyright notice.
 ;;
 ;; The original program that uses these files in NetBSD
 ;; (http://cvsweb.netbsd.org/bsdweb.cgi/src/games/wtf/wtf) is in the
@@ -52,7 +78,69 @@
 ;; Thanks to Trent Buck for `emacs-wiki-wtf.el', which inspired the
 ;; creation of `wtf.el'.
 
+;;; History:
+
+;; 2.0:
+;;
+;; - Add the `wtf-custom-alist' option, the `wtf-add' interactive
+;;   function to add acronyms to it, and the `wtf-remove' interactive
+;;   function to remove acronyms from it.  Thanks to Andreas Roehler
+;;   for the suggestion.
+;;
+;; - Add a few acronyms that were scavenged from various forum FAQ
+;;   pages.
+;;
+;; - Handle multiple definitions for a single acronym more
+;;   intuitively.  The text separator used in this case may be changed
+;;   by customizing the `wtf-def-separator' option.
+
+;; 1.1-1.4:
+;;
+;; - Fix a bug with completions in Emacs 21, thanks to Ehud Karni.
+;;
+;; - Add additional acronyms and re-sync with the NetBSD acronym list.
+
+;; 1.0: Initial release.
+
 ;;; Code:
+
+(eval-when-compile (require 'cus-edit))
+
+(defgroup wtf nil
+  "Options controlling the behavior of the wtf program.
+wtf provides the `wtf-is' command, which looks up the definition
+of the acronym at point."
+  :group 'convenience)
+
+(defcustom wtf-custom-alist nil
+  "Custom mappings of acronyms to definitions used by `wtf-is'.
+The acronym should be uppercase, and the definition may be either
+lowercase or mixed case.  If mixed case, it will not be modified,
+otherwise initial letters will be capitalized.
+
+These definitions are consulted after those in `wtf-alist'.
+
+This variable can also be manipulated interactively by using
+`wtf-add'."
+  :type '(repeat (cons (string :tag "Acronym")
+                       (string :tag "Definition")))
+  :group 'wtf)
+
+(defcustom wtf-removed-acronyms nil
+  "Acronyms which exist in `wtf-alist' but should be ignored by `wtf-is'.
+Each acronym should be in uppercase.
+This is an easy way of removing an acronym that is felt to be
+wrong or irrelevant.
+
+This variable can also be manipulated interactively by using
+`wtf-remove'."
+  :type '(repeat (string :tag "Acronym"))
+  :group 'wtf)
+
+(defcustom wtf-def-separator ", or "
+  "Separator used when an acronym has two or more definitions."
+  :type 'string
+  :group 'wtf)
 
 (defvar wtf-alist
   '(;; $NetBSD: acronyms,v 1.164 2007/01/31 18:37:07 elad Exp $
@@ -500,7 +588,8 @@
     ("LKM" . "{linux, loadable} kernel module")
     ("LLC" . "logical link control")
     ("LRC" . "longitudinal redundancy check")
-    ("LSB" . "Least Significant {Bit,Byte} (or Linux Standards Base)")
+    ("LSB" . "least significant {bit,byte}")
+    ("LSB" . "linux standards base")
     ("LUN" . "logical unit number")
     ("LZW" . "Lempel Ziv Welch")
     ("MAC" . "medium access control")
@@ -534,11 +623,12 @@
     ("OEM" . "original equipment manufacturer")
     ("OFDM" . "orthogonal frequency division multiplexing")
     ("OSF" . "open software foundation")
-    ("OSI" . "Open Systems Interconnection (or Open-Source Initiative)")
+    ("OSI" . "open systems interconnection")
+    ("OSI" . "open-source initiative")
     ("OSPF" . "open shortest path first")
     ("OTP" . "one time password")
-    ("PAM" .
-     "Pluggable Authentication Modules (or Pulse Amplitude Modulation)")
+    ("PAM" . "pluggable authentication modules")
+    ("PAM" . "pulse amplitude modulation")
     ("PAT" . "port address translation")
     ("PAX" . "portable archive exchange")
     ("PC" . "personal computer")
@@ -596,7 +686,8 @@
     ("SASI" . "Shugart Associates System Interface (predecessor to SCSI)")
     ("SATA" . "serial advanced technology attachment")
     ("SB" . "sound blaster")
-    ("SCM" . "Software Configuration Management (or Source Code Management)")
+    ("SCM" . "software configuration management")
+    ("SCM" . "source code management")
     ("SCSI" . "small computer system interface")
     ("SDRAM" . "synchronous dynamic random access memory")
     ("SGRAM" . "synchronous graphics random access memory")
@@ -671,28 +762,120 @@
     ("XSL" . "extensible stylesheet language")
     ("XT" . "extended technology")
     ("ZFOD" . "zero-filled on demand")
-    ;; Additional terms go here
+    ;; Additional acronym definitions go here
+    ("AAMOF" . "as a matter of fact")
+    ("AISI" . "as i see it")
+    ("ASAIMS" . "as strange as it may seem")
+    ("ATSL" . "along the same line")
+    ("AYOR" . "at your own risk")
+    ("BTAIM" . "be that as it may")
     ("BTDTBTTS" . "been there, done that, bought the t-shirt")
+    ("BTHOM" . "beats the hell outta me")
+    ("CBA" . "can't be arsed")
+    ("DBD" . "Defective By Design")
+    ("DIIK" . "damned if i know")
     ("EFF" . "Electronic Frontier Foundation")
     ("FFII" . "Foundation for a Free Information Infrastructure")
+    ("FOAF" . "friend of a friend")
     ("FSF" . "Free Software Foundation")
+    ("FTR" . "for the record")
     ("FTBFS" . "failure to build from source")
     ("GAFC" . "get a fucking clue")
+    ("IAE" . "in any event")
+    ("IBTD" . "i beg to differ")
+    ("ICBF" . "i can't be fucked")
     ("IDS" . "intrusion detection system")
     ("IDK" . "i don't know")
+    ("IJWTS" . "i just want to say")
+    ("IME" . "in my experience")
     ("IYSWIM" . "if you see what i mean")
+    ("JFTR" . "just for the record")
     ("NIFOC" . "naked in front of computer")
+    ("NPOV" . "neutral point of view")
     ("PITB" . "pain in the butt")
+    ("POV" . "point of view")
     ("ROTFLMAO" . "rolling on the floor laughing my ass off")
+    ("SWIM" . "see what i mean")
+    ("TNSTAAFL" . "there's no such thing as a free lunch")
     ("TWAT" . "the war against terrorism")
-    ("WTB" . "where's the beef"))
-  "Mapping of acronyms to expansions.")
+    ("WDOT" . "what do others think")
+    ("WDYMBT" . "what do you mean by that")
+    ("WDYT" . "what do you think")
+    ("WTB" . "where's the beef")
+    ("WTSHTF" . "when the shit hits the fan")
+    ("WTTM" . "without thinking too much")
+    ("WOTAM" . "waste of time and money")
+    ("YAGNI" . "you ain't gonna need it")
+    ("YGWYPF" . "you get what you pay for"))
+  "Mapping of acronyms to definitions.")
+
+;;; Utilities
 
 (defun wtf-match-string-no-properties (num &optional string)
   "Return NUMth match of STRING sans text properties."
   (if (fboundp 'match-string-no-properties)
       (match-string-no-properties num string)
     (match-string num string)))
+
+(defun wtf-remove-one (key alist)
+  "Remove only the first instance of KEY from ALIST.
+ALIST should be a symbol, the value of which is modified directly.
+Returns non-nil if an element was found and removed, nil otherwise."
+  (let ((svalist (symbol-value alist)))
+    (if (equal key (caar svalist))
+        (prog1 t
+          (set alist (cdr svalist)))
+      (catch 'done
+        (let ((cur (cadr svalist))
+              (prev svalist))
+          (while cur
+            (if (equal key (car cur))
+                (throw 'done
+                       (prog1 t
+                         (setcdr prev (cddr prev))))
+              (setq prev (cdr prev)
+                    cur (cadr prev))))
+          nil)))))
+
+(defun wtf-multi-assoc (key &rest alists)
+  "Return a list of all values in all ALISTS that are associated with KEY."
+  (let ((vals nil))
+    (dolist (alist alists)
+      (dolist (pair alist)
+        (when (equal key (car pair))
+          (setq vals (cons (cdr pair) vals)))))
+    (nreverse vals)))
+
+(defun wtf-upcase-initials (string)
+  "Do `upcase-initials' on STRING, but do not uppercase letters
+that come after quote characters.
+
+This function clobbers the match data."
+  (with-temp-buffer
+    (insert (upcase-initials string))
+    (goto-char (point-min))
+    (while (re-search-forward "['`]\\([[:upper:]]\\)" nil t)
+      (downcase-region (match-beginning 1) (match-end 1)))
+    (buffer-string)))
+
+(defun wtf-upcase-initials-maybe (string)
+  "Do `wtf-upcase-initials' on STRING only if STRING contains no
+existing capitalization.
+
+This function clobbers the match data."
+  (let ((case-fold-search nil))
+    (if (string-match "[A-Z]" string)
+        string
+      (wtf-upcase-initials string))))
+
+;;; Implementation
+
+(defun wtf-lookup-term (term)
+  (setq term (upcase term))
+  (wtf-multi-assoc term
+                   (and (not (member term wtf-removed-acronyms))
+                        wtf-alist)
+                   wtf-custom-alist))
 
 (defun wtf-get-term-at-point ()
   "Return the term at point."
@@ -702,44 +885,79 @@
         (goto-char (1+ (point)))
       (beginning-of-line))
     (when (looking-at "\\w+")
-      (let ((term (downcase (wtf-match-string-no-properties 0))))
-        (when (assoc (upcase term) wtf-alist)
-          term)))))
+      (let ((term (wtf-match-string-no-properties 0)))
+        (when (wtf-lookup-term term)
+          (downcase term))))))
 
-(defun wtf-upcase-initials (string)
-  "Do `upcase-initials' on STRING, but do not uppercase letters
-that come after quote characters."
-  (with-temp-buffer
-    (insert (upcase-initials string))
-    (goto-char (point-min))
-    (while (re-search-forward "['`]\\([[:upper:]]\\)" nil t)
-      (downcase-region (match-beginning 1) (match-end 1)))
-    (buffer-string)))
+(defun wtf-completions ()
+  "Return a list of completions for terms."
+  (mapcar #'(lambda (term)
+              (list (downcase (car term))))
+          (append wtf-alist wtf-custom-alist)))
 
-(defun wtf-is (term)
-  "Provide the definition for TERM.
-When called interactively, print the message \"TERM is DEF\".
+(defun wtf-save-maybe (var)
+  "If customizations are allowed, save VAR, which should be a symbol."
+  (when (fboundp 'customize-save-variable)
+    (customize-save-variable var (symbol-value var))
+    (message "Saved wtf customization")))
+
+;;; Interactive functions
+
+;;;###autoload
+(defun wtf-add (acronym definition)
+  "Add ACRONYM and its DEFINITION to the list of custom associations.
+
+If you add a custom acronym definition, and feel it to be worth
+sharing, you are encouraged to contact <mwolson@gnu.org> via
+email, providing the acronym and its definition.  This increases
+the chance that it will appear in future versions of wtf.el."
+  (interactive "sAcronym: \nsDefinition: ")
+  (setq acronym (upcase acronym))
+  (setq wtf-custom-alist (sort (cons (cons acronym definition)
+                                     wtf-custom-alist)
+                               #'(lambda (a b)
+                                   (string< (car a) (car b)))))
+  (wtf-save-maybe 'wtf-custom-alist))
+
+;;;###autoload
+(defun wtf-remove (acronym)
+  "Remove ACRONYM from the list of custom associations.
+If ACRONYM is not in the custom associations, but instead in
+`wtf-alist', it will be marked as ignored by adding it to
+`wtf-removed-acronyms'."
+  (interactive
+   (list (completing-read "Acronym to remove: "
+                          (wtf-completions) nil t (wtf-get-term-at-point))))
+  (setq acronym (upcase acronym))
+  (if (wtf-remove-one acronym 'wtf-custom-alist)
+      (wtf-save-maybe 'wtf-custom-alist)
+    (add-to-list 'wtf-removed-acronyms acronym)
+    (wtf-save-maybe 'wtf-removed-acronyms)))
+
+;;;###autoload
+(defun wtf-is (acronym)
+  "Provide the definition for ACRONYM.
+When called interactively, display the message \"ACRONYM is DEF\".
 Otherwise, return DEF.
 
-DEF refers to the definition associated with TERM in `wtf-alist'."
+DEF refers to the definition associated with ACRONYM in `wtf-alist'."
   (interactive
-   (list (completing-read "Term: "
-                          (mapcar #'(lambda (term)
-                                      (list (downcase (car term))))
-                                  wtf-alist)
-                          nil t (wtf-get-term-at-point))))
-  (when (stringp term)
-    (let ((def (cdr (assoc (upcase term) wtf-alist))))
-      (when def
+   (list (completing-read "Acronym: "
+                          (wtf-completions) nil t (wtf-get-term-at-point))))
+  (when (stringp acronym)
+    (let ((defs (wtf-lookup-term acronym)))
+      (if (not defs)
+          (when (interactive-p)
+            (message "I don't know what %s means" (upcase acronym)))
         (save-match-data
-          (let ((case-fold-search nil))
-            ;; only capitalize initials if the term contains no
-            ;; existing capitalization
-            (unless (string-match "[A-Z]" def)
-              (setq def (wtf-upcase-initials def)))))
-        (if (interactive-p)
-            (message (concat term " is " def))
-          def)))))
+          (let ((deftext (wtf-upcase-initials-maybe (car defs))))
+            (when (cdr defs)
+              (dolist (def (cdr defs))
+                (setq deftext (concat deftext wtf-def-separator
+                                      (wtf-upcase-initials-maybe def)))))
+            (if (interactive-p)
+                (message "%s is %s" (upcase acronym) deftext)
+              deftext)))))))
 
 (provide 'wtf)
 
