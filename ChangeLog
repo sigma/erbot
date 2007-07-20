@@ -1,3 +1,9 @@
+2007-07-19  Michael Olson  <mwolson@gnu.org>
+
+	* erbot.el (erbot-reply): Don't force the message through without
+	flood protection.  Since ERC 5.1, ERC has very good flood
+	protection, so make use of it.
+
 2007-04-11  Vivek Dasmohapatra  <vivek@etla.org>
 
 	* erbim.el (fs-unicode-describe): add usage instructions 

@@ -676,7 +676,7 @@ or \"noreply\"
 	     ;; think that's the wrong thing to do. Hopefully if the data-path 
 	     ;; through erc->fsbot->erc is clean, erc will do the right thing 
 	     ;; to outbound data.
-	     (erc-process-input-line linen  t multiline-p))
+	     (erc-process-input-line linen nil multiline-p))
 	   lines))))))
 
 
