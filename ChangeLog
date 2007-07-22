@@ -1,3 +1,10 @@
+2007-07-22  Michael Olson  <mwolson@gnu.org>
+
+	* README.txt: Mention examples/dotemacs-mybot.
+
+	* examples/dotemacs-mybot: New file that is the example .emacs for
+	the bot.
+
 2007-07-19  Michael Olson  <mwolson@gnu.org>
 
 	* erbot.el (erbot-reply): Don't force the message through without

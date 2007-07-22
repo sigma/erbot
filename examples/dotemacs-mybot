@@ -1,0 +1,238 @@
+;; -*- emacs-lisp -*-
+
+
+(setq erbot-nickserv-p t)
+
+(setq erc-prompt-for-nickserv-password nil)
+
+(setq erc-nickserv-passwords
+      '((freenode     (("mybot" . "mypasswd")))))
+
+(setq h4x0r-sometimes-replace
+      '(("ea" "33") ("er" "0r") ("a" "4")
+	;;("b" "8")
+	;;("d" "|>")
+        ("e" "3" "E") ;;("f" "|=") ("h" "|-|")
+	;;("i" "1" "|") ;;("k" "|<" "x")
+        ;;("l" "1" "|_") ("m" "|\\/|") ("n" "|\\|")
+	("o" "0") ;;("q" "@")
+	("s"
+	 "5" "Z" "$")
+	;;("t" "+" "7")
+	("ck" "x") ("u" "U") ;;("v" "\\/")
+
+	;("x"
+        ;X" "><") ("y" "j"
+	))
+
+(add-to-list 'load-path "~/elisp")
+(add-to-list 'load-path "~/elisp/erbot")
+(add-to-list 'load-path "~/elisp/erbot/erbot")
+
+(setq erc-keywords '("mybot" "ownersname"))
+
+(setq fs-internal-english-weights
+
+      '(
+        30 ; doctor ---
+	30 ; yow
+	30 ; fortune
+	2 ;; flame
+	))
+
+(setq fs-internal-botito-mode nil)
+
+;; this optional step
+;; helps the bot get the locations of the .el files in emacs
+(let ((aa default-directory))
+  (cd "/usr/share/emacs/site-lisp")
+  (normal-top-level-add-subdirs-to-load-path)
+  (cd aa))
+
+(require 'cl)
+;;(setq erc-port 6667)
+(require 'erc)
+(require 'erc-match)
+(require 'erc-track)
+(require 'erball)
+(add-hook 'erc-mode-hook
+	  '(lambda () (interactive)
+	     (require 'erc-match)
+	     (erc-match-mode 1)
+	     ;;(erc-match-enable)
+	     (require 'erc-button)
+	     (erc-button-enable)
+	     nil
+	     ))
+
+
+(setq bbdb-file "~/pub/data/botbbdb")
+
+(setq erbot-servers-channels-test
+      '(("irc.freenode.net"
+	 ("#mychannel"
+
+	  "#mybot"
+	  )
+	6667 ;; this is the port, optional, can be omitted.
+	)
+	("irc.gnome.org"
+	 (
+	  "#mychannel2"
+	  )
+	 ;; omitting the port here 6667
+	 )
+
+	))
+
+
+
+
+
+
+(erbot-install)
+
+
+
+(add-hook 'erc-server-376-hook
+	  '(lambda (&rest args)
+	     (interactive)
+	     (erc-track-modified-channels-mode 1)
+	     nil))
+
+;;(global-unset-key "\C-cs")
+
+(global-set-key "\C-cj " 'erbot-join-servers)
+(global-set-key [f9 f1] 'erbot-join-servers)
+
+(global-unset-key [f6])
+(global-set-key [f6 f6] 'erblog-show-targets)
+(global-set-key [f6 f7] 'erblog-reset-targets)
+(global-set-key "\C-c\C-c" 'erc-send-current-line)
+
+
+;(global-set-key "\C-cr" 'erblog-reset-targets)
+
+
+
+
+
+
+
+;;(setq fs-limit-line-length 125)
+
+
+;;(setq fs-limit-length
+ ;; 410)
+
+;;(setq fs-limit-lines 5 )
+
+(setq bbdb-case-fold-search t)
+(setq erc-auto-query t)
+
+;; Don't send more than 5 messages in 10 seconds.  This prevents the
+;; bot from getting kicked.
+(setq erc-server-flood-penalty 2)
+(setq erc-server-flood-margin 10)
+
+;; To restrict "automated" replies, change the "" below to your
+;; favorite channels, example:
+;;"\\(mychannel1\\|mychannel2\\)"
+(setq fs-internal-query-target-regexp "")
+
+(setq fs-internal-google-level 60)
+
+(setq erbkarma-file "~/public_html/karma/karma")
+(setq fs-internal-google-time 4)
+(setq fs-internal-dictionary-time 4)
+
+(load "~/.emacs.private")
+
+
+(setq erbkarma-tgt-check-string
+      "^\\(#mychannel\\)$")
+
+;; .emacs ends here..
+
+
+
+
+
+
+(setq erbot-nick "mybot")
+(setq erc-user-full-name "My Bot")
+
+(setq erbot-servers-channels-main
+      '(("irc.freenode.net"
+         ("#mybot"
+	  "#mychannel"
+	  "#mychannel2"
+	  ))
+	("irc.gnome.org"
+	 (
+	  "#mychannel"
+
+	  )
+
+	 )))
+
+(setq erbot-servers-channels erbot-servers-channels-main)
+
+
+(setq fs-google-level 60)
+
+
+
+(setq erbot-servers-channels-test
+      '(("irc.freenode.net"
+         (;;"#fsbot"
+	  "#mybot"
+	  ))
+	("irc.gnome.org"
+	 (;;"#fsbotgnome"
+	  ;;"#gnome"
+	  )
+	 )
+
+	))
+
+(setq bbdb-file-coding-system 'raw-text)
+(require 'erball)
+(erbunlisp-install)
+
+;; this delysid's server containing many dictionaries, if you prefer
+;; the default server dict.org, just comment out this line.
+(setq dictionary-server  "dict.tu-graz.ac.at")
+
+
+(fs-pf-load)
+(fs-pv-load)
+
+(ignore-errors
+  (fs-user-init))
+
+(require 'idledo)
+(idledo-add-periodic-action-crude
+ '(fs-pv-save))
+
+(add-hook 'kill-emacs-hook
+	  'fs-pv-save)
+
+;; consider uncommenting these
+;;(add-to-list 'erblisp-allowed-words '&optional)
+;;(add-to-list 'erblisp-allowed-words '&rest)
+
+
+;;uncomment this only for a channel full of emacs hackers... see C-h v
+;;(setq fs-internal-parse-error-p t)
+
+(setq units-dat-file "/usr/share/misc/units.dat")
+
+(add-to-list 'load-path "~/public_html/data")
+
+
+
+
+;; .emacs ends here..
+
+

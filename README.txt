@@ -9,6 +9,10 @@ required.  The versions here are provided for convenience, and are
 also the versions known to work with erbot, but you might want to
 fetch their latest versions from their respective authors' websites.
 
+The file `examples/dotemacs-mybot' is meant to be the bot's .emacs
+file.  Copy it to .emacs in your bot's home directory, and then make
+any changes you like.
+
 NOTE: A data file for contrib/units.el may be obtained in Debian by
 performing "apt-get install units", and adding
   (setq units-dat-file "/usr/share/misc/units.dat")
