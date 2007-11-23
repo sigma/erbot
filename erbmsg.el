@@ -1,5 +1,5 @@
 ;;; erbmsg.el --- memoserv-esque functions for Erbot
-;; $Id: erbmsg.el,v 1.25 2005/12/31 01:18:36 fledermaus Exp $
+;; $Id: erbmsg.el,v 1.26 2007/11/23 16:31:59 deego Exp $
 ;; Copyright (C) 2004 Sebastian Freundt
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmsg.el
@@ -14,14 +14,14 @@
 (defconst erbot-home-page
   "http://savannah.nongnu.org/projects/erbot")
 (defconst erbmsg-version
-  "Version 0.2 $Revision: 1.25 $")
+  "Version 0.2 $Revision: 1.26 $")
 
  
 ;; This file is NOT (yet) part of GNU Emacs.
  
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
+;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
  
 ;; This is distributed in the hope that it will be useful,

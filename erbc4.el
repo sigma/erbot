@@ -1,5 +1,5 @@
 ;;; erbc4.el --- Russian Roulette 
-;; Time-stamp: <2005-08-11 20:30:50 deego>
+;; Time-stamp: <2007-11-23 11:30:12 deego>
 ;; Copyright (C) 2003 Taylor Campbell
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc4.el
@@ -19,7 +19,7 @@
  
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
+;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
  
 ;; This is distributed in the hope that it will be useful,

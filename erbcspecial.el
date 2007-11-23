@@ -4,7 +4,7 @@
 ;; This file is for the remaining few, that can't be.
 ;; Thus, CODE IN THIS FILE SHOULD BE CONSTRUCTED VERY CAREFULLY.
 1
-;; Time-stamp: <2005-08-11 20:32:12 deego>
+;; Time-stamp: <2007-11-23 11:30:12 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbcspecial.el
@@ -21,7 +21,7 @@
  
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
+;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
  
 ;; This is distributed in the hope that it will be useful,

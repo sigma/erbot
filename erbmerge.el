@@ -1,5 +1,5 @@
 ;;; erbmerge.el --- merge 2 bbdb's -- NOT YET IMPLEMENTED
-;; Time-stamp: <2004-12-17 00:13:49 deego>
+;; Time-stamp: <2007-11-23 11:30:07 deego>
 ;; Copyright (C) 2004 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbmerge.el
@@ -16,7 +16,7 @@
  
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
+;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
  
 ;; This is distributed in the hope that it will be useful,

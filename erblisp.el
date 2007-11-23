@@ -1,5 +1,5 @@
 ;;; erblisp.el --- 
-;; Time-stamp: <2006-01-01 04:19:58 deego>
+;; Time-stamp: <2007-11-23 11:30:08 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erblisp.el
@@ -14,7 +14,7 @@
  
 ;; This is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
+;; the Free Software Foundation; either version 3, or (at your option)
 ;; any later version.
  
 ;; This is distributed in the hope that it will be useful,
