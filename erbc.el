@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2007-11-23 11:30:12 deego>
+;; Time-stamp: <2007-12-06 11:25:03 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3662,7 +3662,7 @@ number N, and ending at M-1. The first record is numbered 0.
   "TODO: implemenet fixedcase, literal, subexp... If needed, let the
 author know.."
   (unless (and from to term)
-    (error (format "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER)" erbn-char)))
+    (error "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER" erbn-char)))
   (erbnocmd-iterate-internal term number 'replace-regexp-in-string from to
 			     nil)
   (format "Replaced regexp %S with %S" from to))
@@ -3693,7 +3693,7 @@ author know.."
 
 (defun fsi-merge-generic (&optional name dest &rest args)
   (unless (and name dest (not args))
-    (error (format "Syntax: %s merge TERM1 TERM2" erbn-char)))
+    (error "Syntax: %s merge TERM1 TERM2" erbn-char))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (when (string= (downcase name) (downcase dest))
@@ -3740,7 +3740,7 @@ author know.."
 Do not confuse this function with fs-rearrange which rearranges the
 order of entries within a given term. "
   (when (or args (not (and name dest)))
-    (error (format "Format: %s mv foo bar" erbn-char)))
+    (error "Format: %s mv foo bar" erbn-char))
   (setq name (format "%s" name))
   (setq dest (format "%s" dest))
   (cond
@@ -3954,7 +3954,7 @@ MSG here is a list which needs to be combined.  "
 (defun fsi-replace-string (&optional from to term number)
   (unless (and from to term)
     (error
-     (format "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbn-char)))
+     "Syntax: %s s/foo.../bar in TERM [NUMBER or ALL]" erbn-char))
   (erbot-working
    (erbnocmd-iterate-internal
     (or (erbbdb-get-exact-name term ) term)
@@ -4043,12 +4043,12 @@ initargs.  Then the function is applied as (function @initargs string
 
 (defun fsi-info-file (&optional infofile regexp)
   (unless regexp
-    (error (format "Syntax: %s info-node nodename REGEXP" erbn-char)))
+    (error "Syntax: %s info-node nodename REGEXP" erbn-char))
   (unless (stringp regexp) (setq regexp (format "%s" regexp)))
 
 
-  (unless infofile (error (format "Syntax: %s info info-file REGEXP"
-			      erbn-char)))
+  (unless infofile (error "Syntax: %s info info-file REGEXP"
+			      erbn-char))
   (unless (stringp infofile) (setq infofile (format "%s" infofile)))
 
   (cond
@@ -4086,7 +4086,7 @@ initargs.  Then the function is applied as (function @initargs string
 
 
 (defun fsi-dict (&optional word &rest ignore)
-  (unless word (error (format "Syntax: %s d[ict] word" erbn-char)))
+  (unless word (error "Syntax: %s d[ict] word" erbn-char))
   (unless (stringp word) (setq word (format "%s" word)))
   (fs-dictionary-search word))
 
@@ -4239,7 +4239,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun fsi-country (&optional ct)
-  (unless ct (error (format "Syntax: %s country NM (example , country jp)" erbn-char)))
+  (unless ct (error "Syntax: %s country NM (example , country jp" erbn-char)))
   (setq ct (format "%s" ct))
   (let ((addp (and (> (length ct) 1)
 		   ;; does not start with .
@@ -4251,7 +4251,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-country-search (&rest names)
   (unless names (error
-	      (format "Syntax: %s country-search NM (example , country japa)" erbn-char)))
+	      "Syntax: %s country-search NM (example , country japa" erbn-char)))
   (erbcountry-search
    (mapconcat (lambda (arg) (format "%s" arg)) names " ")))
 
@@ -4471,7 +4471,7 @@ slowing down your bot."
 	       (kill-buffer ,buffer))))))))
 
 (defun fsi-web-page-title (&optional site &rest args)
-  (unless site (error (format "Syntax: %s web-page-title SITE" erbn-char)))
+  (unless site (error "Syntax: %s web-page-title SITE" erbn-char))
   (setq site (format "%s" site))
   (erbn-with-web-page-buffer site
     (let* ((case-fold-search t)
@@ -4484,7 +4484,7 @@ slowing down your bot."
                 "not available")))))
 
 (defun fsi-wserver (&optional site &rest args)
-  (unless site (error (format "Syntax: %s wserver SITE" erbn-char)))
+  (unless site (error "Syntax: %s wserver SITE" erbn-char))
   (setq site (format "%s" site))
   (erbn-with-web-page-buffer site
     (buffer-substring (point-min)
@@ -4494,7 +4494,7 @@ slowing down your bot."
 (defalias 'fs-webserver 'fs-wserver)
 
 (defun fsi-web (&optional site &rest args)
-  (unless site (error (format "Syntax: %s web SITE" erbn-char)))
+  (unless site (error "Syntax: %s web SITE" erbn-char))
   (setq site (format "%s" site))
   (erbn-with-web-page-buffer site
     (shell-command-on-region (or (search-forward "\n\n" nil t)
