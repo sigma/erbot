@@ -1,5 +1,5 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2007-12-06 11:25:03 deego>
+;; Time-stamp: <2008-04-04 12:49:39 deego>
 ;; Copyright (C) 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
@@ -3662,7 +3662,7 @@ number N, and ending at M-1. The first record is numbered 0.
   "TODO: implemenet fixedcase, literal, subexp... If needed, let the
 author know.."
   (unless (and from to term)
-    (error "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER" erbn-char)))
+    (error "Syntax: %s (replace-regexp FROM TO TERM &optional NUMBER" erbn-char))
   (erbnocmd-iterate-internal term number 'replace-regexp-in-string from to
 			     nil)
   (format "Replaced regexp %S with %S" from to))
@@ -4239,7 +4239,7 @@ last time i checked , equalp seemed to work as well.. "
 
 
 (defun fsi-country (&optional ct)
-  (unless ct (error "Syntax: %s country NM (example , country jp" erbn-char)))
+  (unless ct (error "Syntax: %s country NM (example , country jp" erbn-char))
   (setq ct (format "%s" ct))
   (let ((addp (and (> (length ct) 1)
 		   ;; does not start with .
@@ -4251,7 +4251,7 @@ last time i checked , equalp seemed to work as well.. "
 
 (defun fsi-country-search (&rest names)
   (unless names (error
-	      "Syntax: %s country-search NM (example , country japa" erbn-char)))
+	      "Syntax: %s country-search NM (example , country japa" erbn-char))
   (erbcountry-search
    (mapconcat (lambda (arg) (format "%s" arg)) names " ")))
 
