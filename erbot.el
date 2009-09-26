@@ -1,10 +1,10 @@
 ;;; erbot.el --- Another robot for ERC.
-;; Time-stamp: <2007-11-23 11:30:05 deego>
+;; Time-stamp: <2009-09-26 22:28:50 fledermaus>
 ;; Emacs Lisp Archive entry
 ;; Filename: erbot.el
 ;; Package: erbot
 ;; Authors:  David Edmunston (dme@dme.org)
-;; Modified by: D. Goel <deego@gnufans.org>
+;; Modified by: D. Goel <deego@gnufans.org>, V Dasmohapatra <vivek@etla.org>
 ;; Version: 0.0
 ;; URL:  http://www.emacswiki.org/cgi-bin/wiki.pl?ErBot
 ;; Maintainer: Deepak Goel <deego@gnufans.org>
@@ -345,7 +345,8 @@ http://www.emacswiki.org/cgi-bin/wiki?ErcNickserv
 ")
 
 (when erbot-nickserv-p
-  (require 'erc-nickserv)
+  (require 'erc-nickserv nil t) ;; old erc 
+  (require 'erc-services nil t) ;; erc from emacs22
   (erc-nickserv-mode 1)
   )
 
