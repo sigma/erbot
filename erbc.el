@@ -1,6 +1,6 @@
 ;;; erbc.el --- Erbot user-interface commands -- see also erbc5.el
-;; Time-stamp: <2008-04-04 12:49:39 deego>
-;; Copyright (C) 2002 D. Goel
+;; Time-stamp: <2009-09-26 22:20:39 fledermaus>
+;; Copyright © 2002 D. Goel
 ;; Emacs Lisp Archive entry
 ;; Filename: erbc.el
 ;; Package: erbc
@@ -3503,32 +3503,22 @@ number N, and ending at M-1. The first record is numbered 0.
 (defun fsi-google-raw (&rest args)
   "Return a list of google results. "
   (let ((concatted
-	 (mapconcat '(lambda (a)
-		       (format "%s" a))
-		    args " ")))
+         (mapconcat '(lambda (a)
+                       (format "%s" a))
+                    args " ")))
     (with-timeout
-	(fs-internal-google-time
-	 (list concatted (list "google---TimedOut")))
-      (let* ((results
-	      ;; this ignore-errors is very important.
-	      ;; since the google stuff currently gives weird errors
-	      ;; when called from within a with-timeout loop, and a
-	      ;; timeout actually occurs.
-	      (ignore-errors
-		(google-process-response
-		 (google-search-internal
-		  concatted
-		  google-start google-max-results
-		  google-filter-p google-safe-p))))
-	     (fir (first results))
-	     (revresults
-	      (reverse results))
-	     (realresults
-	      (mapcan
-	       '(lambda (arg)
-		  (if (>= (length arg) 3) (list arg) nil))
-	       (cdr results))))
-	(cons fir (reverse realresults))))))
+        (fs-internal-google-time
+         (list concatted (list "google---TimedOut")))
+      (let ((results
+             ;; this ignore-errors is very important.
+             ;; since the google stuff currently gives weird errors
+             ;; when called from within a with-timeout loop, and a
+             ;; timeout actually occurs.
+             (ignore-errors
+               (mapcar 'list
+                       (google-result-urls
+                        (google-search concatted 0 "web")) )) ))
+        results)) ))
 
 (defvar fs-internal-google-redirect-p nil)
 
@@ -3582,12 +3572,12 @@ number N, and ending at M-1. The first record is numbered 0.
 	      (ignore-errors (erbn-read fir)))))
     (if (numberp num)
 	(setq args (cdr args))
-      (setq num 1))
+      (setq num 2))
     (apply 'fs-googlen num args)))
 
 (defun fsi-google-with-options (options terms &rest args)
   "internal"
-  (apply 'fs-google (append terms args (list options))))
+  (apply 'fs-google (append (list options) terms args)))
 
 (defun fsi-google-deego (&rest args)
   "Google on the gnufans.net."
@@ -3623,9 +3613,12 @@ number N, and ending at M-1. The first record is numbered 0.
   "Google on the emacswiki site."
   (fs-google-with-options "site:wikipedia.org" args))
 
-(defun fs-google-gnufans-net (&rest args)
-  "Google on gnufans.net."
-  (fs-google-with-options "site:gnufans.net" args))
+(defun fs-google-wikipedia (&rest args)
+  (fs-google-with-options "site:wikipedia.org" args))
+
+(defun fs-google-imdb (&rest args)
+  "Google on IMDB"
+  (fs-google-with-options "site:imdb.com" "1" args))
 
 (defun fs-google-gnufans-org (&rest args)
   "Google on gnufans.org"
@@ -4680,6 +4673,7 @@ slowing down your bot."
 (defalias 'fs-gs 'fs-google-sl4)
 
 (defalias 'fs-gw 'fs-google-wikipedia)
+(defalias 'fs-gi 'fs-google-imdb)
 (defalias 'fs-gwe 'fs-google-wikipedia-english)
 (defalias 'fs-gh 'fs-google-hurdwiki)
 ;;(defalias 'fs-gm 'fs-google-meatball)
