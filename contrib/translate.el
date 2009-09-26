@@ -47,7 +47,7 @@ elements are human-readable aliases. (types) is a list of translation types,
 usually text, and occasionally web-page as well. No other types are currently 
 known.")
 
-(defvar translate-unsupported-langs '("ar" "he" "pap")
+(defvar translate-unsupported-langs '("he" "pap")
   "Languages (two/three letter codes) that we cannot utf-8 encode yet.")
 
 (defgroup translate nil
