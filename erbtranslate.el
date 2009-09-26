@@ -1,6 +1,6 @@
 ;;; erbtranslate.el --- Natural Language translation functions. 
-;; Time-stamp: <2007-11-23 11:29:50 deego>
-;; Copyright (C) 2002 Alejandro Benitez
+;; Time-stamp: <2009-09-26 22:33:14 fledermaus>
+;; Copyright © 2002 Alejandro Benitez
 ;; Emacs Lisp Archive entry
 ;; Filename: erbtranslate.el
 ;; Package: erbot
@@ -113,6 +113,16 @@ unless both from and to are specified. *, any, - are allowed as wildcards."
     (concat translate-program " --list-services")
     '(t)))
 
+(defun fsi-kks (&rest nihongo)
+  (let ( (coding-system-for-read  'euc-jp)
+	 (coding-system-for-write 'euc-jp)
+	 (text (mapconcat #'(lambda (x) (format "%s" x)) nihongo " ")) )
+    (with-temp-buffer 
+      (insert text)
+      (shell-command-on-region 
+       (point-min) (point-max)
+       "kakasi -i euc -Ha -Ka -Ja -Ea -ka -s | sed 's/ESC<2E>.//g'" nil t)
+      (buffer-string)) ))
 ;; temporarily disabled till clean support is provided by translate.el
 
 ;; (defun fsi-translate-web-page (from to url &rest args)
