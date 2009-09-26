@@ -233,7 +233,7 @@ as many times as it returns a...
 	    (save-excursion
 	      (re-search-backward
 	       (concat "\\(" customize-label "\\)") nil t)
-              (if (< 22 emacs-major-version)
+              (if (> 22 emacs-major-version)
                   (help-xref-button 1 (lambda (v)
                                         (if help-xref-stack
                                             (pop help-xref-stack))
@@ -253,7 +253,7 @@ as many times as it returns a...
         (with-current-buffer "*Help*"
     (save-excursion
       (re-search-backward "`\\([^`']+\\)'" nil t)
-      (if (< 22 emacs-major-version)
+      (if (> 22 emacs-major-version)
           (help-xref-button
            1 (lambda (arg)
                (let ((location
