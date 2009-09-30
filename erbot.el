@@ -497,9 +497,7 @@ the new erc-backend functions."
 	 (fs-tgt tgt)
 	 (msg 
 	  (erbutils-remove-text-properties-maybe 
-	   (cond (cmdargs
-		  (nth 1 cmdargs))
-		 (t (aref parsed 3)))))
+          (erc-response.contents parsed)))
 	 (erbot-end-user-nick nick)
 	 (csys     (if (fboundp 'erc-coding-system-for-target)
 		       (erc-coding-system-for-target tgt)
